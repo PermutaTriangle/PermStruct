@@ -84,12 +84,25 @@ def createFromSumType( sumT, atoms, B, b = 1, permProp = (lambda perm : True), p
                 
     return created
 
-B = 6
+'''
+Testing
 
-permProp  = (lambda perm : perm.avoids([2,1,4,3]))
+B         : Look for generating rules of sizes 1 through B-1
+permProp  : The defining property of the set of permutations you are looking at
+permCount : How many permutations of length n have this property
+over      : How much overlap to allow. 1 = no overlap, 1/2 = on average each permutation in
+            the set may be generated twice
+compl     : What kind of coverage you want. 1 = complete coverage, 1/2 = at least half of
+            the permutations in the set are generated
+atoms     : The list of permutations to start with
+'''
+
+B = 5
+
+permProp  = (lambda perm : perm.avoids([2,3,1]))
 permCount = (lambda n : len(filter(lambda x : permProp(x), Permutations(n))) )
 overl     = (lambda n : 1)
-compl     = (lambda n : 1/4)
+compl     = (lambda n : 1)
 atoms = [Permutation([])]
 
 for N in range(1,6):
