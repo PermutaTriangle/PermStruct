@@ -95,15 +95,119 @@ over      : How much overlap to allow. 1 = no overlap, 1/2 = on average each per
 compl     : What kind of coverage you want. 1 = complete coverage, 1/2 = at least half of
             the permutations in the set are generated
 atoms     : The list of permutations to start with
-'''
 
-B = 5
+------------------- Nice examples that work -------------------
 
-permProp  = (lambda perm : perm.avoids([2,3,1]))
+Unless otherwise stated assume
+
 permCount = (lambda n : len(filter(lambda x : permProp(x), Permutations(n))) )
 overl     = (lambda n : 1)
 compl     = (lambda n : 1)
-atoms = [Permutation([])]
+atoms     = [Permutation([])]
+
+1) Decreasing permutations
+permProp  = (lambda perm : perm.avoids([1,2]))
+
+[[2, 1], {0}]
+[[2, 1], {1}]
+
+2) Increasing permutations
+permProp  = (lambda perm : perm.avoids([1,2]))
+
+[[1, 2], {0}]
+[[1, 2], {1}]
+
+Avoiders of a single non-monotone pattern of length 3, e.g.,
+3) Avoiders of 213
+permProp  = (lambda perm : perm.avoids([2,1,3]))
+
+[[2, 3, 1], {0}]
+[[3, 1, 2], {1}]
+
+------------------- Examples that might work with more general rules -------------------
+
+Unless otherwise stated assume
+
+permCount = (lambda n : len(filter(lambda x : permProp(x), Permutations(n))) )
+overl     = (lambda n : 1)
+compl     = (lambda n : 1)
+atoms     = [Permutation([])]
+
+1) Avoiders of a single monotone pattern of length 3, e.g.,
+permProp  = (lambda perm : perm.avoids([1,2,3]))
+
+Tested up to B = 6.
+It is well known that there is a rule of size two (two boxes free) where
+we put in decreasing permutations.
+
+Avoiders of two patterns of length 3. Below we have all combinations up to symmetry.
+-----------------------------------------------------------------------
+2) Avoiders of 123 and 321. This class dies out, so probably no "nice" rule to
+describe it
+permProp  = (lambda perm : perm.avoids([1,2,3]) and perm.avoids([3,2,1]))
+
+Tested up to B = 6.
+Found nothing as expected.
+
+3) Avoiders of 123 and 231. I think you need to rules to describe this class and
+one of the rules requires putting monotone permutations in a box so we shouldn't
+expect to find any rules yet.
+permProp  = (lambda perm : perm.avoids([1,2,3]) and perm.avoids([2,3,1]))
+
+Tested up to B = 6.
+Found nothing as expected.
+
+4) Avoiders of 123 and 132. Don't have a feeling for this set.
+permProp  = (lambda perm : perm.avoids([1,2,3]) and perm.avoids([1,3,2]))
+
+Tested up to B = 6.
+
+-----------------------------------------------------------------------
+
+Avoiders of one pattern of length 3 and one of length 4
+-----------------------------------------------------------------------
+5) Avoiders of 321 and 1234. This class dies out, so probably no "nice" rule
+to describe it
+permProp  = (lambda perm : perm.avoids([3,2,1]) and perm.avoids([1,2,3,4]))
+
+Tested up to B = 7.
+
+6) Avoiders of 321 and 2134.
+permProp  = (lambda perm : perm.avoids([3,2,1]) and perm.avoids([2,1,3,4]))
+
+Tested up to B = 7.
+
+7) Avoiders of 132 and 4321.
+permProp  = (lambda perm : perm.avoids([1,3,2]) and perm.avoids([4,3,2,1]))
+
+Tested up to B = 7.
+
+8) Avoiders of 321 and 1324.
+permProp  = (lambda perm : perm.avoids([3,2,1]) and perm.avoids([1,3,2,4]))
+
+Tested up to B = 7.
+
+9) Avoiders of 321 and 1343.
+permProp  = (lambda perm : perm.avoids([3,2,1]) and perm.avoids([1,3,4,2]))
+
+Tested up to B = 7.
+
+9) Avoiders of 321 and 2143.
+permProp  = (lambda perm : perm.avoids([3,2,1]) and perm.avoids([2,1,4,3]))
+
+Tested up to B = 7.
+
+To be continued ...
+-----------------------------------------------------------------------
+'''
+
+B = 7
+
+permProp  = (lambda perm : perm.avoids([4,3,2,1]) and perm.avoids([4,3,1,2]))
+permCount = (lambda n : len(filter(lambda x : permProp(x), Permutations(n))) )
+overl     = (lambda n : 1)
+compl     = (lambda n : 1)
+atoms     = [Permutation([])]
 
 for N in range(1,6):
     for sumT in sumTs(N):
