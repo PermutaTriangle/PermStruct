@@ -1,4 +1,5 @@
 
+from permutation_sets import Point, SimpleGeneratingRule
 
 # def generate_all_of_length(max_n, S, inp):
 def generate_all_of_length(max_n, S):
