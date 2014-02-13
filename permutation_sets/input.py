@@ -13,3 +13,6 @@ class Input(PermutationSet):
     def generate_of_length(self, n, input):
         return input.get(n, [])
 
+    def __repr__(self):
+        return 'Input()'
+

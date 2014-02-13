@@ -15,3 +15,6 @@ class Point(PermutationSet):
         if n == 1:
             yield Permutation([1])
 
+    def __repr__(self):
+        return 'Point()'
+
