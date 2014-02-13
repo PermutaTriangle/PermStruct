@@ -2,6 +2,7 @@
 from sage.combinat.permutation import Permutation
 from sage.misc.flatten import flatten
 from permutation_set import PermutationSet
+from static_permutation_set import StaticPermutationSet
 from point import Point
 from itertools import product
 
@@ -25,39 +26,49 @@ class SimpleGeneratingRule(PermutationSet):
 
     def generate_of_length(self, n, input):
 
-        # TODO: Get rid of this and make everything work without it. Base cases
-        # of recursive generating rules need to be handled in some other way.
-        # This also means removing the input parameter, which is ugly anyway.
-        if n == 0:
-            yield Permutation([])
-        else:
+        def count_assignments(at, left):
 
-            def count_assignments(at, left):
+            if at == len(self.perm):
+                if left == 0:
+                    yield []
+            elif type(self.sets[at]) is Point:
+                # this doesn't need to be handled separately,
+                # it's just an optimization
+                if left > 0:
+                    for ass in count_assignments(at + 1, left - 1):
+                        yield [1] + ass
+            else:
+                for cur in range(left+1):
+                    for ass in count_assignments(at + 1, left - cur):
+                        yield [cur] + ass
 
-                if at == len(self.perm):
-                    if left == 0:
-                        yield []
-                elif type(self.sets[at]) is Point:
-                    # this doesn't need to be handled separately,
-                    # it's just an optimization
-                    if left > 0:
-                        for ass in count_assignments(at + 1, left - 1):
-                            yield [1] + ass
-                else:
-                    for cur in range(left+1):
-                        for ass in count_assignments(at + 1, left - cur):
-                            yield [cur] + ass
+        permInv = self.perm.inverse()
+        for count_ass in count_assignments(0, n):
 
-            permInv = self.perm.inverse()
-            for count_ass in count_assignments(0, n):
+            for perm_ass in product(*[ s.generate_of_length(cnt, input) for cnt, s in zip(count_ass, self.sets) ]):
 
-                for perm_ass in product(*[ s.generate_of_length(cnt, input) for cnt, s in zip(count_ass, self.sets) ]):
+                res = [None]*len(self.perm)
+                cumul = 0
+                for idx in permInv:
+                    res[idx-1] = [ x + cumul for x in perm_ass[idx-1] ]
+                    cumul += count_ass[idx-1]
 
-                    res = [None]*len(self.perm)
-                    cumul = 0
-                    for idx in permInv:
-                        res[idx-1] = [ x + cumul for x in perm_ass[idx-1] ]
-                        cumul += count_ass[idx-1]
+                yield Permutation(flatten(res))
 
-                    yield Permutation(flatten(res))
+    def to_static(self, max_n, input):
+
+        inp = dict(input)
+
+        for n in range(max_n+1):
+            for perm in self.generate_of_length(n, inp):
+                inp.setdefault(n, [])
+                inp[n].append(perm)
+
+        try:
+            gf = self.generating_function()
+        except NotImplementedError:
+            gf = None
+
+        perms = [ p for ps in inp.values() for p in ps ]
+        return StaticPermutationSet(perms, gf)
 

@@ -2,7 +2,7 @@
 from sage.combinat.permutation import Permutation
 from permutation_set import PermutationSet
 
-class InputPermutationSet(PermutationSet):
+class Input(PermutationSet):
     """A permutation set representing the input permutations."""
 
     # When we implement get_generating_function, this is probably what it will
