@@ -1,104 +1,7 @@
 
 from sage.combinat.permutation import Permutation, Permutations
 from permutation_sets import Point, Input, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
-
-def generate_all_of_length(max_n, S, inp):
-
-    inp = dict(inp)
-
-    for n in range(max_n+1):
-        for perm in S.generate_of_length(n, inp):
-            inp.setdefault(n, [])
-            inp[n].append(perm)
-
-    return inp
-
-def generate_rules_2(n, m, sets):
-
-    assert n <= m
-
-    used = [False] * n
-
-    def gen(at):
-
-
-
-def generate_rules(n, m, sets):
-
-    def valid(rule):
-        if all( x is None for x in rule[0] ):
-            return False
-
-        for y in range(m):
-            found = False
-            for x in range(n):
-                if rule[x][y] is not None:
-                    found = True
-                    break
-
-            if not found:
-                return False
-
-        return True
-
-    def gen(i, j):
-        if j == m:
-            for rule in gen(i + 1, 0):
-                if i + 1 == n or any( x is not None for x in rule[i + 1] ):
-                    yield rule
-        elif i == n:
-            yield [ [ None for y in range(m) ] for x in range(n) ]
-        else:
-            for trule in gen(i, j + 1):
-                rule = [ [ trule[x][y] for y in range(m) ] for x in range(n) ]
-
-                for set in sets:
-                    rule[i][j] = set
-                    yield rule
-
-    a, b = 0, 0
-    for rule in gen(0, 0):
-        a += 1
-        if valid(rule):
-            b += 1
-            yield GeneratingRule(rule)
-
-    # print(a, b)
-
-
-def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (lambda n : 0)):
-
-    created = {}
-
-    # Putting the atoms in the dictionary by length
-    for atom in atoms:
-        created.setdefault(len(atom),[])
-        created[len(atom)].append(atom)
-
-    for n in range(B+1):
-
-        # Need to be careful if there are atoms of length n
-        created.setdefault(n,[])
-
-        for perm in rule.generate_of_length(n, created):
-            if not permProp(perm):
-                return False
-
-            created[n].append(perm)
-
-        if len(set(created[n])) != len(created[n]):
-            return False
-
-        if permCount(n) != len(created[n]):
-            return False
-
-    return True
-
-
-# Shorthands, maybe include this in the library?
-I = Input()
-P = Point()
-empty = {0:[Permutation([])]}
+from struct import generate_all_of_length, generate_rules, matches_rule, I, P, N, empty
 
 # Increasing permutations
 incr_gen = SimpleGeneratingRule(Permutation([1,2]), [I, P])
@@ -106,20 +9,20 @@ incr_gen = SimpleGeneratingRule(Permutation([1,2]), [I, P])
 # Decreasing permutations
 decr_gen = SimpleGeneratingRule(Permutation([2,1]), [I, P])
 
-avoids_132 = StaticPermutationSet.from_predicate(lambda x: x.avoids([1,3,2]), 6, None)
+avoids_132 = StaticPermutationSet.from_predicate(lambda x: x.avoids([1,3,2]), 6, N)
 
 # Avoiders of 231 and 312
 avoid_231_312 = SimpleGeneratingRule(Permutation([1,3,2]), [I, P, decr_gen.to_static(10, empty)])
 
 avoid_231_312_G = GeneratingRule([
-    [None, P, None],
-    [None, None, decr_gen.to_static(10, empty)],
-    [I, None, None],
+    [N, P, N],
+    [N, N, decr_gen.to_static(10, empty)],
+    [I, N, N],
 ])
 
 avoid_vinc_3_12_ = GeneratingRule([
-    [None, P, None],
-    [I, None, decr_gen.to_static(10,empty)]
+    [N, P, N],
+    [I, N, decr_gen.to_static(10,empty)]
 ])
 
 
