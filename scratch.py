@@ -54,7 +54,7 @@ def generate_rules(n, m, sets):
             b += 1
             yield GeneratingRule(rule)
 
-    print(a, b)
+    # print(a, b)
 
 
 def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (lambda n : 0)):
@@ -92,25 +92,25 @@ P = Point()
 empty = {0:[Permutation([])]}
 
 # Increasing permutations
-incr = SimpleGeneratingRule(Permutation([1,2]), [I, P])
+incr_gen = SimpleGeneratingRule(Permutation([1,2]), [I, P])
 
 # Decreasing permutations
-decr = SimpleGeneratingRule(Permutation([2,1]), [I, P])
+decr_gen = SimpleGeneratingRule(Permutation([2,1]), [I, P])
 
 avoids_132 = StaticPermutationSet.from_predicate(lambda x: x.avoids([1,3,2]), 6, None)
 
 # Avoiders of 231 and 312
-avoid_231_312 = SimpleGeneratingRule(Permutation([1,3,2]), [I, P, decr.to_static(10, empty)])
+avoid_231_312 = SimpleGeneratingRule(Permutation([1,3,2]), [I, P, decr_gen.to_static(10, empty)])
 
 avoid_231_312_G = GeneratingRule([
     [None, P, None],
-    [None, None, decr.to_static(10, empty)],
+    [None, None, decr_gen.to_static(10, empty)],
     [I, None, None],
 ])
 
 avoid_vinc_3_12_ = GeneratingRule([
     [None, P, None],
-    [I, None, decr.to_static(10,empty)]
+    [I, None, decr_gen.to_static(10,empty)]
 ])
 
 
@@ -136,27 +136,37 @@ for i in range(1, 11):
 # 
 #     return True
 
-# permProp  = (lambda perm : perm.avoids([2,3,1]))
+permProp  = (lambda perm : perm.avoids([1,2,3]))
 # permProp  = (lambda perm : perm.avoids([2,3,1]))
 # permProp  = (lambda perm : perm.avoids([1,2,3]) and perm.avoids([1,3,2]))
 # permProp  = (lambda perm : perm.avoids([1,3,2,4]))
-permProp  = (lambda perm : perm.avoids([1,3,2,4]))
+# permProp  = (lambda perm : perm.avoids([1,3,2,4]))
 permCount = (lambda n : len(filter(lambda x : permProp(x), Permutations(n))) )
 
-incr = incr.to_static(8, empty)
-decr = decr.to_static(8, empty)
+incr = incr_gen.to_static(8, empty)
+decr = decr_gen.to_static(8, empty)
+
+incr_nonempty = incr_gen.to_static(8, {1:[Permutation([1])]})
+decr_nonempty = decr_gen.to_static(8, {1:[Permutation([1])]})
+
 # avoids_132 = avoids_132.to_static(8, empty)
 
 
 # for n in range(1, 4+1):
 #     for m in range(1, 4+1):
 
+
+rule = GeneratingRule([
+    [decr_nonempty, decr_nonempty]
+])
+
+
 def main():
-    n = 4
+    n = 1
     m = 2
 
     rulecnt = 0
-    rules = generate_rules(n, m, [ I, P, None, avoids_132, decr ])
+    rules = generate_rules(n, m, [ I, P, None, incr, decr ])
     for rule in rules:
         ok = True
         for y in range(m):
@@ -169,10 +179,12 @@ def main():
 
         rulecnt += 1
 
+        print(rule.rule)
+
         if matches_rule(rule, [Permutation([])], 5, permProp, permCount):
             print(rule.rule)
 
-    print(n, m, rulecnt)
+    # print(n, m, rulecnt)
 
 if __name__ == '__main__':
     main()
