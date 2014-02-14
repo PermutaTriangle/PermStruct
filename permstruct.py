@@ -101,5 +101,5 @@ def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (l
 I = Input()
 P = Point()
 N = None
-empty = {0:[Permutation([])]}
+empty = { 0: [Permutation([])] }
 

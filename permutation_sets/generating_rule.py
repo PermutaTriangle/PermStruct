@@ -72,7 +72,6 @@ class GeneratingRule(PermutationSet):
 
                 for colpart in product(*[ OrderedSetPartitions(range(colcnt[col]), [ len(arr[row][col]) for row in range(h) ]) for col in range(w) ]):
                     for rowpart in product(*[ OrderedSetPartitions(range(rowcnt[row]), [ len(arr[row][col]) for col in range(w) ]) for row in range(h) ]):
-
                         res = [ [None]*colcnt[col] for col in range(w) ]
 
                         cumul = 1

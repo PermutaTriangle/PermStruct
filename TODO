@@ -1,5 +1,6 @@
 
 
+- Rewrite OrderedSetPartitions without all the sets. Benchmark and see if it is faster.
 - Generate rules more efficiently.
 - Framework for tests.
 

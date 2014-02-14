@@ -1,7 +1,7 @@
 
 from sage.combinat.permutation import Permutation, Permutations
 from permutation_sets import Point, Input, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
-from struct import generate_all_of_length, generate_rules, matches_rule, I, P, N, empty
+from permstruct import generate_all_of_length, generate_rules, matches_rule, I, P, N, empty
 
 # Increasing permutations
 incr_gen = SimpleGeneratingRule(Permutation([1,2]), [I, P])
@@ -69,35 +69,26 @@ decr_nonempty = decr_gen.to_static(8, {1:[Permutation([1])]})
 
 
 rule = GeneratingRule([
-    [decr_nonempty, decr_nonempty]
+    [decr,N,N],
+    [N,P,N],
+    [I,N,N]
 ])
 
-
-def main():
-    n = 1
-    m = 2
-
-    rulecnt = 0
-    rules = generate_rules(n, m, [ I, P, None, incr, decr ])
-    for rule in rules:
-        ok = True
-        for y in range(m):
-            if sum( rule.rule.get((x,y), None) is not None for x in range(n) ) > 1:
-                ok = False
-                break
-
-        if not ok:
-            continue
-
-        rulecnt += 1
-
-        print(rule.rule)
-
-        if matches_rule(rule, [Permutation([])], 5, permProp, permCount):
-            print(rule.rule)
-
-    # print(n, m, rulecnt)
-
-if __name__ == '__main__':
-    main()
+# def main():
+#     n = 1
+#     m = 2
+# 
+#     rulecnt = 0
+#     rules = generate_rules(n, m, [ I, P, None, incr, decr ])
+#     for rule in rules:
+# 
+#         rulecnt += 1
+# 
+#         if matches_rule(rule, [Permutation([])], 5, permProp, permCount):
+#             print(rule.rule)
+# 
+#     # print(n, m, rulecnt)
+# 
+# if __name__ == '__main__':
+#     main()
 
