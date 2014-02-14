@@ -26,7 +26,7 @@ def generate_all_of_length(max_n, S, inp):
 # 
 
 
-def generate_rules(n, m, sets):
+def generate_rules(n, m, sets, cnt):
 
     def valid(rule):
         if all( x is None for x in rule[0] ):
@@ -54,8 +54,12 @@ def generate_rules(n, m, sets):
         else:
             for trule in gen(i, j + 1):
                 rule = [ [ trule[x][y] for y in range(m) ] for x in range(n) ]
+                left = cnt - sum( rule[x][y] is not None for x in range(n) for y in range(m) )
 
                 for set in sets:
+                    if left == 0 and set is not None:
+                        continue
+
                     rule[i][j] = set
                     yield rule
 

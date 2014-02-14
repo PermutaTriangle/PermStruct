@@ -48,9 +48,11 @@ for i in range(1, 11):
 # 
 #     return True
 
-permProp  = (lambda perm : perm.avoids([1,2,3]))
+# permProp  = (lambda perm : perm.avoids([1,2,3]))
+# permProp  = (lambda perm : perm.avoids([1,2,3]))
 # permProp  = (lambda perm : perm.avoids([2,3,1]))
 # permProp  = (lambda perm : perm.avoids([1,2,3]) and perm.avoids([1,3,2]))
+permProp  = (lambda perm : perm.avoids([1,4,2,3]) and perm.avoids([3,2,1]))
 # permProp  = (lambda perm : perm.avoids([1,3,2,4]))
 # permProp  = (lambda perm : perm.avoids([1,3,2,4]))
 permCount = (lambda n : len(filter(lambda x : permProp(x), Permutations(n))) )
@@ -74,21 +76,17 @@ rule = GeneratingRule([
     [I,N,N]
 ])
 
-# def main():
-#     n = 1
-#     m = 2
-# 
-#     rulecnt = 0
-#     rules = generate_rules(n, m, [ I, P, None, incr, decr ])
-#     for rule in rules:
-# 
-#         rulecnt += 1
-# 
-#         if matches_rule(rule, [Permutation([])], 5, permProp, permCount):
-#             print(rule.rule)
-# 
-#     # print(n, m, rulecnt)
-# 
-# if __name__ == '__main__':
-#     main()
+def main():
+    n = 4
+    m = 4
+    cnt = 4
+
+    rules = generate_rules(n, m, [ I, P, None, incr, decr ], cnt)
+    for rule in rules:
+
+        if matches_rule(rule, [Permutation([])], 5, permProp, permCount):
+            print(rule.rule)
+
+if __name__ == '__main__':
+    main()
 
