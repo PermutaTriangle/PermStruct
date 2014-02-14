@@ -13,6 +13,15 @@ def generate_all_of_length(max_n, S, inp):
 
     return inp
 
+def generate_rules_2(n, m, sets):
+
+    assert n <= m
+
+    used = [False] * n
+
+    def gen(at):
+
+
 
 def generate_rules(n, m, sets):
 

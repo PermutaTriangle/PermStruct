@@ -13,10 +13,12 @@ class GeneratingRule(PermutationSet):
 
     def __init__(self, rule):
 
-        if type(rule) is list:
-            self.rule = { (i,j): rule[i][j] for i in range(len(rule)) for j in range(len(rule[i])) if rule[i][j] is not None }
-        else:
-            self.rule = rule
+        self.rule = rule
+
+        # if type(rule) is list:
+        #     self.rule = { (i,j): rule[i][j] for i in range(len(rule)) for j in range(len(rule[i])) if rule[i][j] is not None }
+        # else:
+        #     self.rule = rule
 
 
     # When we implement generating_function, this is probably what it will
