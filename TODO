@@ -1,6 +1,5 @@
 
 
-- Vertical boxes (extend the current implementation, shouldn't be too hard).
 - Generate rules more efficiently.
 - Framework for tests.
 

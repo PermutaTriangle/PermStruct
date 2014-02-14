@@ -13,12 +13,12 @@ class GeneratingRule(PermutationSet):
 
     def __init__(self, rule):
 
-        self.rule = rule
+        # self.rule = rule
 
-        # if type(rule) is list:
-        #     self.rule = { (i,j): rule[i][j] for i in range(len(rule)) for j in range(len(rule[i])) if rule[i][j] is not None }
-        # else:
-        #     self.rule = rule
+        if type(rule) is list:
+            self.rule = { (i,j): rule[i][j] for i in range(len(rule)) for j in range(len(rule[i])) if rule[i][j] is not None }
+        else:
+            self.rule = rule
 
 
     # When we implement generating_function, this is probably what it will
@@ -37,6 +37,12 @@ class GeneratingRule(PermutationSet):
         h = max( k[0] for k,v in rule ) + 1
         w = max( k[1] for k,v in rule ) + 1
 
+        def permute(arr, perm):
+            res = [None] * len(arr)
+            for i in range(len(arr)):
+                res[i] = arr[perm[i] - 1]
+            return res
+
         def count_assignments(at, left):
 
             if at == len(rule):
@@ -54,7 +60,6 @@ class GeneratingRule(PermutationSet):
                         yield [cur] + ass
 
         for count_ass in count_assignments(0, n):
-
             for perm_ass in product(*[ s[1].generate_of_length(cnt, input) for cnt, s in zip(count_ass, rule) ]):
 
                 arr = [ [ Permutation([]) for j in range(w) ] for i in range(h) ]
@@ -62,44 +67,23 @@ class GeneratingRule(PermutationSet):
                 for i, perm in enumerate(perm_ass):
                     arr[rule[i][0][0]][rule[i][0][1]] = perm
 
-                # TODO: The following conversion to a permutation doesn't work
-                # when there are many permutations in a column
+                rowcnt = [ sum( len(arr[row][col]) for col in range(w) ) for row in range(h) ]
+                colcnt = [ sum( len(arr[row][col]) for row in range(h) ) for col in range(w) ]
 
-                def permute(arr, perm):
-                    res = [None] * len(arr)
-                    for i in range(len(arr)):
-                        res[i] = arr[perm[i] - 1]
-                    return res
+                for colpart in product(*[ OrderedSetPartitions(range(colcnt[col]), [ len(arr[row][col]) for row in range(h) ]) for col in range(w) ]):
+                    for rowpart in product(*[ OrderedSetPartitions(range(rowcnt[row]), [ len(arr[row][col]) for col in range(w) ]) for row in range(h) ]):
 
-                def gen(i):
-                    if i == h:
-                        yield [ [] for _ in range(w) ]
-                    else:
-                        cnt = sum( len(arr[i][j]) for j in range(w) )
+                        res = [ [None]*colcnt[col] for col in range(w) ]
 
-                        for part in OrderedSetPartitions(list(range(1,cnt+1)), [ len(arr[i][j]) for j in range(w) ]):
-                            for tres in gen(i+1):
-                                res = list(tres)
-                                cumul = sum( len(r) for r in res )
-                                for j in range(w):
-                                    if arr[i][j]:
-                                        res[j] = permute([ x + cumul for x in sorted(part[j]) ], arr[i][j])
+                        cumul = 1
+                        for row in range(h-1,-1,-1):
+                            for col in range(w):
+                                for idx, val in zip(sorted(colpart[col][row]), permute(sorted(rowpart[row][col]), arr[row][col])):
+                                    res[col][idx] = cumul + val
 
-                                yield res
+                            cumul += rowcnt[row]
 
-
-                for perm in gen(0):
-                    yield Permutation(flatten(perm))
-
-
-                # perm = [None]*w
-                # cumul = 0
-                # for i in range(h-1, -1, -1):
-                #     for j in range(w):
-                #         if arr[i][j] is not None:
-                #             perm[j] = [ x + cumul for x in arr[i][j] ]
-                #             cumul += len(arr[i][j])
-                # yield Permutation(flatten(perm))
+                        yield Permutation(flatten(res))
 
 
     def to_static(self, max_n, input):
