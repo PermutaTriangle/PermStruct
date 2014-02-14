@@ -1,7 +1,6 @@
 
-
 - Rewrite OrderedSetPartitions without all the sets. Benchmark and see if it is faster.
 - Generate rules more efficiently.
+    - Support bound on number of non-empty boxes.
 - Framework for tests.
-
 
