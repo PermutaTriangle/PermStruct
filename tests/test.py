@@ -1,4 +1,5 @@
 
+from struct import generate_rules, matches_rule, I, P, N
 
 
 class Test(object):
@@ -14,6 +15,12 @@ class Test(object):
     @staticmethod
     def register(test):
         self.registered_tests.append(test)
+
+    @staticmethod
+    def run_all():
+
+        for test in registered_tests:
+            test.run()
 
 
 class AvoidanceTest(Test):
