@@ -53,7 +53,8 @@ class SimpleGeneratingRule(PermutationSet):
                     res[idx-1] = [ x + cumul for x in perm_ass[idx-1] ]
                     cumul += count_ass[idx-1]
 
-                yield Permutation(flatten(res))
+                # yield Permutation(flatten(res))
+                yield tuple(flatten(res))
 
     def to_static(self, max_n, input):
 

@@ -21,7 +21,7 @@ class StaticPermutationSet(PermutationSet):
         for n in range(max_n+1):
             for perm in Permutations(n):
                 if predicate(perm):
-                    perms.append(perm)
+                    perms.append(tuple(perm))
 
         return StaticPermutationSet(perms, gf)
 

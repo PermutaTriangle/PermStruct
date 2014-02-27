@@ -1,5 +1,5 @@
 
-from sage.combinat.permutation import Permutation, Permutations
+# from sage.combinat.permutation import Permutation, Permutations
 from permutation_sets import Point, Input, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
 
 
@@ -105,5 +105,6 @@ def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (l
 I = Input()
 P = Point()
 N = None
-empty = { 0: [Permutation([])] }
+# empty = { 0: [Permutation([])] }
+empty = { 0: [()] }
 

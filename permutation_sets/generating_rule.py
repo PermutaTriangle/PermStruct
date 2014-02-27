@@ -1,5 +1,5 @@
 
-from sage.combinat.permutation import Permutation
+# from sage.combinat.permutation import Permutation
 from sage.misc.flatten import flatten
 from ordered_set_partitions import ordered_set_partitions
 from permutation_set import PermutationSet
@@ -62,7 +62,7 @@ class GeneratingRule(PermutationSet):
         for count_ass in count_assignments(0, n):
             for perm_ass in product(*[ s[1].generate_of_length(cnt, input) for cnt, s in zip(count_ass, rule) ]):
 
-                arr = [ [ Permutation([]) for j in range(w) ] for i in range(h) ]
+                arr = [ [ [] for j in range(w) ] for i in range(h) ]
 
                 for i, perm in enumerate(perm_ass):
                     arr[rule[i][0][0]][rule[i][0][1]] = perm
@@ -82,7 +82,8 @@ class GeneratingRule(PermutationSet):
 
                             cumul += rowcnt[row]
 
-                        yield Permutation(flatten(res))
+                        # yield Permutation(flatten(res))
+                        yield tuple(flatten(res))
 
 
     def to_static(self, max_n, input):

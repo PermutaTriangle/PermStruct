@@ -13,7 +13,8 @@ class Point(PermutationSet):
     def generate_of_length(self, n, input):
 
         if n == 1:
-            yield Permutation([1])
+            # yield Permutation([1])
+            yield (1,)
 
     def __repr__(self):
         return 'Point()'
