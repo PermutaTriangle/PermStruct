@@ -64,8 +64,8 @@ permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
 # permProp  = (lambda perm : perm.avoids([1,3,2,4]))
 permCount = (lambda n : len(filter(lambda x : permProp(x), Permutations(n))) )
 
-incr = incr_gen.to_static(8, empty)
-decr = decr_gen.to_static(8, empty)
+# incr = incr_gen.to_static(8, empty)
+# decr = decr_gen.to_static(8, empty)
 
 # incr_nonempty = incr_gen.to_static(8, {1:[Permutation([1])]})
 # decr_nonempty = decr_gen.to_static(8, {1:[Permutation([1])]})
@@ -87,6 +87,58 @@ decr = decr_gen.to_static(8, empty)
 
 # print(list(generet))
 
+
+def find_multiple_rules(rules, atoms, B, permProp):
+    okrules = []
+    for rule in rules:
+        print(rule)
+
+        bs = 0
+        ps = generate_all_of_length(B, rule, atoms)
+
+        ok = True
+        for l in range(B+1):
+            s = set(ps[l])
+            if sorted(s) != sorted(ps[l]):
+                ok = False
+                break
+
+            ps[l] = s
+
+        if not ok:
+            continue
+
+        print(rule)
+
+        # for l in range(B+1):
+        #     for perm in Permutations(l):
+        #         a = permProp(perm)
+        #         b = perm in ps.get(len(perm), [])
+        #         if a:
+        #             bs <<= 1
+        #             if b:
+        #                 bs |= 1
+        #         elif b:
+        #             ok = False
+        #             break
+
+        #     if not ok:
+        #         break
+
+        if ok:
+            print(rule, bs)
+            okrules.append((rule, bs))
+
+    return okrules
+
+# print('A')
+permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
+rules = generate_rules(3, 3, [ I, P, None, incr, decr ], 3)
+
+find_multiple_rules(rules, empty, 3, permProp)
+# for r, b in find_multiple_rules(rules, empty, 3, permProp):
+#     print(r, b)
+
 def main():
     n = 3
     m = 3
@@ -99,6 +151,6 @@ def main():
         if matches_rule(rule, [()], 5, permProp, permCount):
             print(rule.rule)
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
 
