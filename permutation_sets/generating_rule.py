@@ -1,7 +1,7 @@
 
 from sage.combinat.permutation import Permutation
 from sage.misc.flatten import flatten
-from sage.combinat.set_partition_ordered import OrderedSetPartitions
+from ordered_set_partitions import ordered_set_partitions
 from permutation_set import PermutationSet
 from static_permutation_set import StaticPermutationSet
 from point import Point
@@ -70,8 +70,8 @@ class GeneratingRule(PermutationSet):
                 rowcnt = [ sum( len(arr[row][col]) for col in range(w) ) for row in range(h) ]
                 colcnt = [ sum( len(arr[row][col]) for row in range(h) ) for col in range(w) ]
 
-                for colpart in product(*[ OrderedSetPartitions(range(colcnt[col]), [ len(arr[row][col]) for row in range(h) ]) for col in range(w) ]):
-                    for rowpart in product(*[ OrderedSetPartitions(range(rowcnt[row]), [ len(arr[row][col]) for col in range(w) ]) for row in range(h) ]):
+                for colpart in product(*[ ordered_set_partitions(range(colcnt[col]), [ len(arr[row][col]) for row in range(h) ]) for col in range(w) ]):
+                    for rowpart in product(*[ ordered_set_partitions(range(rowcnt[row]), [ len(arr[row][col]) for col in range(w) ]) for row in range(h) ]):
                         res = [ [None]*colcnt[col] for col in range(w) ]
 
                         cumul = 1
