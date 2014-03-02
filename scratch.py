@@ -1,4 +1,5 @@
 
+import bisect
 from sage.combinat.permutation import Permutation, Permutations
 from permutation_sets import Point, Input, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
 from permstruct import generate_all_of_length, generate_rules, matches_rule, I, P, N, empty
@@ -64,8 +65,8 @@ permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
 # permProp  = (lambda perm : perm.avoids([1,3,2,4]))
 permCount = (lambda n : len(filter(lambda x : permProp(x), Permutations(n))) )
 
-# incr = incr_gen.to_static(8, empty)
-# decr = decr_gen.to_static(8, empty)
+incr = incr_gen.to_static(8, empty)
+decr = decr_gen.to_static(8, empty)
 
 # incr_nonempty = incr_gen.to_static(8, {1:[Permutation([1])]})
 # decr_nonempty = decr_gen.to_static(8, {1:[Permutation([1])]})
@@ -87,55 +88,139 @@ permCount = (lambda n : len(filter(lambda x : permProp(x), Permutations(n))) )
 
 # print(list(generet))
 
+def display_rule(rule):
+    n = max( i for i,j in rule.rule )+1
+    m = max( j for i,j in rule.rule )+1
+    arr = [ [ ' ' for j in range(2*m+1) ] for i in range(2*n+1) ]
 
-def find_multiple_rules(rules, atoms, B, permProp):
+    for i in range(2*n+1):
+        for j in range(2*m+1):
+            a = i % 2 == 0
+            b = j % 2 == 0
+            if a and b:
+                arr[i][j] = '+'
+            elif a:
+                arr[i][j] = '-'
+            elif b:
+                arr[i][j] = '|'
+
+    for i,j in rule.rule:
+        if rule.rule[(i,j)] == I:
+            arr[2*i+1][2*j+1] = 'I'
+        elif rule.rule[(i,j)] == P:
+            arr[2*i+1][2*j+1] = 'O'
+        else:
+            arr[2*i+1][2*j+1] = 'S'
+
+    for row in arr:
+        print(''.join(row))
+
+def binary_search(a, x):
+    i = bisect.bisect_left(a, x)
+    return i != len(a) and a[i] == x
+
+def find_multiple_rules(rules, atoms, B, max_cnt, permProp):
+
+    ball = 0
+    permset = [ [] for _ in range(B+1) ]
+    for n in range(B+1):
+        for perm in Permutations(n):
+            if permProp(perm):
+                permset[n].append(tuple(perm))
+                ball <<= 1
+                ball |= 1
+
     okrules = []
     for rule in rules:
-        print(rule)
+
+        created = deepcopy(atoms)
 
         bs = 0
-        ps = generate_all_of_length(B, rule, atoms)
-
         ok = True
-        for l in range(B+1):
-            s = set(ps[l])
-            if sorted(s) != sorted(ps[l]):
-                ok = False
+        for n in range(B+1):
+            created.setdefault(n, [])
+            for perm in rule.generate_of_length(n, created):
+                # if not permProp(perm):
+                if not binary_search(permset[n], perm):
+                    ok = False
+                    break
+
+                created[n].append(perm)
+
+            if not ok:
                 break
 
-            ps[l] = s
+            cur = sorted(created[n])
+            created[n] = cur
+            for a,b in zip(cur, cur[1:]):
+                if a == b:
+                    ok = False
+                    break
 
-        if not ok:
-            continue
+            if not ok:
+                break
 
-        print(rule)
+            i = 0
+            j = 0
+            while i < len(cur) and j < len(permset[n]):
+                bs <<= 1
+                if permset[n][j] < cur[i]:
+                    j += 1
+                elif cur[i] == permset[n][j]:
+                    bs |= 1
+                    i += 1
+                    j += 1
+                else:
+                    assert False
 
-        # for l in range(B+1):
-        #     for perm in Permutations(l):
-        #         a = permProp(perm)
-        #         b = perm in ps.get(len(perm), [])
-        #         if a:
-        #             bs <<= 1
-        #             if b:
-        #                 bs |= 1
-        #         elif b:
-        #             ok = False
-        #             break
+            assert i == len(cur)
 
-        #     if not ok:
-        #         break
+            while j < len(permset[n]):
+                bs <<= 1
+                j += 1
 
         if ok:
-            print(rule, bs)
+            # print(rule.rule, bs)
+            display_rule(rule)
+            print(bin(bs))
+            print('')
+
             okrules.append((rule, bs))
 
-    return okrules
+    curcover = []
+    def set_cover(at, left, done):
+        if done == ball:
+            return curcover
+
+        if left == 0 or at == len(okrules):
+            return None
+
+        if (okrules[at][1] & done) == 0:
+            curcover.append(okrules[at])
+            res = set_cover(at + 1, left - 1, done | okrules[at][1])
+            if res is not None:
+                return res
+            curcover.pop()
+
+        return set_cover(at + 1, left, done)
+
+    return set_cover(0, max_cnt, 0)
 
 # print('A')
 permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
 rules = generate_rules(3, 3, [ I, P, None, incr, decr ], 3)
 
-find_multiple_rules(rules, empty, 3, permProp)
+res = find_multiple_rules(rules, empty, 5, 3, permProp)
+print('Result:')
+if res is None:
+    print('None')
+else:
+    print(len(res))
+    for rule, bs in res:
+        display_rule(rule)
+        print(bs)
+        print('')
+
 # for r, b in find_multiple_rules(rules, empty, 3, permProp):
 #     print(r, b)
 
