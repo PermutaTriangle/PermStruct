@@ -1,15 +1,16 @@
 
 # from sage.combinat.permutation import Permutation, Permutations
 from permutation_sets import Point, Input, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
+from copy import deepcopy
 
 
 def generate_all_of_length(max_n, S, inp):
 
-    inp = dict(inp)
+    inp = deepcopy(inp)
 
     for n in range(max_n+1):
+        inp.setdefault(n, [])
         for perm in S.generate_of_length(n, inp):
-            inp.setdefault(n, [])
             inp[n].append(perm)
 
     return inp
