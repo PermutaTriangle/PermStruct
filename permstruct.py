@@ -74,6 +74,13 @@ def generate_rules(n, m, sets, cnt):
     # print(a, b)
 
 
+def generate_rules_upto(n, m, sets, cnt):
+    for nn in range(1, n+1):
+        for mm in range(1, m+1):
+            for res in generate_rules(nn, mm, sets, cnt):
+                yield res
+
+
 def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (lambda n : 0)):
 
     created = {}

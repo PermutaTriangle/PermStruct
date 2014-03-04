@@ -1,8 +1,8 @@
 
 class PermutationSet(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, description=None):
+        self.description = description
 
     def get_of_length(self, n):
         raise NotImplementedError()

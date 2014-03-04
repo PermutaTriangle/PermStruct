@@ -5,6 +5,10 @@ from permutation_set import PermutationSet
 class Point(PermutationSet):
     """A permutation set containing only the single permutation of length 1."""
 
+    def __init__(self):
+        # PermutationSet.__init__(self, description='point')
+        self.description = description
+
     # When we implement get_generating_function, this is probably what it will
     # look like:
     # def get_generating_function(self):

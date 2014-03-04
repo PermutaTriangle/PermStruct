@@ -5,7 +5,10 @@ from permutation_set import PermutationSet
 class StaticPermutationSet(PermutationSet):
     """A static set of permutations."""
 
-    def __init__(self, perms, gf=None):
+    def __init__(self, perms, gf=None, description=None):
+        # PermutationSet.__init__(self, description)
+        self.description = description
+
         self.perms = dict()
         self.gf = gf
 
@@ -15,7 +18,7 @@ class StaticPermutationSet(PermutationSet):
             self.perms[n].append(perm)
 
     @staticmethod
-    def from_predicate(predicate, max_n, gf=None):
+    def from_predicate(predicate, max_n, gf=None, description=None):
 
         perms = []
         for n in range(max_n+1):
@@ -23,7 +26,7 @@ class StaticPermutationSet(PermutationSet):
                 if predicate(perm):
                     perms.append(tuple(perm))
 
-        return StaticPermutationSet(perms, gf)
+        return StaticPermutationSet(perms, gf, description)
 
     def generating_function(self):
 
