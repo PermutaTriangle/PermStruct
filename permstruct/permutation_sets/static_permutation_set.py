@@ -1,13 +1,12 @@
 
-from sage.combinat.permutation import Permutation, Permutations
+from permstruct.lib import Permutation, Permutations
 from permutation_set import PermutationSet
 
 class StaticPermutationSet(PermutationSet):
     """A static set of permutations."""
 
     def __init__(self, perms, gf=None, description=None):
-        # PermutationSet.__init__(self, description)
-        self.description = description
+        super().__init__(description=description)
 
         self.perms = dict()
         self.gf = gf

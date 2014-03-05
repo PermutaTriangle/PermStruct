@@ -1,13 +1,11 @@
 
-from sage.combinat.permutation import Permutation
 from permutation_set import PermutationSet
 
-class Input(PermutationSet):
+class InputPermutationSet(PermutationSet):
     """A permutation set representing the input permutations."""
 
     def __init__(self):
-        # PermutationSet.__init__(self, description='input')
-        self.description = description
+        super().__init__(description='input permutation set')
 
     # When we implement get_generating_function, this is probably what it will
     # look like:
@@ -18,5 +16,5 @@ class Input(PermutationSet):
         return input.get(n, [])
 
     def __repr__(self):
-        return 'Input()'
+        return 'InputPermutationSet()'
 
