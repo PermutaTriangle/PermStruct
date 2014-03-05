@@ -96,15 +96,26 @@ decr_nonempty = decr_gen.to_static(8, {1:[(1,)]}, description='decreasing nonemp
 
 # print(list(generet))
 
+for n1 in range(2, 4):
+    for n2 in range(2, 4):
+        for av1 in Permutations(n1):
+            for av2 in Permutations(n2):
+
+                print('=============================================')
+                print('============                   ==============')
+                print('============       Av(%s,%s)     ==============' % (av1, av2))
+                print('============                   ==============')
+                print('=============================================')
 
 # print('A')
-# permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
+                # permProp  = (lambda perm : Permutation(list(perm)).avoids(av))
+                permProp  = (lambda perm : Permutation(list(perm)).avoids(av1) and Permutation(list(perm)).avoids(av2))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2,3]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]) and Permutation(list(perm)).avoids([1,3,2]))
-permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2,3]) and Permutation(list(perm)).avoids([2,3,1]))
+                # permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2,3]) and Permutation(list(perm)).avoids([2,3,1]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]) and Permutation(list(perm)).avoids([4,3,2,1]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([1,3,2,4]))
-rules = list(generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty ] + avoiders_len_3, 3))
+                rules = list(generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty ] + avoiders_len_3, 3))
 # rules = list(generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty, incr_nonempty ], 3))
 # rules = list(generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty, incr_nonempty ] + avoiders_len_3, 3))
 
@@ -112,20 +123,20 @@ rules = list(generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty ]
 #     print(rule)
 #     print('')
 
-res = find_multiple_rules(rules, 5, 4, permProp)
+                res = find_multiple_rules(rules, 5, 4, permProp)
 
-rescnt = 0
-for x in res:
-    print('=======================================')
-    print('Result:')
-    rescnt += 1
-    for rule, bs in x:
-        print(rule)
-        print(bin(bs))
-        print('')
+                rescnt = 0
+                for x in res:
+                    print('=======================================')
+                    print('Result:')
+                    rescnt += 1
+                    for rule, bs in x:
+                        print(rule)
+                        print(bin(bs))
+                        print('')
 
-print('=======================================')
-print('Number of results: %d' % rescnt)
+                print('=======================================')
+                print('Number of results: %d' % rescnt)
 
 
 # if res is None:

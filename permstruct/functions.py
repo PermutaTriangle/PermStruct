@@ -1,6 +1,6 @@
 
-from permutation_sets import PointPermutationSet, InputPermutationSet, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
-from lib import Permutation, Permutations, binary_search
+from .permutation_sets import PointPermutationSet, InputPermutationSet, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
+from .lib import Permutation, Permutations, binary_search
 from copy import deepcopy
 
 def generate_all_of_length(max_n, S, inp):
@@ -177,14 +177,14 @@ def find_multiple_rules(rules, B, max_cnt, permProp):
 
         if ok:
             # print(rule.rule, bs)
-            print(rule)
-            print(bin(bs))
-            print('')
+            # print(rule)
+            # print(bin(bs))
+            # print('')
 
             okrules.append((rule, bs))
 
 
-    print('Number of ok rules: %d' % len(okrules))
+    # print('Number of ok rules: %d' % len(okrules))
 
     curcover = []
     def set_cover(at, left, done):

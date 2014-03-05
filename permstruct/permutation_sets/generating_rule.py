@@ -1,9 +1,9 @@
 
-from ordered_set_partitions import ordered_set_partitions
-from permutation_set import PermutationSet
-from static_permutation_set import StaticPermutationSet
-from point_permutation_set import PointPermutationSet
-from input_permutation_set import InputPermutationSet
+from permstruct.lib.ordered_set_partitions import ordered_set_partitions
+from .permutation_set import PermutationSet
+from .static_permutation_set import StaticPermutationSet
+from .point_permutation_set import PointPermutationSet
+from .input_permutation_set import InputPermutationSet
 from itertools import product
 from copy import deepcopy
 
@@ -23,7 +23,7 @@ class GeneratingRule(PermutationSet):
     rule."""
 
     def __init__(self, rule, description=None):
-        super().__init__(description=description)
+        super(GeneratingRule, self).__init__(description=description)
 
         # TODO: store rules as a 2d array, and benchmark
         if type(rule) is list:

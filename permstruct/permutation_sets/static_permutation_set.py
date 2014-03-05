@@ -1,12 +1,12 @@
 
 from permstruct.lib import Permutation, Permutations
-from permutation_set import PermutationSet
+from .permutation_set import PermutationSet
 
 class StaticPermutationSet(PermutationSet):
     """A static set of permutations."""
 
     def __init__(self, perms, gf=None, description=None):
-        super().__init__(description=description)
+        super(StaticPermutationSet, self).__init__(description=description)
 
         self.perms = dict()
         self.gf = gf

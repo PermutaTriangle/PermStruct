@@ -1,5 +1,5 @@
 
-from dancing_links import DancingLinks
+from .dancing_links import DancingLinks
 
 class Permutation(object):
     def __init__(self, perm, check=False):

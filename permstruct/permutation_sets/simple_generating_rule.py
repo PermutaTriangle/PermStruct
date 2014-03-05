@@ -1,7 +1,7 @@
 
-from permutation_set import PermutationSet
-from static_permutation_set import StaticPermutationSet
-from point_permutation_set import PointPermutationSet
+from .permutation_set import PermutationSet
+from .static_permutation_set import StaticPermutationSet
+from .point_permutation_set import PointPermutationSet
 from itertools import product
 from copy import deepcopy
 
@@ -21,7 +21,7 @@ class SimpleGeneratingRule(PermutationSet):
     generating rule."""
 
     def __init__(self, perm, sets, description=None):
-        super().__init__(description=description)
+        super(SimpleGeneratingRule, self).__init__(description=description)
 
         self.perm = perm
         self.sets = sets

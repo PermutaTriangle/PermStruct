@@ -1,5 +1,5 @@
 
-from dancing_links import DancingLinks
+from .dancing_links import DancingLinks
 
 def ordered_set_partitions(lst, parts):
 
