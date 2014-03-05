@@ -1,11 +1,11 @@
 
-from permutation_set import PermutationSet
+from .permutation_set import PermutationSet
 
 class PointPermutationSet(PermutationSet):
     """A permutation set containing only the single permutation of length 1."""
 
     def __init__(self):
-        super().__init__(description='point permutation set')
+        super(PointPermutationSet, self).__init__(description='point permutation set')
 
     # When we implement get_generating_function, this is probably what it will
     # look like:

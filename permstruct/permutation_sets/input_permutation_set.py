@@ -1,11 +1,11 @@
 
-from permutation_set import PermutationSet
+from .permutation_set import PermutationSet
 
 class InputPermutationSet(PermutationSet):
     """A permutation set representing the input permutations."""
 
     def __init__(self):
-        super().__init__(description='input permutation set')
+        super(InputPermutationSet, self).__init__(description='input permutation set')
 
     # When we implement get_generating_function, this is probably what it will
     # look like:
