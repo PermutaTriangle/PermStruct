@@ -2,6 +2,7 @@
 - Generate rules more efficiently.
     - Support bound on number of non-empty boxes.
 - Framework for tests.
+- Preprocess binary strings. Don't do set cover over the same binary string many times.
 
 
 DONE:

@@ -109,7 +109,9 @@ def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (l
     return True
 
 
-def find_multiple_rules(rules, B, max_cnt, permProp):
+def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=False):
+
+    validcnt = 0
 
     ball = 0
     permset = [ [] for _ in range(B+1) ]
@@ -120,10 +122,10 @@ def find_multiple_rules(rules, B, max_cnt, permProp):
             if permProp(perm):
                 permset[n].append(tuple(perm))
                 ocreated[n].append(perm)
-
-                if n > 0:
-                    ball <<= 1
-                    ball |= 1
+                ball |= 1 << validcnt
+                validcnt += 1
+                # ball <<= 1
+                # ball |= 1
 
     okrules = []
     for rule in rules:
@@ -132,13 +134,14 @@ def find_multiple_rules(rules, B, max_cnt, permProp):
 
         bs = 0
         ok = True
-        for n in range(1, B+1):
+        curcnt = 0
+        for n in range(B+1):
             curlevel = []
             for perm in rule.generate_of_length(n, created):
                 # if not permProp(perm):
                 if not binary_search(permset[n], perm):
                     ok = False
-                    # print('Generated something not in the set')
+                    # print('Generated something not in the set (%s)' % str(perm))
                     break
 
                 curlevel.append(perm)
@@ -159,25 +162,36 @@ def find_multiple_rules(rules, B, max_cnt, permProp):
             i = 0
             j = 0
             while i < len(cur) and j < len(permset[n]):
-                bs <<= 1
+                # bs <<= 1
                 if permset[n][j] < cur[i]:
                     j += 1
+                    curcnt += 1
                 elif cur[i] == permset[n][j]:
-                    bs |= 1
+                    bs |= 1 << curcnt
+                    # bs |= 1
                     i += 1
                     j += 1
+                    curcnt += 1
                 else:
                     assert False
 
             assert i == len(cur)
 
             while j < len(permset[n]):
-                bs <<= 1
+                curcnt += 1
+                # bs <<= 1
                 j += 1
 
         if ok:
-            # print(rule.rule, bs)
             # print(rule)
+            # for i in range(validcnt - 1, -1, -1):
+            #     if (bs & (1 << i)) == 0:
+            #         sys.stdout.write('0')
+            #     else:
+            #         sys.stdout.write('1')
+
+            # sys.stdout.write('\n')
+
             # print(bin(bs))
             # print('')
 
@@ -187,11 +201,12 @@ def find_multiple_rules(rules, B, max_cnt, permProp):
     # print('Number of ok rules: %d' % len(okrules))
 
     curcover = []
+    care = ball & ~((1 << ignore_first) - 1)
     def set_cover(at, left, done):
-        if done == ball:
+        if (done & care) == (ball & care):
             yield list(curcover)
         elif not (left == 0 or at == len(okrules)):
-            if (okrules[at][1] & done) == 0:
+            if (okrules[at][1] & done & (care if allow_overlap_in_first else ball)) == 0:
                 curcover.append(okrules[at])
                 for res in set_cover(at + 1, left - 1, done | okrules[at][1]):
                     yield res
