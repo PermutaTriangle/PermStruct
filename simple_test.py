@@ -16,9 +16,9 @@ for p in Permutations(3):
     avoiders_len_3.append(StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 5, description='Av(%s)' % str(p)))
 
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2]))
-# permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
+permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]) and Permutation(list(perm)).avoids([1,2,3]))
-permProp  = (lambda perm : avoids_312_vinc(perm))
+# permProp  = (lambda perm : avoids_312_vinc(perm))
 
 incr = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing').to_static(8, empty)
 decr = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing').to_static(8, empty)

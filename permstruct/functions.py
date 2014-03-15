@@ -112,7 +112,6 @@ def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (l
 def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=False):
 
     validcnt = 0
-
     ball = 0
     permset = [ [] for _ in range(B+1) ]
     ocreated = {}
@@ -124,8 +123,6 @@ def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overl
                 ocreated[n].append(perm)
                 ball |= 1 << validcnt
                 validcnt += 1
-                # ball <<= 1
-                # ball |= 1
 
     okrules = []
     for rule in rules:
