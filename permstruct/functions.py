@@ -199,21 +199,21 @@ def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overl
 
     curcover = []
     care = ball & ~((1 << ignore_first) - 1)
-    def set_cover(at, left, done):
+    def exact_cover(at, left, done):
         if (done & care) == (ball & care):
             yield list(curcover)
         elif not (left == 0 or at == len(okrules)):
             if (okrules[at][1] & done & (care if allow_overlap_in_first else ball)) == 0:
                 curcover.append(okrules[at])
-                for res in set_cover(at + 1, left - 1, done | okrules[at][1]):
+                for res in exact_cover(at + 1, left - 1, done | okrules[at][1]):
                     yield res
 
                 curcover.pop()
 
-            for res in set_cover(at + 1, left, done):
+            for res in exact_cover(at + 1, left, done):
                 yield res
 
-    return set_cover(0, max_cnt, 0)
+    return exact_cover(0, max_cnt, 0)
 
 
 I = InputPermutationSet()

@@ -1,5 +1,5 @@
 
-from permstruct.lib import Permutation, Permutations, flatten, binary_search
+from permstruct.lib import Permutation, Permutations, flatten, binary_search, choose
 from permstruct import I, P, empty, generate_all_of_length
 from permstruct.permutation_sets import SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
 from itertools import product
@@ -43,23 +43,6 @@ inputs = [
     (lambda perm: len(perm) >= 1 and perm == Permutation(sorted(perm)), incr_nonempty),
     (lambda perm: len(perm) >= 1 and perm == Permutation(sorted(perm)[::-1]), decr_nonempty),
 ]
-
-def choose(l, k):
-    cur = []
-    def gen(at, left):
-        if left == 0:
-            yield list(cur)
-        elif at < l:
-            cur.append(at)
-            for res in gen(at + 1, left - 1):
-                yield res
-
-            cur.pop()
-
-            for res in gen(at + 1, left):
-                yield res
-
-    return gen(0, k)
 
 def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=False):
 
@@ -217,23 +200,23 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
     curcover = []
     care = ball & ~((1 << ignore_first) - 1)
     bss = list(ok_rules.keys())
-    def set_cover(at, left, done):
+    def exact_cover(at, left, done):
         if (done & care) == (ball & care):
             yield list(curcover)
         elif not (left == 0 or at == len(bss)):
             if (bss[at] & done & (care if allow_overlap_in_first else ball)) == 0:
                 curcover.append(at)
-                for res in set_cover(at + 1, left - 1, done | bss[at]):
+                for res in exact_cover(at + 1, left - 1, done | bss[at]):
                     yield res
 
                 curcover.pop()
 
-            for res in set_cover(at + 1, left, done):
+            for res in exact_cover(at + 1, left, done):
                 yield res
 
     used_idx = set()
     print('Found:')
-    for res in set_cover(0, max_cnt, 0):
+    for res in exact_cover(0, max_cnt, 0):
         print(', '.join(map(str, res)))
         used_idx |= set(res)
 
@@ -258,7 +241,7 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
 
         print('')
 
-    # return set_cover(0, max_cnt, 0)
+    # return exact_cover(0, max_cnt, 0)
 
     return []
 

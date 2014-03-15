@@ -17,3 +17,20 @@ def flatten(lst):
     dfs(lst)
     return res
 
+def choose(l, k):
+    cur = []
+    def gen(at, left):
+        if left == 0:
+            yield list(cur)
+        elif at < l:
+            cur.append(at)
+            for res in gen(at + 1, left - 1):
+                yield res
+
+            cur.pop()
+
+            for res in gen(at + 1, left):
+                yield res
+
+    return gen(0, k)
+
