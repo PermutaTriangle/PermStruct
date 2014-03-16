@@ -16,7 +16,8 @@ def avoids_312_vinc(perm):
 
 avoiders_len_3 = []
 for p in Permutations(3):
-    avoiders_len_3.append(StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s)' % str(p)))
+    avoiders_len_3.append((lambda perm: perm.avoids(p),StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s)' % str(p))))
+    # avoiders_len_3.append((lambda perm: len(perm) >= 3 and perm.avoids(p),StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s)' % str(p))))
 
 incr = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing').to_static(8, empty)
 decr = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing').to_static(8, empty)
@@ -30,8 +31,9 @@ n_range = (1, 3) # number of rows (min, max)
 m_range = (1, 3) # numbor of columns (min, max)
 max_nonempty = 3
 
-# permProp = lambda perm: perm.avoids([1,2])
-permProp = lambda perm: perm.avoids([2,3,1])
+permProp = lambda perm: perm.avoids([1,2])
+# permProp = lambda perm: perm.avoids([2,3,1])
+# permProp = lambda perm: perm.avoids([1,4,2,3])
 # permProp  = lambda perm : perm.avoids([2,3,1]) and perm.avoids([1,2,3])
 # permProp = avoids_312_vinc
 
@@ -42,7 +44,15 @@ inputs = [
     (lambda perm: perm == Permutation(sorted(perm)[::-1]), decr),
     (lambda perm: len(perm) >= 1 and perm == Permutation(sorted(perm)), incr_nonempty),
     (lambda perm: len(perm) >= 1 and perm == Permutation(sorted(perm)[::-1]), decr_nonempty),
+    # (permProp, I),
+    # (lambda perm: len(perm) == 1, P),
+    # (lambda perm: len(perm) >= 3 and perm == Permutation(sorted(perm)), incr),
+    # (lambda perm: len(perm) >= 3 and perm == Permutation(sorted(perm)[::-1]), decr),
+    # (lambda perm: len(perm) >= 3 and perm == Permutation(sorted(perm)), incr_nonempty),
+    # (lambda perm: len(perm) >= 3 and perm == Permutation(sorted(perm)[::-1]), decr_nonempty),
 ]
+
+inputs += avoiders_len_3
 
 def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=False):
 
@@ -131,14 +141,12 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
                             # print(rule)
                             # print('')
 
-                            created = deepcopy(ocreated)
-
                             bs = 0
                             ok = True
                             curcnt = 0
                             for l in range(B+1):
                                 curlevel = []
-                                for perm in rule.generate_of_length(l, created):
+                                for perm in rule.generate_of_length(l, ocreated):
                                     # if not permProp(perm):
                                     if not binary_search(permset[l], perm):
                                         ok = False
@@ -175,11 +183,7 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
                                         assert False
 
                                 assert i == len(cur)
-
-                                # TODO: do this in constant time
-                                while j < len(permset[l]):
-                                    curcnt += 1
-                                    j += 1
+                                curcnt += len(permset[l]) - j
 
                             if ok:
                                 print(rule)
@@ -196,6 +200,8 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
 
                                 ok_rules.setdefault(bs, [])
                                 ok_rules[bs].append(rule)
+
+    print('Finding exact cover...')
 
     curcover = []
     care = ball & ~((1 << ignore_first) - 1)
@@ -246,7 +252,7 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
     return []
 
 
-res = construct_rule(5, 3, permProp, 1)
+res = construct_rule(5, 4, permProp, 1)
 # print('res:')
 
 # for rule in res:
