@@ -2,11 +2,8 @@
 - Generate rules more efficiently.
     - Support bound on number of non-empty boxes.
 - Framework for tests.
-<<<<<<< HEAD
-- When we search for 1x1 rules for Av(231) we only get the rule |I| but should also get |Av(231)|
-=======
+- When we search for 1x1 rules for Av(231) we only get the rule |I| but should also get 
 - Preprocess binary strings. Don't do set cover over the same binary string many times.
->>>>>>> b15f0a4ad71948220eb17f87b7c7dc736d0b2de5
 
 
 DONE:
