@@ -2,6 +2,7 @@
 - Generate rules more efficiently.
     - Support bound on number of non-empty boxes.
 - Framework for tests.
+- When we search for 1x1 rules for Av(231) we only get the rule |I| but should also get |Av(231)|
 
 
 DONE:
