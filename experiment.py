@@ -54,11 +54,11 @@ for p in Permutations(3):
     avoiders_len_3.append(StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 5, description='Av(%s)' % str(p)))
 
 
-# permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2]))
+permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]) and Permutation(list(perm)).avoids([1,2,3]))
 # permProp  = (lambda perm : avoids_312_vinc(perm))
-permProp  = (lambda perm : not ( Permutation(list(perm)).avoids([2,3,4,1]) and not mBp1(perm, ( Permutation([3,2,4,1]), [ (1,4) ] ))))
+# permProp  = (lambda perm : not ( Permutation(list(perm)).avoids([2,3,4,1]) and not mBp1(perm, ( Permutation([3,2,4,1]), [ (1,4) ] ))))
 permCount = (lambda n : len(list(filter(lambda x : permProp(x), Permutations(n)))) )
 
 incr = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing').to_static(8, empty)
@@ -69,7 +69,8 @@ decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='de
 
 n = 2 # height of rules to check
 m = 2 # width of rules to check
-inp_types = [ I, P, None, incr, decr, incr_nonempty, decr_nonempty ] + avoiders_len_3 # input types
+inp_types = [ I, P, None, incr, decr, incr_nonempty, decr_nonempty ] # input types
+# inp_types += avoiders_len_3 # adding avoiders of a pattern of length 3 to input types
 inp_cnt = 3 # max number of inputs
 
 # for rule in generate_rules(n, m, inp_types, inp_cnt):
