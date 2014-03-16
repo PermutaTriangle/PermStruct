@@ -82,6 +82,11 @@ class Permutation(object):
     def __eq__(self, other):
         return type(other) is Permutation and self.perm == other.perm
 
+    def __hash__(self):
+        res = 27
+        for x in self.perm:
+            res = res * 31 + x
+        return res
 
 class Permutations(object):
     def __init__(self, n):
