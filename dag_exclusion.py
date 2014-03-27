@@ -15,13 +15,13 @@ incr_nonempty = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='in
 decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing nonempty').to_static(8, {1:[Permutation([1])]})
 
 inputs = [
-    StaticPermutationSet({ Permutation([]) }),
+    N,
     P,
     incr_nonempty,
     decr_nonempty,
     incr,
     decr,
-] + avoiders_len_3 + [ I, StaticPermutationSet({}) ]
+] + avoiders_len_3 + [ I, StaticPermutationSet({}, description='empty set') ]
 
 dag = {
     # 0: [ 1, 2, 11 ],
@@ -56,8 +56,11 @@ dag = {
 
 max_len = 6
 ignore_first = 1
-n_range = (1, 3)
-m_range = (1, 3)
+# n_range = (1, 3)
+# m_range = (1, 3)
+
+n_range = (3, 3)
+m_range = (3, 3)
 
 # perm_prop = lambda perm: Permutation(perm).avoids([ 2, 3, 1 ])
 perm_prop = lambda perm: Permutation(perm).avoids([2, 1])
@@ -72,64 +75,77 @@ def walk(n, m, cur, bad):
         return
 
     visited.add(cur)
+    print(cur, bad)
 
-    # print(cur, bad)
-    # print(n, m)
+    any_empty_set = any( x == 13 for x in cur )
 
-    if not bad:
-        rule = GeneratingRule({ (i,j): inputs[t] for i, j, t in cur })
-        print(rule)
+    if not bad and not any_empty_set:
+        di = { (i,j): inputs[cur[i * m + j]] for i in range(n) for j in range(m) if inputs[cur[i * m + j]] is not None }
+        if di:
+            rule = GeneratingRule({ (i,j): inputs[cur[i * m + j]] for i in range(n) for j in range(m) if inputs[cur[i * m + j]] is not None })
+            print(rule)
 
-        for i in range(ignore_first, max_len + 1):
-            for perm in rule.generate_of_length(i, perm_created):
-                if perm not in perm_set:
-                    bad = True
+            bs = 0
+            cur_no = 0
+            gen_any = False
+            for l in range(ignore_first, max_len + 1):
+                gen_perms = []
+                for perm in rule.generate_of_length(l, perm_created):
+                    if perm not in perm_set:
+                        bad = True
+                        break
+
+                    gen_perms.append(perm)
+
+                if bad:
                     break
 
-            if bad:
-                break
+                gen_perms = sorted(gen_perms)
+                for a, b in zip(gen_perms, gen_perms[1:]):
+                    if a == b:
+                        bad = True
+                        break
 
-        print('done')
+                if bad:
+                    break
+
+                i = 0
+                j = 0
+
+                while i < len(gen_perms) and j < len(perm_created[l]):
+                    if gen_perms[i] < perm_created[l][j]:
+                        assert False
+
+                    if gen_perms[i] > perm_created[l][j]:
+                        cur_no += 1
+                        j += 1
+
+                    if perm_created[l][j] == gen_perms[i]:
+                        bs |= 1 << cur_no
+                        cur_no += 1
+                        i += 1
+                        j += 1
+
+                if gen_perms:
+                    gen_any = True
+
+            if not bad and gen_any:
+                print(rule)
+                print(bin(bs))
+                print('done')
+                print('')
 
     for i in range(len(cur)):
-        for child in dag[cur[i][2]]:
-            walk(n, m, tuple([ (cur[j][0], cur[j][1], child) if i == j else cur[j] for j in range(len(cur)) ]), bad)
+        if any_empty_set and cur[i] != 13:
+            continue
+
+        for child in dag[cur[i]]:
+            walk(n, m, tuple([ child if i == j else cur[j] for j in range(len(cur)) ]), bad)
 
 
 for n in range(n_range[0], n_range[1] + 1):
     for m in range(m_range[0], m_range[1] + 1):
-        for subset in range(2 ** (n * m)):
 
-            use = { (i // m, i % m) for i in range(n * m) if (subset & (1 << i)) != 0 }
-
-            ok = True
-            for i in range(n):
-                if not any( (i,j) in use for j in range(m) ):
-                    ok = False
-                    break
-
-            for j in range(m):
-                if not any( (i,j) in use for i in range(n) ):
-                    ok = False
-                    break
-
-            if not ok:
-                continue
-
-            # print(use)
-
-            # print(n, m)
-            # for i in range(n):
-            #     sys.stdout.write('|')
-            #     for j in range(m):
-            #         sys.stdout.write('P' if (i,j) in use else ' ')
-            #         sys.stdout.write('|')
-
-            #     sys.stdout.write('\n')
-
-            # print('')
-
-            visited = set()
-            walk(n, m, tuple([ (i, j, 0) for i, j in use ]), False)
-
+        visited = set()
+        walk(n, m, tuple([ 13 for i in range(n) for j in range(m) ]), False)
 
