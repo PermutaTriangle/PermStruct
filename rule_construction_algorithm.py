@@ -27,14 +27,15 @@ decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='de
 
 
 
-n_range = (1, 3) # number of rows (min, max)
-m_range = (1, 3) # numbor of columns (min, max)
+max_len = 6
+n_range = (2, 3) # number of rows (min, max)
+m_range = (2, 3) # numbor of columns (min, max)
 max_nonempty = 3
 
-permProp = lambda perm: perm.avoids([1,2])
+# permProp = lambda perm: perm.avoids([1,2])
 # permProp = lambda perm: perm.avoids([2,3,1])
 # permProp = lambda perm: perm.avoids([1,4,2,3])
-# permProp  = lambda perm : perm.avoids([2,3,1]) and perm.avoids([1,2,3])
+permProp  = lambda perm : perm.avoids([2,3,1]) and perm.avoids([1,2,3])
 # permProp = avoids_312_vinc
 
 inputs = [
@@ -252,7 +253,7 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
     return []
 
 
-res = construct_rule(5, 4, permProp, 1)
+res = construct_rule(max_len, 4, permProp, 1)
 # print('res:')
 
 # for rule in res:

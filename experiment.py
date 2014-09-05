@@ -61,8 +61,46 @@ decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='de
 
 
 
+# rule = GeneratingRule([
+#     [decr, N, N],
+#     [N, N, decr_nonempty],
+#     [N, P, N],
+#     [N, N, decr]
+# ])
+
+# rule = GeneratingRule([
+#     # [N, incr, incr],
+#     # [incr, incr, N],
+#     # [N, N, incr, incr],
+#     # [N, incr, incr, N],
+#     # [incr, incr, N, N],
+# 
+#     [N, I],
+#     [incr, incr]
+# ])
+# 
+# # rule2 = GeneratingRule([
+# #     [decr_nonempty, decr, N],
+# #     [N, N, P],
+# #     [N, decr, N]
+# # ])
+# 
+# res = generate_all_of_length(6, rule, empty)
+# # res2 = generate_all_of_length(6, rule2, empty)
+# 
+# 
+# for k in range(6+1):
+#     # res[k] += res2[k]
+# 
+#     # print(k, len(res[k]), len(set(res[k])), { tuple(p) for p in Permutations(k) if p.avoids([1,2,3]) } - set(res[k]))
+#     # print(k, len(res[k]), len(set(res[k])), { tuple(p) for p in Permutations(k) if p.avoids([3,2,1]) } - set(res[k]))
+#     # print(k, len(res[k]), len(set(res[k])), res[k], res2[k])
+#     print(k, len(set(res[k])), len(res[k]))
+
+
 
 permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2]))
+# permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2,3]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]) and Permutation(list(perm)).avoids([1,2,3]))
 # permProp  = (lambda perm : avoids_312_vinc(perm))
@@ -72,7 +110,7 @@ n = 2 # height of rules to check
 m = 2 # width of rules to check
 inp_types = [ I, P, None, incr, decr, incr_nonempty, decr_nonempty ] # input types
 # inp_types += avoiders_len_3 # adding avoiders of a pattern of length 3 to input types
-inp_cnt = 3 # max number of inputs
+inp_cnt = 4 # max number of inputs
 
 rules = generate_rules_upto(n, m, inp_types, inp_cnt)
 for res in find_multiple_rules(rules, 5, 3, permProp, 1):
@@ -81,4 +119,5 @@ for res in find_multiple_rules(rules, 5, 3, permProp, 1):
         print(rule)
         print(bin(bs))
         print('')
+
 

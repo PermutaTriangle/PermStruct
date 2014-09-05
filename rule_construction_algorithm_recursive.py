@@ -27,13 +27,14 @@ decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='de
 
 
 
+max_len = 6
 n_range = (2, 3) # number of rows (min, max)
 m_range = (2, 3) # numbor of columns (min, max)
 max_nonempty = 3
 
 # permProp = lambda perm: perm.avoids([1,2])
 # permProp = lambda perm: perm.avoids([2,3,1])
-permProp = lambda perm: perm.avoids([1,3,2,4])
+# permProp = lambda perm: perm.avoids([1,3,2,4])
 # permProp  = lambda perm : perm.avoids([2,3,1]) and perm.avoids([1,2,3])
 # permProp = avoids_312_vinc
 
@@ -54,27 +55,25 @@ inputs = [
 
 # inputs += avoiders_len_3
 
-def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=False):
+indent = 0
+old_print = print
+def print(*args):
+    global indent
+    s = '\n'.join([ ' ' * indent + line for line in ' '.join(map(str, args)).split('\n') ])
+    old_print(s)
 
-    validcnt = 0
-    ball = 0
-    permset = [ [] for _ in range(B+1) ]
-    ocreated = {}
-    for l in range(B+1):
-        ocreated.setdefault(l, [])
-        for perm in Permutations(l):
-            if permProp(perm):
-                permset[l].append(tuple(perm))
-                ocreated[l].append(perm)
-                ball |= 1 << validcnt
-                validcnt += 1
+def construct_rule(permSet, left, ignore_first):
 
-    if validcnt == 0:
+    # print(left)
+    # input()
+
+    if sum( 1 for p in left if len(p) >= ignore_first ) == 0:
         return []
 
     # pick the main permutation to work with, currently just chooses one of the
     # largest ones randomly
-    main_perms = list(permset[B])
+    B = max(map(len, left))
+    main_perms = [ p for p in left if len(p) == B ]
     random.shuffle(main_perms)
     main_perm = main_perms[0]
 
@@ -107,20 +106,6 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
                     if not ok:
                         continue
 
-                    # print(main_perm, n, m, xsep, ysep)
-                    # for i in range(n):
-                    #     sys.stdout.write('-' * (m * (5 + 1) + 1))
-                    #     sys.stdout.write('\n')
-
-                    #     sys.stdout.write('|')
-                    #     for j in range(m):
-                    #         sys.stdout.write(''.join(map(str,arr[i][j])).rjust(5))
-                    #         sys.stdout.write('|')
-                    #     sys.stdout.write('\n')
-
-                    # sys.stdout.write('-' * (m * (5 + 1) + 1))
-                    # sys.stdout.write('\n')
-
                     nonempty = []
                     for i in range(n):
                         for j in range(m):
@@ -135,24 +120,14 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
 
                     for poss in product(*nonempty):
                         rule = GeneratingRule({ (i,j): inp for i, j, inp in poss })
-                        # if rule in tried_rules:
-                        #     continue
-
-                        # tried_rules.add(rule)
-
-                        # print(rule)
-                        # print('')
-
                         perms_left = set()
+                        cur_generated = set()
 
-                        bs = 0
                         ok = True
-                        curcnt = 0
                         for l in range(B+1):
                             curlevel = []
-                            for perm in rule.generate_of_length(l, ocreated):
-                                # if not permProp(perm):
-                                if not binary_search(permset[l], perm):
+                            for perm in rule.generate_of_length(l, permSet):
+                                if perm not in left:
                                     ok = False
                                     # print('Generated something not in the set (%s)' % str(perm))
                                     break
@@ -172,102 +147,40 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
                             if not ok:
                                 break
 
-                            i = 0
-                            j = 0
-                            while i < len(cur) and j < len(permset[l]):
-                                if permset[l][j] < cur[i]:
-                                    perms_left.add(permset[l][j])
-                                    j += 1
-                                    curcnt += 1
-                                elif cur[i] == permset[l][j]:
-                                    bs |= 1 << curcnt
-                                    i += 1
-                                    j += 1
-                                    curcnt += 1
-                                else:
-                                    assert False
+                            cur_generated |= set(cur)
 
-                            assert i == len(cur)
-                            curcnt += len(permset[l]) - j
+                        ok = ok and len(cur_generated) > 0
 
                         if ok:
-                            print(rule)
-                            print(perms_left)
-                            def nextPermProp(perm):
-                                return tuple(perm) in perms_left
 
-                            res = construct_rule(B, max_cnt, nextPermProp, ignore_first, allow_overlap_in_first)
+                            cur_left = left - cur_generated
+
+                            print('current rule:')
+                            print(rule)
+                            # print('it generated:')
+                            # print(cur_generated)
+                            # print('\n'.join(map(str,cur_generated)))
+                            # print('left:')
+                            # print(cur_left)
+                            # print('\n'.join(map(str,cur_left)))
+                            print('recursing...')
+
+                            global indent
+                            indent += 4
+                            res = construct_rule(permSet, cur_left, ignore_first)
+                            indent -= 4
+
+                            print('ans = ', res)
+
                             if res is not None:
                                 return [rule] + res
 
-                            # for i in range(validcnt - 1, -1, -1):
-                            #     if (bs & (1 << i)) == 0:
-                            #         sys.stdout.write('0')
-                            #     else:
-                            #         sys.stdout.write('1')
-
-                            # sys.stdout.write('\n')
-
-                            # # print(bin(bs))
-                            # print('')
-
-                            # ok_rules.setdefault(bs, [])
-                            # ok_rules[bs].append(rule)
-
     return None
 
-    # print('Finding exact cover...')
+permSet = { n: [ tuple(p) for p in Permutations(n) if permProp(p) ] for n in range(max_len + 1) }
+left = { p for n in range(max_len + 1) for p in permSet[n] }
 
-    # curcover = []
-    # care = ball & ~((1 << ignore_first) - 1)
-    # bss = list(ok_rules.keys())
-    # def exact_cover(at, left, done):
-    #     if (done & care) == (ball & care):
-    #         yield list(curcover)
-    #     elif not (left == 0 or at == len(bss)):
-    #         if (bss[at] & done & (care if allow_overlap_in_first else ball)) == 0:
-    #             curcover.append(at)
-    #             for res in exact_cover(at + 1, left - 1, done | bss[at]):
-    #                 yield res
-
-    #             curcover.pop()
-
-    #         for res in exact_cover(at + 1, left, done):
-    #             yield res
-
-    # used_idx = set()
-    # print('Found:')
-    # for res in exact_cover(0, max_cnt, 0):
-    #     print(', '.join(map(str, res)))
-    #     used_idx |= set(res)
-
-    # print('')
-    # print('Index:')
-    # for i, b in enumerate(bss):
-    #     if i not in used_idx:
-    #         continue
-
-    #     print('%3d: ' % i)
-    #     for i in range(validcnt - 1, -1, -1):
-    #         if (b & (1 << i)) == 0:
-    #             sys.stdout.write('0')
-    #         else:
-    #             sys.stdout.write('1')
-
-    #     sys.stdout.write('\n')
-
-    #     for rule in ok_rules[b]:
-    #         print('')
-    #         print(rule)
-
-    #     print('')
-
-    # # return exact_cover(0, max_cnt, 0)
-
-    # return []
-
-
-res = construct_rule(7, 4, permProp, 1)
+res = construct_rule(permSet, left, 1)
 print('res:')
 
 for rule in res:
