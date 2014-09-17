@@ -1,5 +1,5 @@
 
-from permstruct.lib import Permutation, Permutations, flatten, binary_search, choose
+from permstruct.lib import Permutation, Permutations, flatten, binary_search, choose, exact_cover
 from permstruct import I, P, empty, generate_all_of_length
 from permstruct.permutation_sets import SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
 from itertools import product
@@ -204,26 +204,11 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
 
     print('Finding exact cover...')
 
-    curcover = []
-    care = ball & ~((1 << ignore_first) - 1)
     bss = list(ok_rules.keys())
-    def exact_cover(at, left, done):
-        if (done & care) == (ball & care):
-            yield list(curcover)
-        elif not (left == 0 or at == len(bss)):
-            if (bss[at] & done & (care if allow_overlap_in_first else ball)) == 0:
-                curcover.append(at)
-                for res in exact_cover(at + 1, left - 1, done | bss[at]):
-                    yield res
-
-                curcover.pop()
-
-            for res in exact_cover(at + 1, left, done):
-                yield res
 
     used_idx = set()
     print('Found:')
-    for res in exact_cover(0, max_cnt, 0):
+    for res in exact_cover(bss, validcnt, max_cnt, ignore_first, allow_overlap_in_first):
         print(', '.join(map(str, res)))
         used_idx |= set(res)
 
@@ -247,8 +232,6 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
             print(rule)
 
         print('')
-
-    # return exact_cover(0, max_cnt, 0)
 
     return []
 
