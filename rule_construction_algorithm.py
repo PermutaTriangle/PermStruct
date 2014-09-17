@@ -14,6 +14,54 @@ def avoids_312_vinc(perm):
                 return False
     return True
 
+def avoids_231_vinc(perm):
+    for i in range(len(perm)):
+        j = i + 1
+        for k in range(j+1, len(perm)):
+            if perm[k] < perm[i] < perm[j]:
+                return False
+    return True
+
+
+def avoids_123_vinc(perm):
+    for i in range(len(perm)):
+        for j in range(i+1, len(perm)):
+            k = j + 1
+            if k < len(perm) and perm[i] < perm[j] < perm[k]:
+                return False
+    return True
+
+
+def avoids_312_covinc(perm):
+    for i in range(len(perm)):
+        for j in range(i+1, len(perm)):
+            for k in range(j+1, len(perm)):
+                if perm[j] < perm[k] < perm[i] and perm[i] == 1 + perm[k]:
+                    return False
+    return True
+
+
+def avoids_132_covinc(perm):
+    for i in range(len(perm)):
+        for j in range(i+1, len(perm)):
+            for k in range(j+1, len(perm)):
+                if perm[i] < perm[k] < perm[j] and perm[j] == 1 + perm[k]:
+                    return False
+    return True
+
+# for l in range(1, 8):
+#     cnt = 0
+#     for p in Permutations(l):
+#         if avoids_231_vinc(p) and p.avoids([1,2,3]):
+#             cnt += 1
+#             # print(p)
+#     print(l, cnt)
+# 
+# import sys
+# sys.exit(0)
+
+
+
 avoiders_len_3 = []
 for p in Permutations(3):
     avoiders_len_3.append((lambda perm: perm.avoids(p),StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s)' % str(p))))
@@ -30,13 +78,28 @@ decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='de
 max_len = 6
 n_range = (2, 3) # number of rows (min, max)
 m_range = (2, 3) # numbor of columns (min, max)
-max_nonempty = 3
+max_nonempty = 4
 
 # permProp = lambda perm: perm.avoids([1,2])
 # permProp = lambda perm: perm.avoids([2,3,1])
 # permProp = lambda perm: perm.avoids([1,4,2,3])
 permProp  = lambda perm : perm.avoids([2,3,1]) and perm.avoids([1,2,3])
 # permProp = avoids_312_vinc
+# permProp = lambda p: avoids_231_vinc(p) and p.avoids([1,2,3])
+# permProp = lambda p: avoids_123_vinc(p) and avoids_312_covinc(p)
+# permProp = lambda p: avoids_132_covinc(p) and avoids_123_vinc(p)
+
+# for l in range(1, 10):
+#     cnt = 0
+#     for p in Permutations(l):
+#         if permProp(p):
+#             cnt += 1
+#     print(cnt)
+# 
+# import sys
+# sys.exit(0)
+
+
 
 inputs = [
     (permProp, I),
@@ -53,7 +116,7 @@ inputs = [
     # (lambda perm: len(perm) >= 3 and perm == Permutation(sorted(perm)[::-1]), decr_nonempty),
 ]
 
-inputs += avoiders_len_3
+# inputs += avoiders_len_3
 
 def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=False):
 
@@ -75,6 +138,8 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
     main_perms = list(permset[B])
     random.shuffle(main_perms)
     main_perms = main_perms[:10] # TODO: do something
+    # main_perms = main_perms[:20] # TODO: do something
+    # print(len(main_perms))
 
     ok_rules = {}
     tried_rules = set()

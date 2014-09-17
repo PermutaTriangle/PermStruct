@@ -84,11 +84,11 @@ ignore_first = 1
 # n_range = (1, 3)
 # m_range = (1, 3)
 
-n_range = (2, 2)
-m_range = (2, 2)
+n_range = (2, 3)
+m_range = (2, 3)
 
-# perm_prop = lambda perm: Permutation(perm).avoids([ 2, 3, 1 ])
-perm_prop = lambda perm: Permutation(perm).avoids([2, 1])
+perm_prop = lambda perm: Permutation(perm).avoids([ 2, 3, 1 ])
+# perm_prop = lambda perm: Permutation(perm).avoids([2, 1])
 # perm_prop = lambda perm: Permutation(perm).avoids([1, 3, 2, 4])
 # perm_prop = lambda perm: Permutation(perm).avoids([1, 2, 3])
 perm_created = { n: [ tuple(perm) for perm in Permutations(n) if perm_prop(perm) ] for n in range(max_len + 1) }
@@ -210,9 +210,15 @@ def walk(n, m, cur):
             walk(n, m, tuple([ child if i == j else cur[j] for j in range(len(cur)) ]))
 
 
-for n in range(n_range[0], n_range[1] + 1):
-    for m in range(m_range[0], m_range[1] + 1):
+def main():
+    for n in range(n_range[0], n_range[1] + 1):
+        for m in range(m_range[0], m_range[1] + 1):
+            if n == 3 and m == 3:
+                continue
 
-        visited = set()
-        walk(n, m, tuple([ 7 for i in range(n) for j in range(m) ]))
+            visited = set()
+            walk(n, m, tuple([ 7 for i in range(n) for j in range(m) ]))
+
+if __name__ == '__main__':
+    main()
 

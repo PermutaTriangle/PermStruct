@@ -2,22 +2,24 @@ from permstruct import *
 from permstruct.lib import *
 from permstruct.permutation_sets import *
 import sys
+from itertools import product
+from copy import deepcopy
 
 try:
     from queue import Queue
 except:
     from Queue import Queue
 
-# avoiders_len_3 = []
-# for p in Permutations(3):
-#     avoiders_len_3.append(StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s)' % str(p)))
-# 
-# incr = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing').to_static(8, empty)
-# decr = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing').to_static(8, empty)
-# 
-# incr_nonempty = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing nonempty').to_static(8, {1:[Permutation([1])]})
-# decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing nonempty').to_static(8, {1:[Permutation([1])]})
-# 
+avoiders_len_3 = []
+for p in Permutations(3):
+    avoiders_len_3.append(StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s)' % str(p)))
+
+incr = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing').to_static(8, empty)
+decr = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing').to_static(8, empty)
+
+incr_nonempty = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing nonempty').to_static(8, {1:[Permutation([1])]})
+decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing nonempty').to_static(8, {1:[Permutation([1])]})
+
 # inputs = [
 #     N,
 #     P,
@@ -27,6 +29,23 @@ except:
 #     decr,
 # # ] + avoiders_len_3 + [ I, StaticPermutationSet({}, description='empty set') ]
 # ] + [ I, StaticPermutationSet({}, description='empty set') ]
+
+permProp = lambda perm: perm.avoids([1,2])
+
+inputs = [
+    (permProp, I),
+    (lambda perm: len(perm) == 1, P),
+    (lambda perm: perm == Permutation(sorted(perm)), incr),
+    (lambda perm: perm == Permutation(sorted(perm)[::-1]), decr),
+    (lambda perm: len(perm) >= 1 and perm == Permutation(sorted(perm)), incr_nonempty),
+    (lambda perm: len(perm) >= 1 and perm == Permutation(sorted(perm)[::-1]), decr_nonempty),
+    # (permProp, I),
+    # (lambda perm: len(perm) == 1, P),
+    # (lambda perm: len(perm) >= 3 and perm == Permutation(sorted(perm)), incr),
+    # (lambda perm: len(perm) >= 3 and perm == Permutation(sorted(perm)[::-1]), decr),
+    # (lambda perm: len(perm) >= 3 and perm == Permutation(sorted(perm)), incr_nonempty),
+    # (lambda perm: len(perm) >= 3 and perm == Permutation(sorted(perm)[::-1]), decr_nonempty),
+]
 
 dag = {
 #     # 0: [ 1, 2, 11 ],
@@ -118,7 +137,7 @@ for l in range(max_len + 1):
                     for poss in product(*nonempty):
                         rule = GeneratingRule({ (i,j): inp for i, j, inp in poss })
 
-                        created = deepcopy.deepcopy(empty)
+                        created = deepcopy(empty)
                         for curl in range(max_len + 1):
                             for perm in rule.generate_of_length(curl, created):
                                 if not perm_prop(perm):

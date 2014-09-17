@@ -99,6 +99,17 @@ decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='de
 
 
 
+rule = GeneratingRule([
+    [decr, N, decr],
+    [N, P, N],
+])
+
+for p in generate_all_of_length(5, rule, empty):
+    print(p)
+
+import sys
+sys.exit(0)
+
 permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2,3]))
 # permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]))
