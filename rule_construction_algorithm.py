@@ -171,20 +171,6 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
                         if not ok:
                             continue
 
-                        # print(main_perm, n, m, xsep, ysep)
-                        # for i in range(n):
-                        #     sys.stdout.write('-' * (m * (5 + 1) + 1))
-                        #     sys.stdout.write('\n')
-
-                        #     sys.stdout.write('|')
-                        #     for j in range(m):
-                        #         sys.stdout.write(''.join(map(str,arr[i][j])).rjust(5))
-                        #         sys.stdout.write('|')
-                        #     sys.stdout.write('\n')
-
-                        # sys.stdout.write('-' * (m * (5 + 1) + 1))
-                        # sys.stdout.write('\n')
-
                         nonempty = []
                         for i in range(n):
                             for j in range(m):
@@ -203,9 +189,6 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
                                 continue
 
                             tried_rules.add(rule)
-
-                            # print(rule)
-                            # print('')
 
                             bs = 0
                             ok = True
@@ -253,15 +236,7 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
 
                             if ok:
                                 print(rule)
-                                for i in range(validcnt - 1, -1, -1):
-                                    if (bs & (1 << i)) == 0:
-                                        sys.stdout.write('0')
-                                    else:
-                                        sys.stdout.write('1')
-
-                                sys.stdout.write('\n')
-
-                                # print(bin(bs))
+                                print(''.join( '0' if (bs & (1 << i)) == 0 else '1' for i in range(validcnt - 1, -1, -1) ))
                                 print('')
 
                                 ok_rules.setdefault(bs, [])
@@ -284,13 +259,8 @@ def construct_rule(B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=
             continue
 
         print('%3d: ' % i)
-        for i in range(validcnt - 1, -1, -1):
-            if (b & (1 << i)) == 0:
-                sys.stdout.write('0')
-            else:
-                sys.stdout.write('1')
+        print(''.join( '0' if (b & (1 << i)) == 0 else '1' for i in range(validcnt - 1, -1, -1) ))
 
-        sys.stdout.write('\n')
 
         for rule in ok_rules[b]:
             print('')
