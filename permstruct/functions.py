@@ -216,7 +216,7 @@ def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overl
     return exact_cover(0, max_cnt, 0)
 
 
-I = InputPermutationSet()
+X = InputPermutationSet()
 P = PointPermutationSet()
 N = None
 empty = { 0: [()] }

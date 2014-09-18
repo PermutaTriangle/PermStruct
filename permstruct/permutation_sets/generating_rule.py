@@ -123,7 +123,7 @@ class GeneratingRule(PermutationSet):
 
         for i,j in self.rule:
             if type(self.rule[(i,j)]) is InputPermutationSet:
-                arr[2*i+1][2*j+1] = 'I'
+                arr[2*i+1][2*j+1] = 'X'
             elif type(self.rule[(i,j)]) is PointPermutationSet:
                 arr[2*i+1][2*j+1] = 'o'
             else:

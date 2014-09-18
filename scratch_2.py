@@ -1,6 +1,6 @@
 
 from permstruct.lib import Permutation, Permutations, flatten, binary_search, choose, exact_cover
-from permstruct import I, P, empty, generate_all_of_length, construct_rule
+from permstruct import X, P, empty, generate_all_of_length, construct_rule
 from permstruct.permutation_sets import SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
 from itertools import product
 import random, sys
@@ -49,6 +49,14 @@ def avoids_132_covinc(perm):
                     return False
     return True
 
+def avoids_231_bivinc(perm):
+    for i in range(0, len(perm)):
+        j = i + 1
+        for k in range(j+1, len(perm)):
+            if perm[k] < perm[j] and perm[i] == 1 + perm[k]:
+                return False
+    return True
+
 # for l in range(1, 8):
 #     cnt = 0
 #     for p in Permutations(l):
@@ -67,11 +75,11 @@ for p in Permutations(3):
     avoiders_len_3.append((lambda perm: perm.avoids(p),StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s)' % str(p))))
     # avoiders_len_3.append((lambda perm: len(perm) >= 3 and perm.avoids(p),StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s)' % str(p))))
 
-incr = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing').to_static(8, empty)
-decr = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing').to_static(8, empty)
+incr = SimpleGeneratingRule(Permutation([1,2]), [X, P], description='increasing').to_static(8, empty)
+decr = SimpleGeneratingRule(Permutation([2,1]), [X, P], description='decreasing').to_static(8, empty)
 
-incr_nonempty = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing nonempty').to_static(8, {1:[Permutation([1])]})
-decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing nonempty').to_static(8, {1:[Permutation([1])]})
+incr_nonempty = SimpleGeneratingRule(Permutation([1,2]), [X, P], description='increasing nonempty').to_static(8, {1:[Permutation([1])]})
+decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [X, P], description='decreasing nonempty').to_static(8, {1:[Permutation([1])]})
 
 
 
@@ -82,10 +90,13 @@ max_nonempty = 4
 max_ec_cnt = 4
 
 # permProp = lambda perm: perm.avoids([1,2])
-# permProp = lambda perm: perm.avoids([2,3,1])
+permProp = lambda perm: perm.avoids([2,3,1])
 # permProp = lambda perm: perm.avoids([1,4,2,3])
-permProp  = lambda perm : perm.avoids([2,3,1]) and perm.avoids([1,2,3])
+# permProp = lambda perm: perm.avoids([1,3,4,2])
+# permProp  = lambda perm : perm.avoids([2,3,1]) and perm.avoids([1,2,3])
 # permProp = avoids_312_vinc
+# permProp = avoids_123_vinc
+# permProp = avoids_231_bivinc
 # permProp = lambda p: avoids_231_vinc(p) and p.avoids([1,2,3])
 # permProp = lambda p: avoids_123_vinc(p) and avoids_312_covinc(p)
 # permProp = lambda p: avoids_132_covinc(p) and avoids_123_vinc(p)
@@ -103,7 +114,7 @@ permProp  = lambda perm : perm.avoids([2,3,1]) and perm.avoids([1,2,3])
 
 
 inputs = [
-    (permProp, I),
+    (permProp, X),
     (lambda perm: len(perm) == 1, P),
     (lambda perm: perm == Permutation(sorted(perm)), incr),
     (lambda perm: perm == Permutation(sorted(perm)[::-1]), decr),

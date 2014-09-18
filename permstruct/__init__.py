@@ -5,7 +5,7 @@ from .functions import (
     generate_rules_upto,
     matches_rule,
     find_multiple_rules,
-    I,
+    X,
     P,
     N,
     empty
