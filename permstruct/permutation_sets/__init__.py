@@ -5,4 +5,5 @@ from .point_permutation_set import PointPermutationSet
 from .simple_generating_rule import SimpleGeneratingRule
 from .generating_rule import GeneratingRule
 from .static_permutation_set import StaticPermutationSet
+from .universe_permutation_set import UniversePermutationSet
 

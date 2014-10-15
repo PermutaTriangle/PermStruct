@@ -8,6 +8,7 @@ from .functions import (
     X,
     P,
     N,
+    S,
     empty
 )
 

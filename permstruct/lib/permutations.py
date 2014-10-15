@@ -83,7 +83,7 @@ class Permutation(object):
         return type(other) is Permutation and self.perm == other.perm
 
     def __lt__(self, other):
-        return len(self) < len(other) and self.perm < other.perm
+        return (len(self), self.perm) < (len(other), other.perm)
 
     def __hash__(self):
         res = 27

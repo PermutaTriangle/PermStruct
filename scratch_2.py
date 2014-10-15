@@ -1,6 +1,6 @@
 
 from permstruct.lib import Permutation, Permutations, flatten, binary_search, choose, exact_cover
-from permstruct import X, P, empty, generate_all_of_length, construct_rule
+from permstruct import X, P, N, empty, generate_all_of_length, construct_rule
 from permstruct.permutation_sets import SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
 from itertools import product
 import random, sys
@@ -111,6 +111,54 @@ permProp = lambda perm: perm.avoids([2,3,1])
 # import sys
 # sys.exit(0)
 
+
+
+# Cute example
+# G = GeneratingRule([
+#     [N, N, P],
+#     [X, P, N],
+# ])
+
+
+# G = GeneratingRule([
+#     [N,P,N],
+#     [N,P,N],
+#     [X,N,decr],
+# ])
+
+# G = GeneratingRule([
+#     [N,P,N],
+#     [N,P,N],
+#     [X,N,decr],
+# ])
+
+G = GeneratingRule([
+    [decr,N,decr],
+    [N,P,N],
+])
+
+# +-+-+-+-+
+# |1|1|2|1|
+# +-+-+-+-+
+# |1|o|1|1|
+# +-+-+-+-+
+# |1|1|o|1|
+# +-+-+-+-+
+# |1|1|1|X|
+# +-+-+-+-+
+# 1: empty permutation
+# 2: Av([2, 1, 3])
+# 1 1 1 3 9 31 111 409
+
+# res = generate_all_of_length(10, G, {0:[()], 1:[(1,)]}, 2)
+res = generate_all_of_length(10, G, {0:[()]}, 2)
+# print(res)
+for l in res:
+    # print(res)
+    print(len(res[l]))
+
+import sys
+sys.exit(0)
 
 
 inputs = [

@@ -1,13 +1,13 @@
 
-from .permutation_sets import PointPermutationSet, InputPermutationSet, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
+from .permutation_sets import PointPermutationSet, InputPermutationSet, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet, UniversePermutationSet
 from .lib import Permutation, Permutations, binary_search
 from copy import deepcopy
 
-def generate_all_of_length(max_n, S, inp):
+def generate_all_of_length(max_n, S, inp, min_n=0):
 
     inp = deepcopy(inp)
 
-    for n in range(max_n+1):
+    for n in range(min_n,max_n+1):
         inp.setdefault(n, [])
         for perm in S.generate_of_length(n, inp):
             inp[n].append(perm)
@@ -218,6 +218,7 @@ def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overl
 
 X = InputPermutationSet()
 P = PointPermutationSet()
+S = UniversePermutationSet()
 N = None
 empty = { 0: [()] }
 
