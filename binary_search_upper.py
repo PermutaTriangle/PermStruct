@@ -56,8 +56,8 @@ inputs = (
             X,
             # incr_nonempty,
             # decr_nonempty,
-            incr,
-            decr,
+            # incr,
+            # decr,
             # N,
         ]
         # + avoiders_len_3
@@ -109,7 +109,7 @@ def avoids_132_covinc(perm):
                     return False
     return True
 
-B = 7
+B = 6
 permProp = lambda perm: perm.avoids([2,3,1])
 # permProp = lambda perm: perm.avoids([2,1])
 # permProp = lambda perm: perm.avoids([1,3,2,4])
@@ -135,7 +135,7 @@ m = 3
 
 inputPermSet = StaticPermutationSet.from_predicate(permProp, B)
 inputPermSet = { l: inputPermSet.generate_of_length(l, {}) for l in range(B + 1) }
-inputPermSetSet = set([ p for l in range(B + 1) for p in inputPermSet[l] ])
+inputPermSetSet = [ { p for p in inputPermSet[l] } for l in range(B + 1) ]
 
 
 
@@ -178,6 +178,8 @@ below[2].add(3)
 
 # print(above)
 # print(below)
+# import sys
+# sys.exit(0)
 
 between = { }
 
@@ -200,10 +202,16 @@ for i in range(len(inputs)):
 
 between[(2,2)].add(3)
 
+print(above[4])
+print(below[4])
+
 # print(sorted(between.items()))
 # sys.exit(0)
 
-def pick(x, y, lo, hi, arr):
+def pick(x, y, lo, hi, arr, is_active):
+
+    if not is_active:
+        return random.choice(range(len(inputs)))
 
     # if 2 in arr: arr.add(3)
     # if 3 in arr: arr.add(2)
@@ -222,11 +230,13 @@ def rule_from_arr(arr):
     return GeneratingRule([ [ inputs[arr[row][col]] for col in range(m) ] for row in range(n) ])
 
 while True:
-    print('starting')
+    # print('starting')
+    active = [ [ False for col in range(m) ] for row in range(n) ]
     lo = [ [ 2 for col in range(m) ] for row in range(n) ]
-    lo_set = { () }
+    lo_set = [ {()} if l == 0 else {} for l in range(0, B + 1) ]
     # lo = [ [ 0 for col in range(m) ] for row in range(n) ]
-    hi = [ [ 1 for col in range(m) ] for row in range(n) ]
+    hi = [ [ 2 for col in range(m) ] for row in range(n) ]
+    hi_set = [ { tuple(p) for p in Permutations(l) } for l in range(0, B + 1) ]
 
 
     tried = set()
@@ -235,7 +245,7 @@ while True:
     done = False
 
     # for it in range(50):
-    while cnt < 10000:
+    while cnt < 100000:
 
         # if any( 3 in lo[row] for row in range(n) ) or any( 3 in hi[row] for row in range(n) ):
         #     print('lo', lo)
@@ -244,7 +254,7 @@ while True:
         # print('lo', lo)
         # print('hi', hi)
         x,y = random.choice([ (i,j) for i in range(n) for j in range(m) ])
-        if lo[x][y] == hi[x][y]:
+        if lo[x][y] == hi[x][y] and active[x][y]:
             # print('picked same again')
             continue
 
@@ -252,7 +262,7 @@ while True:
         # print(lo)
         # print(hi)
         # mid = [ [ pick(row, col, lo[row][col], hi[row][col], between[( lo[row][col], hi[row][col] )] | set([ lo[row][col] ])) if (row,col) == (x,y) else lo[row][col] for col in range(m) ] for row in range(n) ]
-        mid = [ [ pick(row, col, lo[row][col], hi[row][col], between[( lo[row][col], hi[row][col] )] ) if (row,col) == (x,y) else lo[row][col] for col in range(m) ] for row in range(n) ]
+        mid = [ [ pick(row, col, lo[row][col], hi[row][col], between[( lo[row][col], hi[row][col] )], active[row][col]) if (row,col) == (x,y) else hi[row][col] for col in range(m) ] for row in range(n) ]
 
         state = (tuple([ tuple(row) for row in lo ]), tuple([ tuple(row) for row in mid ]))
         if state in tried:
@@ -269,27 +279,54 @@ while True:
 
         mid_rule = rule_from_arr(mid)
 
+        # print(mid_rule)
+
         gen = { 0: [()], 1: [(1,)] }
         overlap = False
+        is_superset = True
         for l in range(2, B + 1):
+            # print('generating ' + str(l))
             gen.setdefault(l, [])
             for p in mid_rule.generate_of_length(l, gen):
             # for p in mid_rule.generate_of_length(l, inputPermSet):
                 gen[l].append(p)
 
-            if len(gen[l]) != len(set(gen[l])):
-                overlap = True
+            sgen = set(gen[l])
+            gen[l] = list(sgen)
+            ok = sgen <= hi_set[l] and inputPermSetSet[l] <= sgen
+            # print('generated ' + str(len(sgen)) + ' and it was ' + ('ok' if ok else 'not ok'))
+            if not ok:
+                is_superset = False
                 break
 
-        if overlap:
-            # print('overlap')
+            # if len(gen[l]) != len(set(gen[l])):
+            #     overlap = True
+            #     break
+
+        # if overlap:
+        #     # print('overlap')
+        #     continue
+
+        # print('generating done')
+
+        if not is_superset:
             continue
 
-        mid_perms = { p for l in range(B + 1) for p in gen[l] }
+        mid_perms = [ { p for p in gen[l] } for l in range(B + 1) ]
 
-        if not (lo_set <= mid_perms):
-            # print('stepping sideways')
-            continue
+        # print(mid_perms)
+        # print(hi_set)
+
+        # print('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        # print(mid_perms <= hi_set)
+        # print(mid_perms)
+        # print(hi_set)
+        # print('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
+
+        # print(mid_perms <= hi_set)
+        # if not all( mid_perms[l] <= hi_set[l] for l in range(0, B + 1) ):
+        #     # print('stepping sideways')
+        #     continue
 
 
         # print('Hi')
@@ -306,20 +343,23 @@ while True:
         # print('mid_perms', mid_perms)
 
 
-        if mid_perms == inputPermSetSet:
+        if all( mid_perms[l] == inputPermSetSet[l] for l in range(0, B + 1) ):
             done = True
-            lo = mid
-            lo_set = mid_perms
             hi = mid
+            hi_set = mid_perms
+            lo = mid
+            active[x][y] = True
 
             print('Doooooooooooooooooonneeeeeeeeeeee!')
 
             break
 
-        if mid_perms <= inputPermSetSet:
+        if all( mid_perms[l] >= inputPermSetSet[l] for l in range(0, B + 1) ):
             # print('found new lower')
-            lo = mid
-            lo_set = mid_perms
+            hi = mid
+            hi_set = mid_perms
+            active[x][y] = True
+
         # elif inputPermSetSet <= mid_perms:
         #     print('found new higher')
         #     hi = mid
@@ -350,17 +390,38 @@ while True:
     # print(rule_from_arr(hi))
 
 
-    print(rule_from_arr(lo))
+    print(rule_from_arr(hi))
 
     gen = { 0: [()], 1: [(1,)] }
-    lo_rule = rule_from_arr(lo)
+    hi_rule = rule_from_arr(hi)
+    overlap = False
     for l in range(2, B + 1):
         gen.setdefault(l, [])
-        for p in lo_rule.generate_of_length(l, gen):
-        # for p in lo_rule.generate_of_length(l, inputPermSetSet):
+        for p in hi_rule.generate_of_length(l, gen):
+        # for p in hi_rule.generate_of_length(l, inputPermSetSet):
             gen[l].append(p)
 
+        if len(gen[l]) != len(set(gen[l])):
+            overlap = True
+            # break
+
     print(' '.join( str(len(v)) for k, v in gen.items() ))
+
+
+    gen = { 0: [()], 1: [(1,)] }
+    hi_rule = rule_from_arr(hi)
+    for l in range(2, B + 1):
+        gen.setdefault(l, [])
+        for p in hi_rule.generate_of_length(l, gen):
+        # for p in hi_rule.generate_of_length(l, inputPermSetSet):
+            gen[l].append(p)
+
+        gen[l] = list(set(gen[l]))
+
+    print(' '.join( str(len(v)) for k, v in gen.items() ))
+
+    if overlap:
+        print('Overlap')
 
     if done:
         break
