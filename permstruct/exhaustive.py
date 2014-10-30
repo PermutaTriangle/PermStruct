@@ -51,15 +51,9 @@ def exhaustive_with_overlays(
         min_rule_size=(1,1),
     ):
 
-    rules = []
-    for rule in generate_rules_with_overlay_upto(min_rule_size, max_rule_size, dag.elements, max_nonempty, overlay_dag.predicates, max_overlay_cnt, max_overlay_size):
-        print(rule)
-        rules.append(rule)
-
-    print("RULES GENERATED")
+    rules = list(generate_rules_with_overlay_upto(min_rule_size, max_rule_size, dag.elements, max_nonempty, overlay_dag.predicates, max_overlay_cnt, max_overlay_size))
     sol_iter = find_multiple_rules(rules, perm_bound, max_rules, perm_prop, ignore_first, allow_overlap_in_first)
 
     for sol in sol_iter:
-
         yield [ rule for rule, bs in sol ]
 
