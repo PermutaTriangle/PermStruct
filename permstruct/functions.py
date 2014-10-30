@@ -94,6 +94,9 @@ def generate_rules_with_overlay(n, m, sets, cnt, overlay_preds, max_overlay_cnt,
 
                             for orule in gen(rule, i, j, (h, w), left - 1):
                                 for inp in overlay_preds:
+                                    if inp is None:
+                                        continue
+
                                     orule2 = OverlayGeneratingRule(deepcopy(orule.rule), deepcopy(orule.overlay) + [ (deepcopy(overlay_coords), inp) ])
                                     yield orule2
 

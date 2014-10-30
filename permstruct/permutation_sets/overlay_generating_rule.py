@@ -77,7 +77,7 @@ class OverlayGeneratingRule(PermutationSet):
 
                         ok = True
 
-                        for idxs, perm_pred in self.overlay:
+                        for idxs, perm_set in self.overlay:
                             res = [ [None]*colcnt[col] for col in range(w) ]
 
                             cumul = 1
@@ -91,7 +91,7 @@ class OverlayGeneratingRule(PermutationSet):
                                 cumul += rowcnt[row]
 
                             perm = Permutation.to_standard(flatten(res))
-                            if not perm_pred(perm):
+                            if not perm_set.contains(perm):
                                 ok = False
                                 break
 
@@ -162,8 +162,8 @@ class OverlayGeneratingRule(PermutationSet):
         for k, v in sorted(labels.items(), key=lambda x: x[1]):
             out += '\n' + '%s: %s' % (v, k.description)
 
-        for coords, pred in self.overlay:
-            out += '\n' + '%s, %s' % (coords, pred)
+        for coords, perm_set in self.overlay:
+            out += '\n' + '%s, %s' % (coords, perm_set)
 
         return out
 

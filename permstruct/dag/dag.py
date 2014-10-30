@@ -2,15 +2,13 @@
 class DAG:
     def __init__(self):
         self.elements = []
-        self.predicates = []
         self.below = {}
         self.ids = {}
 
-    def add_element(self, element, predicate):
+    def add_element(self, element):
         id = len(self.elements)
         self.ids[element] = id
         self.elements.append(element)
-        self.predicates.append(predicate)
         self.below[id] = set()
 
     def id(self, element):

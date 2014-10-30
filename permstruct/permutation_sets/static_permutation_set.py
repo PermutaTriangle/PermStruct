@@ -34,6 +34,9 @@ class StaticPermutationSet(PermutationSet):
 
         return self.gf
 
+    def contains(self, perm):
+        return perm in self.perms
+
     def generate_of_length(self, n, input):
         return self.perms.get(n, [])
 

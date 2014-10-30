@@ -10,3 +10,6 @@ class PermutationSet(object):
     def generating_function(self):
         raise NotImplementedError()
 
+    def contains(self, perm):
+        raise NotImplementedError()
+

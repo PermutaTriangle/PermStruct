@@ -11,6 +11,9 @@ class UniversePermutationSet(PermutationSet):
     def generate_of_length(self, n, input):
         return [ tuple(p) for p in Permutations(n) ]
 
+    def contains(self, perm):
+        return True
+
     def __repr__(self):
         return 'UniversePermutationSet()'
 

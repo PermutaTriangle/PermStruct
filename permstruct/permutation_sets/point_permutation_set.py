@@ -17,6 +17,9 @@ class PointPermutationSet(PermutationSet):
         if n == 1:
             yield (1,)
 
+    def contains(self, perm):
+        return len(perm) == 1
+
     def __repr__(self):
         return 'PointPermutationSet()'
 
