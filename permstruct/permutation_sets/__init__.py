@@ -4,6 +4,8 @@ from .permutation_set import PermutationSet
 from .point_permutation_set import PointPermutationSet
 from .simple_generating_rule import SimpleGeneratingRule
 from .generating_rule import GeneratingRule
+from .overlay_generating_rule import OverlayGeneratingRule
 from .static_permutation_set import StaticPermutationSet
 from .universe_permutation_set import UniversePermutationSet
+from .empty_permutation_set import EmptyPermutationSet
 

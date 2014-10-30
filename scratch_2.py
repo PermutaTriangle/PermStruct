@@ -150,15 +150,15 @@ G = GeneratingRule([
 # 2: Av([2, 1, 3])
 # 1 1 1 3 9 31 111 409
 
-# res = generate_all_of_length(10, G, {0:[()], 1:[(1,)]}, 2)
-res = generate_all_of_length(10, G, {0:[()]}, 2)
-# print(res)
-for l in res:
-    # print(res)
-    print(len(res[l]))
-
-import sys
-sys.exit(0)
+# # res = generate_all_of_length(10, G, {0:[()], 1:[(1,)]}, 2)
+# res = generate_all_of_length(10, G, {0:[()]}, 2)
+# # print(res)
+# for l in res:
+#     # print(res)
+#     print(len(res[l]))
+# 
+# import sys
+# sys.exit(0)
 
 
 inputs = [

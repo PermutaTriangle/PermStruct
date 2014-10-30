@@ -1,5 +1,5 @@
 
-from permstruct import generate_all_of_length, generate_rules, generate_rules_upto, matches_rule, find_multiple_rules, I, P, N, empty
+from permstruct import generate_all_of_length, generate_rules, generate_rules_upto, generate_rules_with_overlay, generate_rules_with_overlay_upto, matches_rule, find_multiple_rules, X, P, N, empty
 from permstruct.permutation_sets import SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
 from permstruct.lib import Permutation, Permutations
 
@@ -8,16 +8,16 @@ from copy import deepcopy
 sys.setrecursionlimit(10**9)
 
 # Increasing permutations
-incr_gen = SimpleGeneratingRule(Permutation([1,2]), [I, P], description='increasing')
+incr_gen = SimpleGeneratingRule(Permutation([1,2]), [X, P], description='increasing')
 
 # Decreasing permutations
-decr_gen = SimpleGeneratingRule(Permutation([2,1]), [I, P], description='decreasing')
+decr_gen = SimpleGeneratingRule(Permutation([2,1]), [X, P], description='decreasing')
 
 # avoids_132 = StaticPermutationSet.from_predicate(lambda x: x.avoids([1,3,2]), 6, N)
 avoids_231 = GeneratingRule([
     [N, P, N],
-    [N, N, I],
-    [I, N, N],
+    [N, N, X],
+    [X, N, N],
 ], description='Av(231)')
 
 avoiders_len_3 = []
@@ -25,17 +25,17 @@ for p in Permutations(3):
     avoiders_len_3.append(StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 5, description='Av(%s)' % str(p)))
 
 # Avoiders of 231 and 312
-# avoid_231_312 = SimpleGeneratingRule(Permutation([1,3,2]), [I, P, decr_gen.to_static(10, empty)])
+# avoid_231_312 = SimpleGeneratingRule(Permutation([1,3,2]), [X, P, decr_gen.to_static(10, empty)])
 
 # avoid_231_312_G = GeneratingRule([
 #     [N, P, N],
 #     [N, N, decr_gen.to_static(10, empty)],
-#     [I, N, N],
+#     [X, N, N],
 # ])
 
 # avoid_vinc_3_12_ = GeneratingRule([
 #     [N, P, N],
-#     [I, N, decr_gen.to_static(10,empty)]
+#     [X, N, decr_gen.to_static(10,empty)]
 # ])
 
 
@@ -91,7 +91,7 @@ decr_nonempty = decr_gen.to_static(8, {1:[(1,)]}, description='decreasing nonemp
 # rule = GeneratingRule([
 #     [decr,N,N],
 #     [N,P,N],
-#     [I,N,N]
+#     [X,N,N]
 # ])
 
 # print(list(generet))
@@ -107,11 +107,26 @@ def avoids_312_vinc(perm):
 
     return True
 
+def avoids_123_vinc(perm):
+    for i in range(len(perm)):
+        j = i + 1
+        for k in range(j+1, len(perm)):
+            if perm[i] < perm[j] < perm[k]:
+                return False
+    return True
+
 def main():
 
     # permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2,3]) and Permutation(list(perm)).avoids([2,3,1]))
-    permProp  = (lambda perm : avoids_312_vinc(perm))
-    rules = list(generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty, incr_nonempty ] + avoiders_len_3, 3))
+    # permProp  = (lambda perm : avoids_312_vinc(perm))
+    permProp = lambda perm : perm.avoids([3,2,1])
+    # rules = list(generate_rules_upto(3, 3, [ X, P, None, incr, decr, decr_nonempty, incr_nonempty ] + avoiders_len_3, 3))
+    overlay_preds = [ lambda p: p.avoids([3,2,1]) ]
+    max_overlay_rows = 3
+    max_overlay_cols = 3
+    max_overlay_cnt = 1
+
+    rules = list(generate_rules_with_overlay(2, 3, [ X, P, None, decr, incr ], 3, overlay_preds, max_overlay_cnt, max_overlay_rows, max_overlay_cols))
     res = find_multiple_rules(rules, 6, 3, permProp, 1)
 
     for x in res:
@@ -148,10 +163,10 @@ def main():
 #                     # permProp  = (lambda perm : Permutation(list(perm)).avoids([1,2,3]) and Permutation(list(perm)).avoids([2,3,1]))
 # # permProp  = (lambda perm : Permutation(list(perm)).avoids([2,3,1]) and Permutation(list(perm)).avoids([4,3,2,1]))
 # # permProp  = (lambda perm : Permutation(list(perm)).avoids([1,3,2,4]))
-#                     # rules = list(generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty ] + avoiders_len_3, 3))
-#                     rules = generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty ] + avoiders_len_3, 2)
-# # rules = list(generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty, incr_nonempty ], 3))
-# # rules = list(generate_rules_upto(3, 3, [ I, P, None, incr, decr, decr_nonempty, incr_nonempty ] + avoiders_len_3, 3))
+#                     # rules = list(generate_rules_upto(3, 3, [ X, P, None, incr, decr, decr_nonempty ] + avoiders_len_3, 3))
+#                     rules = generate_rules_upto(3, 3, [ X, P, None, incr, decr, decr_nonempty ] + avoiders_len_3, 2)
+# # rules = list(generate_rules_upto(3, 3, [ X, P, None, incr, decr, decr_nonempty, incr_nonempty ], 3))
+# # rules = list(generate_rules_upto(3, 3, [ X, P, None, incr, decr, decr_nonempty, incr_nonempty ] + avoiders_len_3, 3))
 # 
 # # for rule in rules:
 # #     print(rule)
@@ -199,7 +214,7 @@ def main():
 #     m = 3
 #     cnt = 4
 # 
-#     rules = generate_rules(n, m, [ I, P, None, incr, decr ], cnt)
+#     rules = generate_rules(n, m, [ X, P, None, incr, decr ], cnt)
 #     for rule in rules:
 # 
 #         # if matches_rule(rule, [Permutation([])], 5, permProp, permCount):

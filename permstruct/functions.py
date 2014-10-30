@@ -1,5 +1,5 @@
 
-from .permutation_sets import PointPermutationSet, InputPermutationSet, SimpleGeneratingRule, GeneratingRule, StaticPermutationSet, UniversePermutationSet
+from .permutation_sets import PointPermutationSet, InputPermutationSet, SimpleGeneratingRule, GeneratingRule, OverlayGeneratingRule, StaticPermutationSet, UniversePermutationSet, EmptyPermutationSet
 from .lib import Permutation, Permutations, binary_search
 from copy import deepcopy
 
@@ -72,13 +72,49 @@ def generate_rules(n, m, sets, cnt):
 
     # print(a, b)
 
+def generate_rules_with_overlay(n, m, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
 
-def generate_rules_upto(n, m, sets, cnt):
-    for nn in range(1, n+1):
-        for mm in range(1, m+1):
+    def gen(rule, i, j, last, left):
+
+        if j == m:
+            for orule in gen(rule, i + 1, 0, last, left):
+                yield orule
+        elif i == n:
+            yield OverlayGeneratingRule(dict(rule.rule), [])
+        else:
+            for orule in gen(rule, i, j + 1, (0, 0), left):
+                yield orule
+
+            if left > 0:
+                for h in range(1, max_overlay_size[0] + 1):
+                    for w in range(1, max_overlay_size[1] + 1):
+                        if (h, w) != (1, 1) and (h, w) > last and i+h <= n and j+w <= m:
+
+                            overlay_coords = set([ (row, col) for row in range(i, i + h) for col in range(j, j + w) ])
+
+                            for orule in gen(rule, i, j, (h, w), left - 1):
+                                for inp in overlay_preds:
+                                    orule2 = OverlayGeneratingRule(deepcopy(orule.rule), deepcopy(orule.overlay) + [ (deepcopy(overlay_coords), inp) ])
+                                    yield orule2
+
+
+
+    for rule in generate_rules(n, m, sets, cnt):
+        for overlay_rule in gen(rule, 0, 0, (0, 0), max_overlay_cnt):
+            yield overlay_rule
+
+
+def generate_rules_upto(min_rule_size, max_rule_size, sets, cnt):
+    for nn in range(min_rule_size[0], max_rule_size[0]+1):
+        for mm in range(min_rule_size[1], max_rule_size[1]+1):
             for res in generate_rules(nn, mm, sets, cnt):
                 yield res
 
+def generate_rules_with_overlay_upto(min_rule_size, max_rule_size, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
+    for nn in range(min_rule_size[0], max_rule_size[0]+1):
+        for mm in range(min_rule_size[1], max_rule_size[1]+1):
+            for res in generate_rules_with_overlay(nn, mm, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
+                yield res
 
 def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (lambda n : 0)):
 
@@ -108,7 +144,6 @@ def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (l
 
     return True
 
-
 def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overlap_in_first=False):
 
     validcnt = 0
@@ -125,6 +160,7 @@ def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overl
                 validcnt += 1
 
     okrules = []
+
     for rule in rules:
 
         created = deepcopy(ocreated)
@@ -135,6 +171,7 @@ def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overl
         for n in range(B+1):
             curlevel = []
             for perm in rule.generate_of_length(n, created):
+
                 # if not permProp(perm):
                 if not binary_search(permset[n], perm):
                     ok = False
@@ -181,6 +218,7 @@ def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overl
 
         if ok:
             # print(rule)
+            # import sys
             # for i in range(validcnt - 1, -1, -1):
             #     if (bs & (1 << i)) == 0:
             #         sys.stdout.write('0')
@@ -216,9 +254,11 @@ def find_multiple_rules(rules, B, max_cnt, permProp, ignore_first=0, allow_overl
     return exact_cover(0, max_cnt, 0)
 
 
+
 X = InputPermutationSet()
 P = PointPermutationSet()
 S = UniversePermutationSet()
+E = EmptyPermutationSet()
 N = None
 empty = { 0: [()] }
 
