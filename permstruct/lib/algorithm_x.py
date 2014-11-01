@@ -38,6 +38,7 @@ def uncover(c):
 
 class AlgorithmX:
     def __init__(self, rows, cols, solution_callback):
+        assert rows > 0 and cols > 0
         self.rows = rows
         self.cols = cols
         self.head = None

@@ -2,7 +2,6 @@ import permstruct
 import permstruct.dag
 
 import sys
-sys.setrecursionlimit(99999999)
 
 perm_prop = lambda p: p.avoids([1,2,3])
 # perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([2,1,3,4])

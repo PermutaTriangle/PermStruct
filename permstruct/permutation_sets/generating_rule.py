@@ -35,8 +35,8 @@ class GeneratingRule(PermutationSet):
     def generate_of_length(self, n, input):
 
         rule = list(self.rule.items())
-        h = max( k[0] for k,v in rule ) + 1
-        w = max( k[1] for k,v in rule ) + 1
+        h = max( k[0] for k,v in rule ) + 1 if rule else 1
+        w = max( k[1] for k,v in rule ) + 1 if rule else 1
 
         def permute(arr, perm):
             res = [None] * len(arr)
@@ -105,8 +105,8 @@ class GeneratingRule(PermutationSet):
 
     def __str__(self):
 
-        n = max( i for i,j in self.rule )+1
-        m = max( j for i,j in self.rule )+1
+        n = max( i for i,j in self.rule )+1 if self.rule else 1
+        m = max( j for i,j in self.rule )+1 if self.rule else 1
         arr = [ [ ' ' for j in range(2*m+1) ] for i in range(2*n+1) ]
         labels = {}
 

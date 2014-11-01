@@ -29,6 +29,10 @@ def generate_all_of_length(max_n, S, inp, min_n=0):
 def generate_rules(n, m, sets, cnt):
 
     def valid(rule):
+        if n == 1 and m == 1:
+            # edge case: all 1x1 rules are valid
+            return True
+
         if all( x is None for x in rule[0] ):
             return False
 

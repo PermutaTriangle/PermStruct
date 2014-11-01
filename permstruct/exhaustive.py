@@ -53,6 +53,9 @@ def exhaustive_with_overlays(
     ):
 
     rules = RuleSet(perm_prop, perm_bound)
+
+    assert ignore_first < rules.validcnt, "All permutations from the set are ignored"
+
     for rule in generate_rules_with_overlay_upto(min_rule_size, max_rule_size, dag.elements, max_nonempty, overlay_dag.elements, max_overlay_cnt, max_overlay_size):
         rules.add_rule(rule)
 

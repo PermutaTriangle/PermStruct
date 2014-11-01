@@ -96,7 +96,8 @@ class RuleSet:
             mx_cnt = 15
             for rule in self.rules[b]:
                 if cnt == mx_cnt:
-                    print('(and %d more)' % len(self.rules[b] - mx_cnt))
+                    print('')
+                    print('(and %d more)' % (len(self.rules[b]) - mx_cnt))
                     break
 
                 print('')
