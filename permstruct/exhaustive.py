@@ -1,4 +1,5 @@
 
+from permstruct import RuleSet
 from .functions import find_multiple_rules, generate_rules_with_overlay_upto
 from permstruct.dag import DAG
 
@@ -51,9 +52,18 @@ def exhaustive_with_overlays(
         min_rule_size=(1,1),
     ):
 
-    rules = list(generate_rules_with_overlay_upto(min_rule_size, max_rule_size, dag.elements, max_nonempty, overlay_dag.elements, max_overlay_cnt, max_overlay_size))
-    sol_iter = find_multiple_rules(rules, perm_bound, max_rules, perm_prop, ignore_first, allow_overlap_in_first)
+    rules = RuleSet(perm_prop, perm_bound)
+    for rule in generate_rules_with_overlay_upto(min_rule_size, max_rule_size, dag.elements, max_nonempty, overlay_dag.elements, max_overlay_cnt, max_overlay_size):
+        rules.add_rule(rule)
 
-    for sol in sol_iter:
-        yield [ rule for rule, bs in sol ]
+    print('Found %d rules, %d of which are distinct' % (
+            sum( len(v) for k, v in rules.rules.items() ),
+            len(rules.rules)
+        ))
+
+    return rules.exact_cover(
+            max_rules,
+            ignore_first,
+            allow_overlap_in_first,
+        )
 

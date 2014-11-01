@@ -1,5 +1,6 @@
 
-from permstruct.lib import Permutation, Permutations, choose, exact_cover, binary_search
+from permstruct import RuleSet
+from permstruct.lib import Permutation, Permutations, choose
 from permstruct.permutation_sets import GeneratingRule
 import random
 from itertools import product
@@ -11,8 +12,8 @@ def construct_rule(permProp,
                    max_nonempty,
                    max_ec_cnt,
                    inputs,
-                   ignore_first=0,
-                   allow_overlap_in_first=False):
+                   ignore_first=1,
+                   allow_overlap_in_first=True):
 
     """Tries to construct a set of generating rules that together generate the
     given permutation set.
@@ -60,27 +61,18 @@ def construct_rule(permProp,
     """
 
 
-    validcnt = 0
-    ball = 0
-    permset = [ [] for _ in range(B+1) ]
-    ocreated = {}
-    for l in range(B+1):
-        ocreated.setdefault(l, [])
-        for perm in Permutations(l):
-            if permProp(perm):
-                permset[l].append(tuple(perm))
-                ocreated[l].append(perm)
-                ball |= 1 << validcnt
-                validcnt += 1
+    main_perms = []
+    for perm in Permutations(B + 1):
+        if permProp(perm):
+            main_perms.append(tuple(perm))
 
     # pick the main permutation to work with, currently just chooses one of the
     # largest ones randomly
     # TODO: be more smart about picking the permutations to learn from (or use all of them)
-    main_perms = list(permset[B])
     random.shuffle(main_perms)
     main_perms = main_perms[:10]
 
-    ok_rules = {}
+    rules = RuleSet()
     tried_rules = set()
     for n in range(n_range[0], n_range[1] + 1):
         for m in range(m_range[0], m_range[1] + 1):
@@ -128,85 +120,16 @@ def construct_rule(permProp,
                                 continue
 
                             tried_rules.add(rule)
+                            rules.add_rule(rule)
 
-                            bs = 0
-                            ok = True
-                            curcnt = 0
-                            for l in range(B+1):
-                                curlevel = []
-                                for perm in rule.generate_of_length(l, ocreated):
-                                    # if not permProp(perm):
-                                    if not binary_search(permset[l], perm):
-                                        ok = False
-                                        # print('Generated something not in the set (%s)' % str(perm))
-                                        break
+    print('Found %d rules, %d of which are distinct' % (
+            sum( len(v) for k, v in rules.rules.items() ),
+            len(rules.rules)
+        ))
 
-                                    curlevel.append(perm)
-
-                                if not ok:
-                                    break
-
-                                cur = sorted(curlevel)
-                                for a,b in zip(cur, cur[1:]):
-                                    if a == b:
-                                        ok = False
-                                        # print('Generated something more than once (%s)' % str(a))
-                                        break
-
-                                if not ok:
-                                    break
-
-                                i = 0
-                                j = 0
-                                while i < len(cur) and j < len(permset[l]):
-                                    if permset[l][j] < cur[i]:
-                                        j += 1
-                                        curcnt += 1
-                                    elif cur[i] == permset[l][j]:
-                                        bs |= 1 << curcnt
-                                        i += 1
-                                        j += 1
-                                        curcnt += 1
-                                    else:
-                                        assert False
-
-                                assert i == len(cur)
-                                curcnt += len(permset[l]) - j
-
-                            if ok:
-                                print(rule)
-                                print(''.join( '0' if (bs & (1 << i)) == 0 else '1' for i in range(validcnt - 1, -1, -1) ))
-                                print('')
-
-                                ok_rules.setdefault(bs, [])
-                                ok_rules[bs].append(rule)
-
-    print('Finding exact cover...')
-
-    bss = list(ok_rules.keys())
-
-    used_idx = set()
-    print('Found:')
-    for res in exact_cover(bss, validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first):
-        print(', '.join(map(str, res)))
-        used_idx |= set(res)
-
-    print('')
-    print('Index:')
-    for i, b in enumerate(bss):
-        if i not in used_idx:
-            continue
-
-        print('%3d: ' % i)
-        print(''.join( '0' if (b & (1 << i)) == 0 else '1' for i in range(validcnt - 1, -1, -1) ))
-
-
-        for rule in ok_rules[b]:
-            print('')
-            print(rule)
-
-        print('')
-
-    # TODO: return the results on some nice form
-    return []
+    return rules.exact_cover(
+            max_ec_cnt,
+            ignore_first,
+            allow_overlap_in_first,
+        )
 

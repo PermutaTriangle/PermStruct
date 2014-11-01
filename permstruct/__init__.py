@@ -1,4 +1,6 @@
 
+from .rule_set import RuleSet
+
 from .functions import (
     generate_all_of_length,
     generate_rules,
