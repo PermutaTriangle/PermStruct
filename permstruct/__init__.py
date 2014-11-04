@@ -14,7 +14,8 @@ from .functions import (
     N,
     S,
     E,
-    empty
+    empty,
+    find_allowed_neighbors,
 )
 
 from .exhaustive import exhaustive, exhaustive_with_overlays

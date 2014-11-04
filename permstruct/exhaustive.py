@@ -56,12 +56,15 @@ def exhaustive_with_overlays(
 
     assert ignore_first < rules.validcnt, "All permutations from the set are ignored"
 
+    rule_cnt = 0
     for rule in generate_rules_with_overlay_upto(min_rule_size, max_rule_size, dag.elements, max_nonempty, overlay_dag.elements, max_overlay_cnt, max_overlay_size):
+        rule_cnt += 1
         rules.add_rule(rule)
 
-    print('Found %d rules, %d of which are distinct' % (
+    print('Found %d rules, %d of which are valid, %d of which are distinct' % (
+            rule_cnt,
             sum( len(v) for k, v in rules.rules.items() ),
-            len(rules.rules)
+            len(rules.rules),
         ))
 
     return rules.exact_cover(

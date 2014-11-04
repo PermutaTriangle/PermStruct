@@ -1,3 +1,5 @@
+from permstruct.permutation_sets import GeneratingRule
+from permstruct import N
 
 class DAG:
     def __init__(self):

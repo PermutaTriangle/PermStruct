@@ -51,11 +51,43 @@ av123 = set([ tuple(p) for l in range(8) for p in Permutations(l) if p.avoids([1
 
 # print(G)
 
+# G = OverlayGeneratingRule([
+#         [X, N, decr],
+#         [N, P, N]
+#     ],
+#     [ (set([(0,0), (0,1), (0,2)]), lambda p: p.avoids([1,2,3])) ]
+# )
+
+# +-+-+-+
+# |1| |X|
+# +-+-+-+
+# | |o| |
+# +-+-+-+
+# 1: decreasing
+# set([(0, 1), (0, 0), (0, 2)]), InputPermutationSet()
+
+permProp = lambda p: p.avoids([2,3,1])
 G = OverlayGeneratingRule([
-        [X, N, decr],
-        [N, P, N]
-    ],
-    [ (set([(0,0), (0,1), (0,2)]), lambda p: p.avoids([1,2,3])) ]
+    [decr, N, X],
+    [N, P, N]
+],
+    [ (set([(0, 1), (0, 0), (0, 2)]), InputPermutationSet(permProp)) ]
+)
+
+# +-+-+-+
+# |X| |X|
+# +-+-+-+
+# | |o| |
+# +-+-+-+
+# set([(0, 1), (0, 0), (0, 2)]), InputPermutationSet()
+
+permProp = lambda p: p.avoids([1,3,2,4])
+G = OverlayGeneratingRule([
+    [X, N, X],
+    [N, P, N]
+],
+    # [ (set([(0, 1), (0, 0), (0, 2)]), InputPermutationSet(permProp)) ]
+    [ (set([(0, 0), (0, 2)]), InputPermutationSet(permProp)) ]
 )
 
 # print(generate_all_of_length(6, G, empty))
@@ -64,8 +96,8 @@ for l, perms in sorted(generate_all_of_length(6, G, empty).items()):
     # print(sorted(perms))
     print(l, len(perms))
     assert len(perms) == len(set(perms))
-    # print(perms)
+    # # print(perms)
     for perm in perms:
-        assert Permutation(perm).avoids([1,2,3])
+        assert permProp(Permutation(perm))
 
 

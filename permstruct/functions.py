@@ -26,7 +26,39 @@ def generate_all_of_length(max_n, S, inp, min_n=0):
 # 
 
 
-def generate_rules(n, m, sets, cnt):
+def find_allowed_neighbors(sets):
+
+    neighb = {}
+
+    for cur_elem in sets:
+        for other_elem in sets:
+            for di in range(-1, 2):
+                for dj in range(-1, 2):
+                    if di == 0 and dj == 0:
+                        continue
+
+                    neighb.setdefault((cur_elem, di, dj), set())
+
+                    a = min(0, di)
+                    b = min(0, dj)
+                    G = GeneratingRule({ (-a, -b): cur_elem, (di-a, dj-b): other_elem })
+
+                    ok = True
+                    for k, v in generate_all_of_length(4, G, { 0: [] }).items():
+                        if len(v) != len(set(v)):
+                            ok = False
+                            break
+
+                    if ok:
+                        neighb[(cur_elem, di, dj)].add(other_elem)
+
+    return neighb
+
+
+def generate_rules(n, m, sets, cnt, allowed_neighbors=None):
+
+    if allowed_neighbors is None:
+        allowed_neighbors = find_allowed_neighbors(sets)
 
     def valid(rule):
         if n == 1 and m == 1:
@@ -48,6 +80,7 @@ def generate_rules(n, m, sets, cnt):
 
         return True
 
+    ssets = set(sets)
     def gen(i, j):
         if j == m:
             for rule in gen(i + 1, 0):
@@ -60,11 +93,20 @@ def generate_rules(n, m, sets, cnt):
                 rule = [ [ trule[x][y] for y in range(m) ] for x in range(n) ]
                 left = cnt - sum( rule[x][y] is not None for x in range(n) for y in range(m) )
 
-                for set in sets:
-                    if left == 0 and set is not None:
+                ss = set(ssets)
+                for di in range(-1, 2):
+                    for dj in range(-1, 2):
+                        ci, cj = i+di, j+dj
+                        if (di, dj) > (i, j) and 0 <= ci < n and 0 <= cj < m:
+                            curs = allowed_neighbors[(rule[ci][cj], -di, -dj)]
+                            ss &= curs
+
+                # for s in sets:
+                for s in ss:
+                    if left == 0 and s is not None:
                         continue
 
-                    rule[i][j] = set
+                    rule[i][j] = s
                     yield rule
 
     a, b = 0, 0
@@ -74,9 +116,11 @@ def generate_rules(n, m, sets, cnt):
             b += 1
             yield GeneratingRule(rule)
 
-    # print(a, b)
 
-def generate_rules_with_overlay(n, m, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
+def generate_rules_with_overlay(n, m, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size, allowed_neighbors=None):
+
+    if allowed_neighbors is None:
+        allowed_neighbors = find_allowed_neighbors(sets)
 
     def gen(rule, i, j, last, left):
 
@@ -106,21 +150,29 @@ def generate_rules_with_overlay(n, m, sets, cnt, overlay_preds, max_overlay_cnt,
 
 
 
-    for rule in generate_rules(n, m, sets, cnt):
+    for rule in generate_rules(n, m, sets, cnt, allowed_neighbors):
         for overlay_rule in gen(rule, 0, 0, (0, 0), max_overlay_cnt):
             yield overlay_rule
 
 
-def generate_rules_upto(min_rule_size, max_rule_size, sets, cnt):
+def generate_rules_upto(min_rule_size, max_rule_size, sets, cnt, allowed_neighbors=None):
+
+    if allowed_neighbors is None:
+        allowed_neighbors = find_allowed_neighbors(sets)
+
     for nn in range(min_rule_size[0], max_rule_size[0]+1):
         for mm in range(min_rule_size[1], max_rule_size[1]+1):
-            for res in generate_rules(nn, mm, sets, cnt):
+            for res in generate_rules(nn, mm, sets, cnt, allowed_neighbors):
                 yield res
 
-def generate_rules_with_overlay_upto(min_rule_size, max_rule_size, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
+def generate_rules_with_overlay_upto(min_rule_size, max_rule_size, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size, allowed_neighbors=None):
+
+    if allowed_neighbors is None:
+        allowed_neighbors = find_allowed_neighbors(sets)
+
     for nn in range(min_rule_size[0], max_rule_size[0]+1):
         for mm in range(min_rule_size[1], max_rule_size[1]+1):
-            for res in generate_rules_with_overlay(nn, mm, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
+            for res in generate_rules_with_overlay(nn, mm, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size, allowed_neighbors):
                 yield res
 
 def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (lambda n : 0)):
