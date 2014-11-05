@@ -82,7 +82,6 @@ incr_nonempty = SimpleGeneratingRule(Permutation([1,2]), [X, P], description='in
 decr_nonempty = SimpleGeneratingRule(Permutation([2,1]), [X, P], description='decreasing nonempty').to_static(8, {1:[Permutation([1])]})
 
 
-
 max_len = 6
 n_range = (2, 3) # number of rows (min, max)
 m_range = (2, 3) # numbor of columns (min, max)
@@ -132,10 +131,10 @@ permProp = lambda perm: perm.avoids([2,3,1])
 #     [X,N,decr],
 # ])
 
-G = GeneratingRule([
-    [decr,N,decr],
-    [N,P,N],
-])
+# G = GeneratingRule([
+#     [decr,N,decr],
+#     [N,P,N],
+# ])
 
 # +-+-+-+-+
 # |1|1|2|1|
@@ -150,12 +149,35 @@ G = GeneratingRule([
 # 2: Av([2, 1, 3])
 # 1 1 1 3 9 31 111 409
 
+
+# G = GeneratingRule([
+#     [P,P,P],
+#     [P,P,P],
+#     [P,P,P]
+# ])
+
+# G = GeneratingRule([
+#     [P,P],
+#     [P,P],
+# ])
+
+G = GeneratingRule([
+    [P,P,P,P],
+    [P,P,P,P],
+    [P,P,P,P],
+    [P,P,P,P],
+])
+
+
+# av321_132 = (lambda perm: perm.avoids(Permutation([3,2,1])) and perm.avoids(Permutation([1,3,2])),StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s,%s)' % (Permutation([3,2,1]), Permutation([1,3,2]))))
+# inp_without_incr = (lambda perm: perm.avoids(p), StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='input without incr'))
+
 # # res = generate_all_of_length(10, G, {0:[()], 1:[(1,)]}, 2)
-# res = generate_all_of_length(10, G, {0:[()]}, 2)
+res = generate_all_of_length(16, G, {0:[()]}, 2)
 # # print(res)
-# for l in res:
-#     # print(res)
-#     print(len(res[l]))
+for l in res:
+    # print(res)
+    print(len(res[l]))
 # 
 # import sys
 # sys.exit(0)
