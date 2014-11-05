@@ -14,7 +14,7 @@ class StaticPermutationSet(PermutationSet):
         for perm in perms:
             n = len(perm)
             self.perms.setdefault(n, [])
-            self.perms[n].append(perm)
+            self.perms[n].append(tuple(perm))
 
     @staticmethod
     def from_predicate(predicate, max_n, gf=None, description=None):
@@ -35,7 +35,9 @@ class StaticPermutationSet(PermutationSet):
         return self.gf
 
     def contains(self, perm):
-        return perm in self.perms
+        # print('checking if ', perm, ' in self: ', tuple(perm) in self.perms)
+        # print(self.perms)
+        return tuple(perm) in self.perms[len(tuple(perm))]
 
     def generate_of_length(self, n, input):
         return self.perms.get(n, [])

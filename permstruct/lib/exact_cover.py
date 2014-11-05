@@ -39,7 +39,7 @@ def exact_cover(bss, validcnt, max_cnt, ignore_first, allow_overlap_in_first):
                 ec.set_value(i, j, True)
 
     ec.setup()
-    ec.search()
+    ec.search(at_most=max_cnt)
 
     # print(sols1)
     # print(sols2)

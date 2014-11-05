@@ -93,11 +93,14 @@ class AlgorithmX:
                     ptr[i][j].p = ptr[self.rows][j]
             ptr[self.rows][j].size = cnt
 
-    def search(self, k = 0):
+    def search(self, k = 0, at_most = None):
         if self.head == self.head.r:
             res = [ self.sol[i] for i in range(k) ]
             res = sorted(res)
             return self.solution_callback(res)
+
+        if at_most is not None and k >= at_most:
+            return
 
         c = self.head.r
         tmp = self.head.r
@@ -121,7 +124,7 @@ class AlgorithmX:
                 cover(j.p)
                 j = j.r
 
-            found = self.search(k + 1)
+            found = self.search(k + 1, at_most)
 
             j = r.l
             while j != r:

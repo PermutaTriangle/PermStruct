@@ -5,13 +5,13 @@ from permstruct.permutation_sets import GeneratingRule
 import random
 from itertools import product
 
-def construct_rule(permProp,
-                   B,
-                   n_range,
-                   m_range,
+def construct_rule(perm_prop,
+                   perm_bound,
+                   dag,
+                   max_rule_size,
                    max_nonempty,
-                   max_ec_cnt,
-                   inputs,
+                   max_rules,
+
                    ignore_first=1,
                    allow_overlap_in_first=True):
 
@@ -20,25 +20,22 @@ def construct_rule(permProp,
 
     INPUT:
 
-    - ``permProp`` - the permutation set expressed as a boolean predicate:
-      permProp(p) should return True iff the permutation p is a part of the
+    - ``perm_prop`` - the permutation set expressed as a boolean predicate:
+      perm_prop(p) should return True iff the permutation p is a part of the
       permutation set.
 
-    - ``B`` - consider only permutations of length up to B, inclusive.
+    - ``perm_bound`` - consider only permutations of length up to perm_bound, inclusive.
 
-    - ``n_range`` - a tuple (a, b) specifying that we should consider
-      generating rules with number of rows between a and b, inclusive.
-
-    - ``m_range`` - a tuple (a, b) specifying that we should consider
-      generating rules with number of rows between a and b, inclusive.
+    - ``max_rule_size`` - a tuple (n, m) specifying that we should consider
+      generating rules with at most n rows and at most m columns.
 
     - ``max_nonempty`` - the maximum number of non-empty boxes in the resulting
       generating rule.
 
-    - ``max_ec_cnt`` - the maximum number of generating rules to match
+    - ``max_rules`` - the maximum number of generating rules to match
       together.
 
-    - ``inputs`` - a list of tuples (f, g), where g is a generating rule and f
+    - ``dag`` - a list of tuples (f, g), where g is a generating rule and f
       is a boolean predicate: f(p) should return True iff the permutation p can
       be produced by g. These generating rules are possible candidates for
       boxes in the resulting generating rules.
@@ -51,8 +48,8 @@ def construct_rule(permProp,
       permutation being produced multiple times) in the ``ignore_first``
       permutations.
 
-    Note that if performance is an issue, the parameters ``B``, ``n_range``,
-    ``m_range``, ``max_nonempty``, ``max_ec_cnt`` and ``inputs`` can be tweaked
+    Note that if performance is an issue, the parameters ``perm_bound``, ``max_rule_size``,
+    ``max_nonempty``, ``max_rules`` and ``dag`` can be tweaked
     for better performance, at the cost of lower number of results.
 
     This function currently doesn't return anything meaningful, but it does
@@ -62,22 +59,23 @@ def construct_rule(permProp,
 
 
     main_perms = []
-    for perm in Permutations(B + 1):
-        if permProp(perm):
+    for perm in Permutations(perm_bound):
+        if perm_prop(perm):
             main_perms.append(tuple(perm))
 
     # pick the main permutation to work with, currently just chooses one of the
     # largest ones randomly
     # TODO: be more smart about picking the permutations to learn from (or use all of them)
     random.shuffle(main_perms)
-    main_perms = main_perms[:10]
+    main_perms = main_perms[:50]
+    # main_perm = [ Permutation([1,2,3,4,5,6]) ]
 
-    rules = RuleSet()
+    rules = RuleSet(perm_prop, perm_bound)
     tried_rules = set()
-    for n in range(n_range[0], n_range[1] + 1):
-        for m in range(m_range[0], m_range[1] + 1):
-            for xsep in choose(B - 1, n - 1):
-                for ysep in choose(B - 1, m - 1):
+    for n in range(1, max_rule_size[0] + 1):
+        for m in range(1, max_rule_size[1] + 1):
+            for xsep in choose(perm_bound - 1, n - 1):
+                for ysep in choose(perm_bound - 1, m - 1):
                     for main_perm in main_perms:
 
                         arr = [ [ [] for j in range(m) ] for i in range(n) ]
@@ -86,8 +84,8 @@ def construct_rule(permProp,
                         ok = True
                         for i in range(n):
                             for j in range(m):
-                                for k in range(0 if j == 0 else ysep[j-1] + 1, (B - 1 if j == m - 1 else ysep[j]) + 1):
-                                    if (0 if i == 0 else xsep[i-1] + 1) <= B - main_perm[k] <= (B - 1 if i == n - 1 else xsep[i]):
+                                for k in range(0 if j == 0 else ysep[j-1] + 1, (perm_bound - 1 if j == m - 1 else ysep[j]) + 1):
+                                    if (0 if i == 0 else xsep[i-1] + 1) <= perm_bound - main_perm[k] <= (perm_bound - 1 if i == n - 1 else xsep[i]):
                                         arr[i][j].append(main_perm[k])
 
                                 if arr[i][j]:
@@ -102,33 +100,43 @@ def construct_rule(permProp,
                         if not ok:
                             continue
 
+
                         nonempty = []
                         for i in range(n):
                             for j in range(m):
                                 if arr[i][j]:
                                     arr[i][j] = Permutation.to_standard(arr[i][j])
                                     cur = []
-                                    for inp_prop, inp in inputs:
-                                        if inp_prop(arr[i][j]):
+                                    # for inp_prop, inp in dag.elements:
+                                    for inp in dag.elements:
+                                        if inp is None:
+                                            continue
+
+                                        if inp.contains(arr[i][j]):
                                             cur.append((i, j, inp))
 
                                     nonempty.append(cur)
+
+
 
                         for poss in product(*nonempty):
                             rule = GeneratingRule({ (i,j): inp for i, j, inp in poss })
                             if rule in tried_rules:
                                 continue
 
+                            # print(rule)
+
                             tried_rules.add(rule)
                             rules.add_rule(rule)
 
-    print('Found %d rules, %d of which are distinct' % (
+    print('Found %d rules, %d of which are valid, %d of which are distinct' % (
+            len(tried_rules),
             sum( len(v) for k, v in rules.rules.items() ),
-            len(rules.rules)
+            len(rules.rules),
         ))
 
     return rules.exact_cover(
-            max_ec_cnt,
+            max_rules,
             ignore_first,
             allow_overlap_in_first,
         )

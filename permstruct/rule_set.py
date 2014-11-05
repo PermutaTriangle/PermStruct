@@ -7,6 +7,9 @@ class RuleSet:
         self.perm_bound = perm_bound
         self.rules = {}
 
+        self.death_by_overlap = 0
+        self.death_by_perm_prop = 0
+
         # some preprocessing: cache all permutations of length at most
         # perm_bound that satisfy perm_prop
         self.validcnt = 0
@@ -22,17 +25,23 @@ class RuleSet:
                     self.ball |= 1 << self.validcnt
                     self.validcnt += 1
 
+    def print_stats(self):
+        print('Death by overlap: ', self.death_by_overlap)
+        print('Death by perm prop: ', self.death_by_perm_prop)
+
 
     def add_rule(self, rule):
 
         bs = 0
         curcnt = 0
+        empty = True
         for l in range(self.perm_bound+1):
             curlevel = []
             for perm in rule.generate_of_length(l, self.ocreated):
                 # if not self.perm_prop(perm):
                 if not binary_search(self.permset[l], perm):
                     # the rule generated something that doesn't satisfy perm_prop
+                    self.death_by_perm_prop += 1
                     return False
 
                 curlevel.append(perm)
@@ -41,6 +50,7 @@ class RuleSet:
             for a,b in zip(cur, cur[1:]):
                 if a == b:
                     # the rule generated something more than once (i.e. there is overlap)
+                    self.death_by_overlap += 1
                     return False
 
             i = 0
@@ -54,11 +64,15 @@ class RuleSet:
                     i += 1
                     j += 1
                     curcnt += 1
+                    empty = False
                 else:
                     assert False
 
             assert i == len(cur)
             curcnt += len(self.permset[l]) - j
+
+        if empty:
+            return
 
         print(rule)
         print(''.join( '0' if (bs & (1 << i)) == 0 else '1' for i in range(self.validcnt - 1, -1, -1) ))
