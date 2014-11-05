@@ -22,7 +22,7 @@ def exhaustive(
     assert ignore_first < rules.validcnt, "All permutations from the set are ignored"
 
     rule_cnt = 0
-    for rule in generate_rules_upto(min_rule_size, max_rule_size, perm_prop, dag.elements, max_nonempty):
+    for rule in generate_rules_upto(min_rule_size, max_rule_size, perm_prop, perm_bound, dag.elements, max_nonempty):
         rule_cnt += 1
         rules.add_rule(rule)
 
@@ -63,7 +63,7 @@ def exhaustive_with_overlays(
     assert ignore_first < rules.validcnt, "All permutations from the set are ignored"
 
     rule_cnt = 0
-    for rule in generate_rules_with_overlay_upto(min_rule_size, max_rule_size, perm_prop, dag.elements, max_nonempty, overlay_dag.elements, max_overlay_cnt, max_overlay_size):
+    for rule in generate_rules_with_overlay_upto(min_rule_size, max_rule_size, perm_prop, perm_bound, dag.elements, max_nonempty, overlay_dag.elements, max_overlay_cnt, max_overlay_size):
 
         # print(rule)
         # print ""
