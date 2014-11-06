@@ -186,6 +186,52 @@ def taylored_for_av_132_4231(perm_prop, n):
 
     return dag
 
+def taylored_for_av_132_1234(perm_prop, n):
+    dag = elementary(perm_prop, n)
+
+    i = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([2,1])), n, description='incr, len>1')
+    d = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([1,2])), n, description='decr, len>1')
+    dag.add_element(i)
+    dag.add_element(d)
+
+    p = Permutation([1,3,2])
+    q = Permutation([1,2,3])
+    pset = StaticPermutationSet.from_predicate((lambda x: not x.avoids([1,2]) and x.avoids(p) and x.avoids(q)), n, description='Av(%s,%s)-decr' % (p, q))
+    dag.add_element(pset)
+
+    return dag
+
+def taylored_for_av_132_4213(perm_prop, n):
+    dag = elementary(perm_prop, n)
+
+    i = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([2,1])), n, description='incr, len>1')
+    d = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([1,2])), n, description='decr, len>1')
+    dag.add_element(i)
+    dag.add_element(d)
+
+    p = Permutation([1,3,2])
+    q = Permutation([2,1,3])
+    pset = StaticPermutationSet.from_predicate((lambda x: not x.avoids([1,2]) and not x.avoids([2,1]) and x.avoids(p) and x.avoids(q)), n, description='Av(%s,%s)-incr-decr' % (p, q))
+    dag.add_element(pset)
+
+    return dag
+
+def taylored_for_av_132_3412(perm_prop, n):
+    #dag = elementary(perm_prop, n)
+    dag = DAG()
+    dag.add_element(N)
+    dag.add_element(P)
+
+    X_minus_epsilon = i = StaticPermutationSet.from_predicate((lambda x: len(x) > 0 and perm_prop(x)), n, description='X - epsilon')
+    dag.add_element(X_minus_epsilon)
+
+    i = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([2,1])), n, description='incr, len>1')
+    d = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([1,2])), n, description='decr, len>1')
+    dag.add_element(i)
+    dag.add_element(d)
+
+    return dag
+
 def len_3_pairs(perm_prop, n):
     dag = elementary(perm_prop, n)
 
