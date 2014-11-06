@@ -2,11 +2,18 @@
 - Generate rules more efficiently.
     - Support bound on number of non-empty boxes.
 - Framework for tests.
-- Preprocess binary strings. Don't do set cover over the same binary string many times. (done in new algorithm)
-- Implement Algorithm X for exact cover.
+- The XX-overlay rule for Av(123) also comes up for Av(231)
+- Can we order the output of the exact cover by the number of rules glued?
 
 
 DONE:
+- Preprocess binary strings. Don't do set cover over the same binary string many times. (done in new algorithm)
+- Implement Algorithm X for exact cover. DONE!
+- We can't seem to be able to do perm_prop = lambda p: p.avoids([1])
+  WE DO NOW!
+- I get maximum recursion depth exceeded when working with classical
+  patterns of length 4. NOT ANYMORE!
+- In some cases the exact cover algorithm is slowing things down
+  (Happens rarely)
 - Rewrite OrderedSetPartitions without all the sets. Benchmark and see if it is faster. (IT WAS!!)
 - When we search for 1x1 rules for Av(231) we only get the rule |I| but should also get |Av(231)|
-
