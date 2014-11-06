@@ -140,6 +140,52 @@ def classic_avoiders_length_3_with_input_without_incrdecr(perm_prop, n):
 
     return dag
 
+def taylored_for_av_132_4321(perm_prop, n):
+    dag = elementary(perm_prop, n)
+    i = incr_nonempty(n)
+    d = decr_nonempty(n)
+    dag.add_element(i)
+    dag.add_element(d)
+    dag.put_below(N, i)
+    dag.put_below(P, i)
+    dag.put_below(N, d)
+    dag.put_below(P, d)
+
+    av321_132_minus_incr = from_predicate((lambda p: p.avoids([1,3,2]) and p.avoids([3,2,1]) and not p.avoids([2,1])), 'Av([1,3,2], [3,2,1]) - incr', n)
+    dag.add_element(av321_132_minus_incr)
+
+    return dag
+
+def taylored_for_av_132_4312(perm_prop, n):
+    dag = elementary(perm_prop, n)
+
+    i = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([2,1])), n, description='incr, len>1')
+    d = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([1,2])), n, description='decr, len>1')
+    dag.add_element(i)
+    dag.add_element(d)
+
+    p = Permutation([1,3,2])
+    q = Permutation([3,1,2])
+    pset = StaticPermutationSet.from_predicate((lambda x: not x.avoids([1,2]) and not x.avoids([2,1]) and x.avoids(p) and x.avoids(q)), n, description='Av(%s,%s)-incr-decr' % (p, q))
+    dag.add_element(pset)
+
+    return dag
+
+def taylored_for_av_132_4231(perm_prop, n):
+    dag = elementary(perm_prop, n)
+
+    i = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([2,1])), n, description='incr, len>1')
+    d = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([1,2])), n, description='decr, len>1')
+    dag.add_element(i)
+    dag.add_element(d)
+
+    p = Permutation([1,3,2])
+    q = Permutation([2,3,1])
+    pset = StaticPermutationSet.from_predicate((lambda x: not x.avoids([1,2]) and not x.avoids([2,1]) and x.avoids(p) and x.avoids(q)), n, description='Av(%s,%s)-incr-decr' % (p, q))
+    dag.add_element(pset)
+
+    return dag
+
 def len_3_pairs(perm_prop, n):
     dag = elementary(perm_prop, n)
 
