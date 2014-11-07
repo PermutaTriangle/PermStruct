@@ -25,6 +25,15 @@ def elementary(perm_prop, n):
     dag.add_element(InputPermutationSet(perm_prop))
     return dag
 
+def elementary_X_minus_epsilon(perm_prop, n):
+    dag = DAG()
+    dag.add_element(N)
+    dag.add_element(P)
+
+    X_minus_epsilon = i = StaticPermutationSet.from_predicate((lambda x: len(x) > 0 and perm_prop(x)), n, description='X - epsilon')
+    dag.add_element(X_minus_epsilon)
+    return dag
+
 def incr_decr(perm_prop, n):
     dag = elementary(perm_prop, n)
     i = incr(n)
@@ -39,6 +48,16 @@ def incr_decr(perm_prop, n):
 
 def incr_decr_nonempty(perm_prop, n):
     dag = elementary(perm_prop, n)
+    i = incr_nonempty(n)
+    d = decr_nonempty(n)
+    dag.add_element(i)
+    dag.add_element(d)
+    dag.put_below(P, i)
+    dag.put_below(P, d)
+    return dag
+
+def incr_decr_nonempty_X_minus_epsilon(perm_prop, n):
+    dag = elementary_X_minus_epsilon(perm_prop, n)
     i = incr_nonempty(n)
     d = decr_nonempty(n)
     dag.add_element(i)
@@ -229,6 +248,18 @@ def taylored_for_av_132_3412(perm_prop, n):
     d = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([1,2])), n, description='decr, len>1')
     dag.add_element(i)
     dag.add_element(d)
+
+    return dag
+
+def taylored_for_av_132_231_dotted(perm_prop, n):
+    # dag = elementary(perm_prop, n)
+    dag = DAG()
+
+    dag.add_element(N)
+    dag.add_element(P)
+
+    X_minus_epsilon = i = StaticPermutationSet.from_predicate((lambda x: len(x) > 0 and perm_prop(x)), n, description='X - epsilon')
+    dag.add_element(X_minus_epsilon)
 
     return dag
 
