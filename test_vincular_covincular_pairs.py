@@ -29,14 +29,13 @@ def avoids_231_dotted(perm):
 # Avoidance of one classical pattern of length 1
 
 perm_prop     = lambda p: p.avoids([1,3,2]) and avoids_231_dotted(p)
-perm_prop     = lambda p: p.avoids([1,2,3]) and avoids_132_vinc(p)
+# perm_prop     = lambda p: p.avoids([1,2,3]) and avoids_132_vinc(p)
 
 perm_bound    = 7
 # inp_dag       = permstruct.dag.elementary(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.elementary_X_minus_epsilon(perm_prop, perm_bound)
+inp_dag       = permstruct.dag.elementary_X_minus_epsilon(perm_prop, perm_bound)
 # inp_dag       = permstruct.dag.incr_decr_nonempty(perm_prop, perm_bound)
 # inp_dag       = permstruct.dag.incr_decr_nonempty_X_minus_epsilon(perm_prop, perm_bound)
-inp_dag       = permstruct.dag.taylored_for_av_132_231_dotted(perm_prop, perm_bound)
 max_rule_size = (4, 4)
 max_non_empty = 4
 max_rules     = 20
