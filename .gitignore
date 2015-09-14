@@ -5,3 +5,7 @@ __pycache__
 *.swo
 /stripped
 /stripped.gz
+
+/build
+/dist
+/permstruct.egg-info

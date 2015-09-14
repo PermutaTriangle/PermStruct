@@ -1,4 +1,5 @@
-from permstruct.lib import Permutations, exact_cover, binary_search
+from permuta import Permutations
+from permuta.misc import exact_cover, binary_search
 
 class RuleSet:
 

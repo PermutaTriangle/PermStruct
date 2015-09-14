@@ -1,5 +1,6 @@
 
-from permstruct.lib import Permutation, Permutations, flatten, binary_search, choose, exact_cover
+from permuta import Permutation, Permutations
+from permuta.misc import flatten, binary_search, choose, exact_cover
 from permstruct import X, P, N, empty, generate_all_of_length, construct_rule
 from permstruct.permutation_sets import SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
 from itertools import product

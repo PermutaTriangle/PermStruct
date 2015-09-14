@@ -16,7 +16,7 @@ perm_prop = lambda p: p.avoids([2,3,1])
 
 perm_bound = 6
 
-# inp_dag = permstruct.dag.elementary(perm_prop, perm_bound)
+inp_dag = permstruct.dag.elementary(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.incr_decr(perm_prop, perm_bound)
 # overlay_dag = permstruct.dag.elementary(perm_prop, perm_bound)
 # overlay_dag = permstruct.dag.x_dag(perm_prop, perm_bound)
@@ -24,7 +24,7 @@ perm_bound = 6
 # inp_dag = permstruct.dag.decr_dag(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.classic_avoiders_length_3(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.classic_avoiders_length_3_with_input_without_incrdecr(perm_prop, perm_bound)
-inp_dag = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
+# inp_dag = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
 
 # Found 19525 rules, 86 of which are valid, 72 of which are distinct
 # Found 12445 rules, 86 of which are valid, 72 of which are distinct
@@ -50,8 +50,8 @@ inp_dag = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
 
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (4, 4), 6, 6, ignore_first=1)
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (4, 4), 4, 6, ignore_first=1)
-# sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
-sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 3, 100)
+sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
+# sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 3, 100)
 # sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
 # sol_iter = permstruct.exhaustive_with_overlays(perm_prop, perm_bound, inp_dag, (2, 3), 4, 4, overlay_dag, 1, (1, 3), min_rule_size=(2,3))
@@ -59,11 +59,11 @@ sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 3, 100)
 
 # permstruct.exhaustive(perm_prop, perm_bound, dag, (3, 3), 4, 5)
 
-# for sol in sol_iter:
-# 
-#     print '===================================='
-#     print ""
-#     for rule in sol:
-#         print(rule)
-#         print ""
-# 
+for sol in sol_iter:
+
+    print '===================================='
+    print ""
+    for rule in sol:
+        print(rule)
+        print ""
+
