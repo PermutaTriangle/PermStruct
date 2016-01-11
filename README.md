@@ -1,12 +1,15 @@
 # The PermStruct Algorithm
 
+[![Build Status](https://travis-ci.org/PermutaTriangle/PermStruct.svg?branch=master)](https://travis-ci.org/PermutaTriangle/PermStruct)
+
 PermStruct is an algorithm for discovering descriptions of permutation sets in
 terms of so-called generating rules. These descriptions can then be used to
 derive generating functions for the permutation sets.
 
 ## Installing
-To install PermStruct on your system, simply run the following command as a
-superuser:
+To install PermStruct on your system, start by installing the
+[Permuta](https://github.com/PermutaTriangle/Permuta) library. Then simply run
+the following command as a superuser:
 ```
 # ./setup.py install
 ```
