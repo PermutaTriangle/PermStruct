@@ -1,6 +1,7 @@
 import unittest
 import permstruct
 import permstruct.dag
+import sys
 
 class TestTravis(unittest.TestCase):
     def test_travis(self):
@@ -10,9 +11,8 @@ class TestTravis(unittest.TestCase):
         sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
         for sol in sol_iter:
 
-            print '===================================='
-            print ""
+            sys.stdout.write('====================================\n')
+            sys.stdout.write('\n')
             for rule in sol:
-                print(rule)
-                print ""
+                sys.stdout.write('%s\n\n' % rule)
 
