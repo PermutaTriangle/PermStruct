@@ -5,7 +5,9 @@ python:
   - "3.3"
   - "3.4"
 before_script:
+    - DIR=$(pwd)
     - git clone https://github.com/PermutaTriangle/Permuta.git /tmp/Permuta
     - cd /tmp/Permuta
     - sudo python setup.py install
+    - cd $DIR
 script: python setup.py test
