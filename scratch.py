@@ -1,7 +1,7 @@
 
 from permstruct import generate_all_of_length, generate_rules, generate_rules_upto, generate_rules_with_overlay, generate_rules_with_overlay_upto, matches_rule, find_multiple_rules, X, P, N, empty
 from permstruct.permutation_sets import SimpleGeneratingRule, GeneratingRule, StaticPermutationSet
-from permstruct.lib import Permutation, Permutations
+from permuta import Permutation, Permutations
 
 import bisect, sys
 from copy import deepcopy

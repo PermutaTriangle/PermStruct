@@ -1,6 +1,6 @@
 
 from .permutation_set import PermutationSet
-from permstruct.lib import Permutations
+from permuta import Permutations
 
 class UniversePermutationSet(PermutationSet):
     """A permutation set representing all permutations."""

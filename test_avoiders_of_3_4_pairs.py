@@ -1,6 +1,6 @@
 import permstruct
 import permstruct.dag
-from permstruct.lib import Permutations
+from permuta import Permutations
 
 # Since we usually don't want overlays:
 overlays = False

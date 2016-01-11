@@ -17,14 +17,14 @@ perm_prop = lambda p: p.avoids([2,3,1])
 perm_bound = 6
 
 # inp_dag = permstruct.dag.elementary(perm_prop, perm_bound)
-# inp_dag = permstruct.dag.incr_decr(perm_prop, perm_bound)
+inp_dag = permstruct.dag.incr_decr(perm_prop, perm_bound)
 # overlay_dag = permstruct.dag.elementary(perm_prop, perm_bound)
 # overlay_dag = permstruct.dag.x_dag(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.incr_decr_nonempty(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.decr_dag(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.classic_avoiders_length_3(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.classic_avoiders_length_3_with_input_without_incrdecr(perm_prop, perm_bound)
-inp_dag = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
+# inp_dag = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
 
 # Found 19525 rules, 86 of which are valid, 72 of which are distinct
 # Found 12445 rules, 86 of which are valid, 72 of which are distinct

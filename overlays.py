@@ -1,8 +1,8 @@
-from permstruct.lib import ordered_set_partitions, flatten
+from permuta.misc import ordered_set_partitions, flatten
 from permstruct.permutation_sets import PermutationSet, StaticPermutationSet, PointPermutationSet, InputPermutationSet
 
 from permstruct import X, N, P, empty, generate_all_of_length
-from permstruct.lib import Permutation, Permutations
+from permuta import Permutation, Permutations
 from permstruct.permutation_sets import SimpleGeneratingRule, OverlayGeneratingRule
 
 from itertools import product

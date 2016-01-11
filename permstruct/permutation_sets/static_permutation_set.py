@@ -1,5 +1,5 @@
 
-from permstruct.lib import Permutation, Permutations
+from permuta import Permutation, Permutations
 from .permutation_set import PermutationSet
 
 class StaticPermutationSet(PermutationSet):

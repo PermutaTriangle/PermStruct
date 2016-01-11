@@ -1,5 +1,6 @@
 from permstruct import *
-from permstruct.lib import *
+from permuta import *
+from permuta.misc import *
 from permstruct.permutation_sets import *
 import sys
 from itertools import product

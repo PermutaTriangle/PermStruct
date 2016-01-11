@@ -1,5 +1,5 @@
 from .permutation_set import PermutationSet
-from permstruct.lib import Permutations
+from permuta import Permutations
 
 class EmptyPermutationSet(PermutationSet):
     """A permutation set representing no permutations."""

@@ -1,6 +1,7 @@
 
 from .permutation_sets import PointPermutationSet, InputPermutationSet, SimpleGeneratingRule, GeneratingRule, OverlayGeneratingRule, StaticPermutationSet, UniversePermutationSet, EmptyPermutationSet
-from .lib import Permutation, Permutations, binary_search
+from permuta import Permutation, Permutations
+from permuta.misc import binary_search
 from copy import deepcopy
 
 def generate_all_of_length(max_n, S, inp, min_n=0):

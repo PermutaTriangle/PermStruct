@@ -1,7 +1,7 @@
 
 from permstruct import *
 from permstruct.permutation_sets import *
-from permstruct.lib import Permutation, Permutations
+from permuta import Permutation, Permutations
 
 incr_nonempty = GeneratingRule([
     [N,P],

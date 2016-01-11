@@ -1,6 +1,7 @@
 
 from permstruct import RuleSet
-from permstruct.lib import Permutation, Permutations, choose
+from permuta import  Permutation, Permutations
+from permuta.misc import choose
 from permstruct.permutation_sets import GeneratingRule
 import random
 from itertools import product

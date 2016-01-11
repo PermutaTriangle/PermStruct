@@ -1,5 +1,5 @@
 
-from permstruct.lib import ordered_set_partitions, flatten
+from permuta.misc import ordered_set_partitions, flatten
 from .permutation_set import PermutationSet
 from .static_permutation_set import StaticPermutationSet
 from .point_permutation_set import PointPermutationSet
