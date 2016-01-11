@@ -37,7 +37,7 @@ class StaticPermutationSet(PermutationSet):
     def contains(self, perm):
         # print('checking if ', perm, ' in self: ', tuple(perm) in self.perms)
         # print(self.perms)
-        return tuple(perm) in self.perms[len(tuple(perm))]
+        return tuple(perm) in self.perms.get(len(tuple(perm)), set())
 
     def generate_of_length(self, n, input):
         return self.perms.get(n, [])

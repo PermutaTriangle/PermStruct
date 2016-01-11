@@ -10,9 +10,9 @@ setup(
     version = "0.0.1",
     author = "Henning Ulfarsson",
     author_email = "henningu@ru.is",
-    description = "The PermStruct Algorithm",
+    description = "An implementation of the PermStruct algorithm.",
     license = "BSD-3",
-    keywords = "permutations patterns",
+    keywords = "permutations generating rules",
     url = "https://github.com/PermutaTriangle/PermStruct",
     packages=[
         'permstruct',

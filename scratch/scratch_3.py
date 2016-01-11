@@ -50,8 +50,8 @@ inp_dag = permstruct.dag.incr_decr(perm_prop, perm_bound)
 
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (4, 4), 6, 6, ignore_first=1)
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (4, 4), 4, 6, ignore_first=1)
-# sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
-sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 3, 100)
+sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
+# sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 3, 100)
 # sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
 # sol_iter = permstruct.exhaustive_with_overlays(perm_prop, perm_bound, inp_dag, (2, 3), 4, 4, overlay_dag, 1, (1, 3), min_rule_size=(2,3))
@@ -59,11 +59,11 @@ sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 3, 100)
 
 # permstruct.exhaustive(perm_prop, perm_bound, dag, (3, 3), 4, 5)
 
-# for sol in sol_iter:
-# 
-#     print '===================================='
-#     print ""
-#     for rule in sol:
-#         print(rule)
-#         print ""
-# 
+for sol in sol_iter:
+
+    print '===================================='
+    print ""
+    for rule in sol:
+        print(rule)
+        print ""
+

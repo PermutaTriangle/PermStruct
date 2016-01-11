@@ -1,4 +1,3 @@
-
 from permuta import Permutation
 from permuta.misc import ordered_set_partitions, flatten
 from .permutation_set import PermutationSet
