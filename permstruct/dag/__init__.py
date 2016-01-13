@@ -1,6 +1,6 @@
 from permstruct import E, N, P, X
 from permstruct.permutation_sets import InputPermutationSet
-from permstruct.lib import Permutations
+from permuta import Permutations
 from permstruct.permutation_sets.units import *
 
 from .dag import DAG

@@ -1,6 +1,6 @@
 from permstruct import empty, X, P
 from permstruct.permutation_sets import SimpleGeneratingRule, StaticPermutationSet
-from permstruct.lib import Permutation
+from permuta import Permutation
 
 def incr(n):
     return SimpleGeneratingRule(Permutation([1,2]), [X, P], description='increasing').to_static(n, empty)

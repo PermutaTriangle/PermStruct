@@ -1,6 +1,6 @@
 import permstruct
 import permstruct.dag
-from permstruct.lib import Permutations
+from permuta import Permutations
 import time
 
 def enume(perm_prop, N):
