@@ -1,302 +1,74 @@
-# import sys
-# sys.setrecursionlimit(99999999)
-
 import permstruct
 import permstruct.dag
+from permstruct.lib import Permutations
 
 # Since we usually don't want overlays:
 overlays = False
 
 # In most of the test cases below we do not include symmetries
 
-#------------------------------------------------#
 
-# Avoidance of one classical pattern of length 1
-
-# perm_prop     = lambda p: p.avoids([1])
-
-# perm_bound    = 6
-# inp_dag       = permstruct.dag.elementary(perm_prop, perm_bound)
-# max_rule_size = (1, 1)
-# max_non_empty = 1
-# max_rules     = 100
-# ignored       = 0
-
-#------------------------------------------------#
-
-# Avoidance of one classical pattern of length 2
-
-# perm_prop     = lambda p: p.avoids([1,2])
-
-# perm_bound    = 6
-# inp_dag       = permstruct.dag.elementary(perm_prop, perm_bound)
-# max_rule_size = (2, 2)
-# max_non_empty = 3
-# max_rules     = 100
-# ignored       = 1
-
-#------------------------------------------------#
-
-# Avoidance of two classical patterns of length 2
-
-# perm_prop     = lambda p: p.avoids([1,2]) and p.avoids([2,1])
-
-# perm_bound    = 6
-# inp_dag       = permstruct.dag.elementary(perm_prop, perm_bound)
-# max_rule_size = (2, 2)
-# max_non_empty = 3
-# max_rules     = 100
-# ignored       = 1
-
-#------------------------------------------------#
-
-# Avoidance of one classical pattern of length 3
-
-# This is really fast, e.g., with
-
-# perm_prop     = lambda p: p.avoids([2,3,1])
-
-# perm_bound    = 6
-# inp_dag       = permstruct.dag.elementary(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 100
-# ignored       = 1
-
-# Note that the overlays are still a bit broken - and they
-# can not use our neighborhood restrictions
-# perm_prop = lambda p: p.avoids([1,2,3])
-
-# perm_bound    = 6
-# inp_dag       = permstruct.dag.decr_dag(perm_prop, perm_bound)
-# max_rule_size = (2, 3)
-# max_non_empty = 3
-# max_rules     = 10
-# ignored       = 1
-
-# overlay_dag = permstruct.dag.x_dag(perm_prop, perm_bound)
-# max_overlay_cnt = 1
-# max_overlay_size = (1, 3)
-
-# overlays = True
-
-#------------------------------------------------#
-
-# Pairs of classical patterns of length 3
-
-#-- Wilf class 1 --#
-
-# This class is a bit special, since it is finite. But it does
-# look like we can do it, e.g., with
-
-# perm_prop = lambda p: p.avoids([1,2,3]) and p.avoids([3,2,1])
-
+# R = [[2,3,1], [1,5,4,3,2]]
+# perm_prop = lambda p: all( p.avoids(x) for x in R)
 # perm_bound    = 7
-# inp_dag       = permstruct.dag.elementary(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 4
-# max_rules     = 100
-# ignored       = 1
-
-#-- Wilf class 2 --#
-
-# perm_prop = lambda p: p.avoids([1,2,3]) and p.avoids([2,3,1])
-
-# perm_bound    = 7
-# inp_dag       = permstruct.dag.incr_decr_nonempty(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 2
-# max_rules     = 100
-# ignored       = 1
-
-#-- Wilf class 3 --#
-
-# perm_prop = lambda p: p.avoids([1,2,3]) and p.avoids([1,3,2])
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([3,1,2])
-# perm_prop = lambda p: p.avoids([2,3,1]) and p.avoids([3,1,2])
-
-# perm_bound    = 7
-# inp_dag       = permstruct.dag.incr_decr_nonempty(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 100
-# ignored       = 1
-
-#------------------------------------------------#
-
-# Avoiding one classical pattern of length 3 and one of length 4
-
-#-- Wilf class 1 --#
-
-# This one is finite like Av(123, 321) so we can do it if we
-# allow enough rules, and allow them to be large enough.
-# The following settings ARE NOT ENOUGH!
-
-# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([1,2,3,4])
-
-# perm_bound    = 7
-# inp_dag       = permstruct.dag.elementary(perm_prop, perm_bound)
-# max_rule_size = (5, 5)
-# max_non_empty = 6
-# max_rules     = 100
-# ignored       = 1
-
-#-- Wilf class 2 --#
-
-perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([2,1,3,4])
-
-perm_bound    = 6
-inp_dag       = permstruct.dag.incr_decr_nonempty(perm_prop, perm_bound)
-max_rule_size = (3, 3)
-max_non_empty = 4
-max_rules     = 100
-ignored       = 1
-
-#-- Wilf class 3 --#
-
-# Note the two inp_dag options. Both work, but the taylored one
-# is much faster.
-
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([4,3,2,1])
-
-# perm_bound    = 7
-# inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_4321(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 4
-# max_rules     = 100
-# ignored       = 1
-
-#-- Wilf class 4 --#
-
-# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([1,3,2,4])
-
-# Might need to special case the 21, instead of the full decreasing
-# because of the avoiding 321 thing .... This might also be needed
-# in others where this 321 occurs
-
-# perm_bound    = 7
-# inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# # inp_dag       = permstruct.dag.incr_decr_nonempty(perm_prop, perm_bound)
-# max_rule_size = (4, 4)
-# max_non_empty = 6
-# max_rules     = 100
-# ignored       = 1
-
-#-- Wilf class 5 --#
-
-# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([1,3,4,2])
-
-#-- Wilf class 6 --#
-
-# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([2,1,4,3])
-
-#-- Wilf class 7 --#
-
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([4,3,1,2])
-
-# perm_bound    = 7
+# # inp_dag       = permstruct.dag.N_P_X2_mon2(perm_prop, perm_bound)
+# inp_dag       = permstruct.dag.N_P_X1_taylored_for_av_231_15432(perm_prop, perm_bound)
 # # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_4312(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 4
-# max_rules     = 100
-# ignored       = 1
-
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([4,2,3,1])
-
-# perm_bound    = 7
-# # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_4231(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 4
-# max_rules     = 100
-# ignored       = 1
-
-#-- Wilf class 8 --#
-
-# Note that we can reuse the dag taylored for Av(132, 4321)
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([3,2,1,4])
-
-# perm_bound    = 7
-# # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_4321(perm_prop, perm_bound)
 # max_rule_size = (3, 3)
 # max_non_empty = 3
 # max_rules     = 100
 # ignored       = 1
 
-#-- Wilf class 9 --#
-
-# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([2,3,4,1])
-# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([3,4,1,2])
-# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([3,1,4,2])
-
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([1,2,3,4])
-
+# R = [[2,3,1], [1,5,4,2,3]]
+# perm_prop = lambda p: all( p.avoids(x) for x in R)
 # perm_bound    = 7
+# # inp_dag       = permstruct.dag.N_P_X2_mon2(perm_prop, perm_bound)
+# inp_dag       = permstruct.dag.N_P_X1_taylored_for_av_231_15423(perm_prop, perm_bound)
 # # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_1234(perm_prop, perm_bound)
 # max_rule_size = (3, 3)
 # max_non_empty = 3
 # max_rules     = 100
 # ignored       = 1
 
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([4,2,1,3])
-
+# R = [[2,3,1], [1,5,3,2,4]]
+# perm_prop = lambda p: all( p.avoids(x) for x in R)
 # perm_bound    = 7
+# # inp_dag       = permstruct.dag.N_P_X2_mon2(perm_prop, perm_bound)
+# inp_dag       = permstruct.dag.N_P_X1_taylored_for_av_231_15324(perm_prop, perm_bound)
 # # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_4213(perm_prop, perm_bound)
 # max_rule_size = (3, 3)
 # max_non_empty = 3
 # max_rules     = 100
 # ignored       = 1
 
-# Note that we can reuse the dag taylored for Av(132, 1234)
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([4,1,2,3])
-
+# R = [[2,3,1], [1,5,2,3,4]]
+# perm_prop = lambda p: all( p.avoids(x) for x in R)
 # perm_bound    = 7
+# # inp_dag       = permstruct.dag.N_P_X2_mon2(perm_prop, perm_bound)
+# inp_dag       = permstruct.dag.N_P_X1_taylored_for_av_231_15234(perm_prop, perm_bound)
 # # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_1234(perm_prop, perm_bound)
 # max_rule_size = (3, 3)
 # max_non_empty = 3
 # max_rules     = 100
 # ignored       = 1
 
-# Note that we can reuse the dag taylored for Av(132, 4312)
-# Note that we reduce max_rules to 10 (from the usual 100). Having
-# it at 100 seemed to really slow the exact cover computation and
-# having it at 10 is sufficient to find a ton of rules
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([3,1,2,4])
-
+# R = [[2,3,1], [1,2,5,3,4]]
+# perm_prop = lambda p: all( p.avoids(x) for x in R)
 # perm_bound    = 7
+# # inp_dag       = permstruct.dag.N_P_X2_mon2(perm_prop, perm_bound)
+# inp_dag       = permstruct.dag.N_P_X_taylored_for_av_231_12534(perm_prop, perm_bound)
 # # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_4312(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 10
-# ignored       = 1
-
-# Note that we can reuse the dag taylored for Av(132, 4213)
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([2,1,3,4])
-
-# perm_bound    = 7
-# # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_4213(perm_prop, perm_bound)
 # max_rule_size = (3, 3)
 # max_non_empty = 3
 # max_rules     = 100
 # ignored       = 1
 
-# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([3,4,1,2])
-
-# perm_bound    = 7
-# # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
-# inp_dag       = permstruct.dag.taylored_for_av_132_3412(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 4
-# max_rules     = 100
-# ignored       = 1
+# for n in range(6):
+# 	for perm in Permutations(n):
+# 		if perm.avoids([2,3,1]):
+# 			print perm,
+# 	print ""
+# 	print ""
 
 #------------------------------------------------#
 
@@ -321,6 +93,39 @@ ignored       = 1
 #-- Wilf class 5 --#
 
 #perm_prop = lambda p: p.avoids([4,3,2,1]) and p.avoids([1,3,2,4])
+
+#-- Separable --#
+
+# R = [[2,4,1,3], [3,1,4,2], [2,1,4,3], [3,4,1,2]]
+# perm_prop = lambda p: all( p.avoids(x) for x in R)
+
+# perm_prop = lambda p: p.avoids([2,4,1,3]) and p.avoids([3,1,4,2])
+# perm_prop = lambda p: p.avoids([2,1,4,3]) and p.avoids([3,4,1,2])
+
+# perm_prop = lambda p: p.avoids([4,2,3,1]) and p.avoids([3,2,4,1])
+
+# Atkinson, big example from p. 31
+# No luck
+# R = [[1,2,3,4], [1,2,4,3], [1,3,2,4], [2,1,3,4], [1,4,5,2,3], [3,4,1,2,5], [3,5,1,6,2,4], [3,5,6,1,2,4], [4,5,1,6,2,3], [4,5,6,1,2,3]]
+# perm_prop = lambda p: all( p.avoids(x) for x in R)
+# perm_bound    = 7
+# inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
+# max_rule_size = (3, 3)
+# max_non_empty = 4
+# max_rules     = 100
+# ignored       = 1
+
+# Obtained by a rifle shuffle of a deck of cards. See Atkinson p. 29
+# Note that we have already done Av(321,2143). See Prop 3.4. Might be
+# good to illustrate how Struct can do most of the work here.
+# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([2,1,4,3]) and p.avoids([2,4,1,3])
+# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([2,1,4,3]) and p.avoids([2,4,1,3]) and p.avoids([3,1,4,2])
+# perm_bound    = 7
+# inp_dag       = permstruct.dag.N_P_X_mon1(perm_prop, perm_bound)
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = 100
+# ignored       = 1
 
 #------------------------------------------------#
 
@@ -350,6 +155,27 @@ ignored       = 1
 # of length 3
 # perm_bound    = 7
 # inp_dag       = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
+# max_rule_size = (3, 3)
+# max_non_empty = 4
+# max_rules     = 100
+# ignored       = 1
+
+# def is_Baxter(perm):
+#     n = len(perm)
+#     if n <= 3: return True
+
+#     for i in range(n-3):
+#         for j in range(i+1,n-2):
+#             for k in range(j+2,n):
+#                 if (perm[j+1] < perm[i] < perm[k] < perm[j]) or (perm[j] < perm[k] < perm[i] < perm[j+1]):
+#                     return False
+#     return True
+
+# perm_prop = lambda p: is_Baxter(p)
+
+# perm_bound    = 7
+# # inp_dag       = permstruct.dag.N_P_X2_mon2(perm_prop, perm_bound)
+# inp_dag       = permstruct.dag.classic_avoiders_length_3(perm_prop, perm_bound)
 # max_rule_size = (3, 3)
 # max_non_empty = 4
 # max_rules     = 100

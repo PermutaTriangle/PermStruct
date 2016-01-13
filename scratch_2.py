@@ -64,7 +64,7 @@ def avoids_231_bivinc(perm):
 #             cnt += 1
 #             # print(p)
 #     print(l, cnt)
-# 
+#
 # import sys
 # sys.exit(0)
 
@@ -106,7 +106,7 @@ permProp = lambda perm: perm.avoids([2,3,1])
 #         if permProp(p):
 #             cnt += 1
 #     print(cnt)
-# 
+#
 # import sys
 # sys.exit(0)
 
@@ -168,12 +168,11 @@ G = GeneratingRule([
     [P,P,P,P],
 ])
 
-
 # av321_132 = (lambda perm: perm.avoids(Permutation([3,2,1])) and perm.avoids(Permutation([1,3,2])),StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='Av(%s,%s)' % (Permutation([3,2,1]), Permutation([1,3,2]))))
 # inp_without_incr = (lambda perm: perm.avoids(p), StaticPermutationSet.from_predicate(lambda x: x.avoids(p), 6, description='input without incr'))
 
 # # res = generate_all_of_length(10, G, {0:[()], 1:[(1,)]}, 2)
-res = generate_all_of_length(16, G, {0:[()]}, 2)
+res = generate_all_of_length(8, G, {0:[()]}, 2)
 # # print(res)
 for l in res:
     # print(res)

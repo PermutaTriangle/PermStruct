@@ -69,40 +69,49 @@ def N_P_incr2(n):
     return dag
 
 def N_P_X(perm_prop, n):
-    dag = DAG()
-    dag.add_element(N)
-    dag.add_element(P)
+    dag = N_P(n)
+
     dag.add_element(InputPermutationSet(perm_prop))
     return dag
 
 def N_P_X1(perm_prop, n):
-    dag = DAG()
-    dag.add_element(N)
-    dag.add_element(P)
+    dag = N_P(n)
 
     X1 = StaticPermutationSet.from_predicate((lambda x: len(x) > 0 and perm_prop(x)), n, description='X > 0')
     dag.add_element(X1)
     return dag
 
 def N_P_X2(perm_prop, n):
-    dag = DAG()
-    dag.add_element(N)
-    dag.add_element(P)
+    dag = N_P(n)
 
     X2 = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and perm_prop(x)), n, description='X > 1')
     dag.add_element(X2)
     return dag
 
-def N_P_X3_mon2(perm_prop, n):
-    dag = DAG()
-    dag.add_element(N)
-    dag.add_element(P)
+def N_P_X3(perm_prop, n):
+    dag = N_P(n)
+
+    X3 = StaticPermutationSet.from_predicate((lambda x: len(x) > 2 and perm_prop(x)), n, description='X > 2')
+    dag.add_element(X3)
+    return dag
+
+def N_P_X3_incr2(perm_prop, n):
+    dag = N_P_X3(perm_prop, n)
 
     i = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([2,1])), n, description='incr > 1')
     dag.add_element(i)
 
-    X3 = StaticPermutationSet.from_predicate((lambda x: len(x) > 2 and perm_prop(x)), n, description='X > 2')
-    dag.add_element(X3)
+    return dag
+
+def N_P_X3_mon2(perm_prop, n):
+    dag = N_P_X3(perm_prop, n)
+
+    i = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([2,1])), n, description='incr > 1')
+    d = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([1,2])), n, description='decr > 1')
+
+    dag.add_element(i)
+    dag.add_element(d)
+
     return dag
 
 def incr_decr(perm_prop, n):
@@ -188,10 +197,10 @@ def N_P_X1_mon1(perm_prop, n):
     return dag
 
 def N_P_X1_mon2(perm_prop, n):
-    dag = N_P_X2(perm_prop, n)
+    dag = N_P_X1(perm_prop, n)
 
-    i = StaticPermutationSet.from_predicate((lambda x: len(x) > 0 and x.avoids([2,1])), n, description='incr > 0')
-    d = StaticPermutationSet.from_predicate((lambda x: len(x) > 0 and x.avoids([1,2])), n, description='decr > 0')
+    i = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([2,1])), n, description='incr > 1')
+    d = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([1,2])), n, description='decr > 1')
 
     dag.add_element(i)
     dag.add_element(d)
@@ -319,6 +328,22 @@ def N_P_X_mon1_taylored_for_av_132_4321(perm_prop, n):
     pqset = StaticPermutationSet.from_predicate((lambda x: not x.avoids([2,1]) and x.avoids(p) and x.avoids(q)), n,
         description='Av(%s,%s)-incr' % (p, q))
     dag.add_element(pqset)
+
+    return dag
+
+def N_P_X1_mon1_taylored_for_av_4213_2143(perm_prop, n):
+    # dag = N_P_X1_mon1(perm_prop, n)
+    dag = N_P_X1(perm_prop, n)
+
+    # p = Permutation([2,1,3])
+    # pset = StaticPermutationSet.from_predicate((lambda x: not x.avoids([2,1]) and not x.avoids([1,2]) and x.avoids(p)), n,
+    #     description='Av(%s)-incr-decr' % (p))
+    # dag.add_element(pset)
+
+    p = Permutation([2,1,3])
+    pset = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids(p)), n,
+        description='Av(%s) > 2' % (p))
+    dag.add_element(pset)
 
     return dag
 
@@ -529,13 +554,8 @@ def len_3_pairs(perm_prop, n):
 
     return dag
 
-def len_3_pairs_X_minus_epsilon(perm_prop, n):
-    dag = elementary_X_minus_epsilon(perm_prop, n)
-
-    i = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([2,1])), n, description='incr, len>1')
-    d = StaticPermutationSet.from_predicate((lambda x: len(x) > 1 and x.avoids([1,2])), n, description='decr, len>1')
-    dag.add_element(i)
-    dag.add_element(d)
+def len_3_pairs_X1(perm_prop, n):
+    dag = N_P_X1_mon2(perm_prop, n)
 
     for p in Permutations(3):
         for q in Permutations(3):
