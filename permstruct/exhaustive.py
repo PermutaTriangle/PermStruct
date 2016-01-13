@@ -15,6 +15,7 @@ def exhaustive(
         ignore_first=1,
         allow_overlap_in_first=True,
         min_rule_size=(1,1),
+        lower_bound=None,
     ):
 
     rules = RuleSet(perm_prop, perm_bound)
@@ -38,6 +39,7 @@ def exhaustive(
             max_rules,
             ignore_first,
             allow_overlap_in_first,
+            lower_bound=lower_bound,
         )
 
 

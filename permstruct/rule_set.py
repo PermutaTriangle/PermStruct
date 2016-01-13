@@ -1,5 +1,6 @@
 from permuta import Permutations
 from permuta.misc import exact_cover, binary_search
+from permstruct.exact_cover import exact_cover_lb
 
 class RuleSet:
 
@@ -25,6 +26,8 @@ class RuleSet:
                     self.ocreated[l].append(perm)
                     self.ball |= 1 << self.validcnt
                     self.validcnt += 1
+
+        self.lens = [ len(self.permset[i]) for i in range(self.perm_bound+1) ]
 
     def print_stats(self):
         print('Death by overlap: ', self.death_by_overlap)
@@ -86,6 +89,7 @@ class RuleSet:
                 max_ec_cnt,
                 ignore_first=1,
                 allow_overlap_in_first=True,
+                lower_bound=None,
             ):
 
         print('Finding exact cover...')
@@ -94,9 +98,14 @@ class RuleSet:
 
         used_idx = set()
         print('Found:')
-        for res in exact_cover(bss, self.validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first):
-            print(', '.join(map(str, res)))
-            used_idx |= set(res)
+        if lower_bound is None:
+            for res in exact_cover(bss, self.validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first):
+                print(', '.join(map(str, res)))
+                used_idx |= set(res)
+        else:
+            for res in exact_cover_lb(bss, self.validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first, self.lens, lower_bound):
+                print(', '.join(map(str, res)))
+                used_idx |= set(res)
 
         print('')
         print('Index:')
