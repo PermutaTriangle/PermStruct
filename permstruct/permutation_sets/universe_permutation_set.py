@@ -14,6 +14,9 @@ class UniversePermutationSet(PermutationSet):
     def contains(self, perm):
         return True
 
+    def min_length(self, input):
+        return 0
+
     def __repr__(self):
         return 'UniversePermutationSet()'
 

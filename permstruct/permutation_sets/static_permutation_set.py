@@ -42,3 +42,21 @@ class StaticPermutationSet(PermutationSet):
     def generate_of_length(self, n, input):
         return self.perms.get(n, [])
 
+    def min_length(self, input):
+        for k in sorted(self.perms.keys()):
+            if self.perms[k]:
+                return k
+        assert False
+
+    def _sorted_seq(self):
+        return sorted( p for k,v in self.perms.items() for p in v )
+
+    def __eq__(self, other):
+        return type(self) is type(other) and self._sorted_seq() == other._sorted_seq()
+
+    def __hash__(self):
+        return hash(tuple(self._sorted_seq()))
+
+    def __lt__(self, other):
+        return self._sorted_seq() < other._sorted_seq()
+

@@ -1,3 +1,4 @@
+from __future__ import print_function
 from permuta import Permutations
 from permuta.misc import exact_cover, binary_search
 from permstruct.exact_cover import exact_cover_lb
@@ -32,7 +33,6 @@ class RuleSet:
     def print_stats(self):
         print('Death by overlap: ', self.death_by_overlap)
         print('Death by perm prop: ', self.death_by_perm_prop)
-
 
     def add_rule(self, rule):
 
@@ -76,11 +76,14 @@ class RuleSet:
             curcnt += len(self.permset[l]) - j
 
         if empty:
+            assert False
+            # TODO
+            # print(rule)
             return
 
-        print(rule)
-        print(''.join( '0' if (bs & (1 << i)) == 0 else '1' for i in range(self.validcnt - 1, -1, -1) ))
-        print('')
+        # print(rule)
+        # print(''.join( '0' if (bs & (1 << i)) == 0 else '1' for i in range(self.validcnt - 1, -1, -1) ))
+        # print('')
 
         self.rules.setdefault(bs, [])
         self.rules[bs].append(rule)

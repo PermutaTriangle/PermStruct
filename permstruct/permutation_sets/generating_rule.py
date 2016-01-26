@@ -144,3 +144,6 @@ class GeneratingRule(PermutationSet):
     def __hash__(self):
         return sum( hash((k, v)) for k, v in self.rule.items() )
 
+    # def __repr__(self):
+    #     return 'GeneratingRule(%s)' % repr(self.rule)
+

@@ -20,6 +20,15 @@ class PointPermutationSet(PermutationSet):
     def contains(self, perm):
         return len(perm) == 1
 
+    def min_length(self, input):
+        return 1
+
     def __repr__(self):
         return 'PointPermutationSet()'
+
+    def __eq__(self, other):
+        return type(self) is type(other)
+
+    def __hash__(self):
+        return hash(tuple([repr(self), 12387841212314]))
 

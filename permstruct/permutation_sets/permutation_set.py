@@ -13,3 +13,17 @@ class PermutationSet(object):
     def contains(self, perm):
         raise NotImplementedError()
 
+    def min_length(self, input):
+        raise NotImplementedError()
+
+    def __hash__(self):
+        print(type(self))
+        raise NotImplementedError()
+
+    def __eq__(self, other):
+        raise NotImplementedError()
+
+    def __lt__(self, other):
+        print(type(self), type(other))
+        raise NotImplementedError()
+

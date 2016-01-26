@@ -3,6 +3,18 @@ from .permutation_sets import PointPermutationSet, InputPermutationSet, SimpleGe
 from permuta import Permutation, Permutations
 from permuta.misc import binary_search
 from copy import deepcopy
+from .misc.cache import Cache
+import marshal
+
+def generate_small_input(perm_prop):
+    bound = 2
+    ocreated = {}
+    for l in range(bound+1):
+        ocreated.setdefault(l, [])
+        for perm in Permutations(l):
+            if perm_prop(perm):
+                ocreated[l].append(perm)
+    return ocreated
 
 def generate_all_of_length(max_n, S, inp, min_n=0):
 
@@ -27,53 +39,66 @@ def generate_all_of_length(max_n, S, inp, min_n=0):
 # 
 
 
-def find_allowed_neighbors(perm_prop, perm_bound, sets):
+def find_allowed_neighbors(small_input, sets, ignore_cache=False):
 
-    max_check = min(perm_bound, 7)
+    key = (small_input, sets)
+    if not ignore_cache and Cache.contains(key):
+        neighb = Cache.get(key)
+    else:
+        neighb = {}
+        max_check = max(small_input.keys())
 
-    ocreated = {}
-    for l in range(max_check+1):
-        ocreated.setdefault(l, [])
-        for perm in Permutations(l):
-            if perm_prop(perm):
-                ocreated[l].append(perm)
+        for i in range(len(sets)):
+            for j in range(len(sets)):
+                for di in range(-1, 2):
+                    for dj in range(-1, 2):
+                        if di == 0 and dj == 0:
+                            continue
+
+                        # neighb.setdefault((cur_elem, di, dj), set())
+                        neighb.setdefault((i, di, dj), set())
+
+                        a = min(0, di)
+                        b = min(0, dj)
+                        # G = GeneratingRule({ (-a, -b): cur_elem, (di-a, dj-b): other_elem })
+                        G = GeneratingRule({ (-a, -b): sets[i], (di-a, dj-b): sets[j] })
+
+                        ok = True
+                        for l in range(max_check+1):
+                            # perms = list(G.generate_of_length(l, ocreated))
+                            perms = list(G.generate_of_length(l, small_input))
+                            if len(perms) != len(set(perms)):
+                                ok = False
+                                break
+                        if ok:
+                            # neighb[(cur_elem, di, dj)].add(other_elem)
+                            neighb[(i, di, dj)].add(j)
+
+        if not ignore_cache:
+            Cache.put(key,neighb)
+
+    res = {}
+    for (i,di,dj),v in neighb.items():
+        res[(sets[i],di,dj)] = set([ sets[j] for j in v ])
+    return res
 
 
-    neighb = {}
-
-    for cur_elem in sets:
-        for other_elem in sets:
-            for di in range(-1, 2):
-                for dj in range(-1, 2):
-                    if di == 0 and dj == 0:
-                        continue
-
-                    neighb.setdefault((cur_elem, di, dj), set())
-
-                    a = min(0, di)
-                    b = min(0, dj)
-                    G = GeneratingRule({ (-a, -b): cur_elem, (di-a, dj-b): other_elem })
-
-                    ok = True
-                    for l in range(max_check+1):
-                        perms = list(G.generate_of_length(l, ocreated))
-                        if len(perms) != len(set(perms)):
-                            ok = False
-                            break
-                    if ok:
-                        neighb[(cur_elem, di, dj)].add(other_elem)
-
-    cnt = 0
-    for k, v in neighb.items():
-        cnt += len(v)
-    print(cnt)
-    return neighb
-
-
-def generate_rules(n, m, perm_prop, perm_bound, sets, cnt, allowed_neighbors=None, use_allowed_neighbors=True):
+def generate_rules(n, m, small_input, sets, cnt,
+        allowed_neighbors=None,
+        use_allowed_neighbors=True,
+        mn_at_most=None):
 
     if allowed_neighbors is None and use_allowed_neighbors:
-        allowed_neighbors = find_allowed_neighbors(perm_prop, perm_bound, sets)
+        allowed_neighbors = find_allowed_neighbors(small_input, sets)
+    if not use_allowed_neighbors:
+        allowed_neighbors = None
+
+    # key = (n,m,perm_bound, sets, cnt, allowed_neighbors)
+    # print('a')
+    # if Cache.contains(key):
+    #     res = Cache.get(key)
+    #     print('b cache')
+    #     return res
 
     def valid(rule):
         if n == 1 and m == 1:
@@ -107,6 +132,7 @@ def generate_rules(n, m, perm_prop, perm_bound, sets, cnt, allowed_neighbors=Non
             for trule in gen(i, j + 1):
                 rule = [ [ trule[x][y] for y in range(m) ] for x in range(n) ]
                 left = cnt - sum( rule[x][y] is not None for x in range(n) for y in range(m) )
+                at_most = mn_at_most - sum( 0 if rule[x][y] is None else rule[x][y].min_length(small_input) for x in range(n) for y in range(m) )
 
                 ss = set(ssets)
                 if use_allowed_neighbors:
@@ -119,21 +145,30 @@ def generate_rules(n, m, perm_prop, perm_bound, sets, cnt, allowed_neighbors=Non
 
                 # for s in sets:
                 for s in ss:
-                    if left == 0 and s is not None:
-                        continue
+                    if s is not None:
+                        if left == 0 or s.min_length(small_input) > at_most:
+                            continue
+                    # if left == 0 and s is not None:
+                    #     continue
 
                     rule[i][j] = s
                     yield rule
 
+    res = []
     a, b = 0, 0
     for rule in gen(0, 0):
         a += 1
         if valid(rule):
             b += 1
-            yield GeneratingRule(rule)
+            res.append(GeneratingRule(rule))
+
+    # print('b')
+    # Cache.put(key,res)
+    # print('c')
+    return res
 
 
-def generate_rules_with_overlay(n, m, perm_prop, perm_bound, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
+def generate_rules_with_overlay(n, m, small_input, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
 
     def gen(rule, i, j, last, left):
 
@@ -163,26 +198,41 @@ def generate_rules_with_overlay(n, m, perm_prop, perm_bound, sets, cnt, overlay_
 
 
 
-    for rule in generate_rules(n, m, perm_prop, perm_bound, sets, cnt, None, use_allowed_neighbors=False):
+    for rule in generate_rules(n, m, small_input, sets, cnt, None, use_allowed_neighbors=False):
         for overlay_rule in gen(rule, 0, 0, (0, 0), max_overlay_cnt):
             yield overlay_rule
 
 
-def generate_rules_upto(min_rule_size, max_rule_size, perm_prop, perm_bound, sets, cnt, allowed_neighbors=None, use_allowed_neighbors=True):
+def generate_rules_upto(min_rule_size, max_rule_size, small_input, sets, cnt,
+        allowed_neighbors=None,
+        use_allowed_neighbors=True,
+        ignore_cache=False,
+        mn_at_most=None):
 
-    if allowed_neighbors is None:
-        allowed_neighbors = find_allowed_neighbors(perm_prop, perm_bound, sets)
+    key = (min_rule_size,max_rule_size,small_input,sets,cnt,allowed_neighbors,use_allowed_neighbors,mn_at_most)
+    if not ignore_cache and Cache.contains(key):
+        ans = Cache.get(key)
+    else:
+        if allowed_neighbors is None:
+            allowed_neighbors = find_allowed_neighbors(small_input, sets)
+
+        rev = { v:i for i,v in enumerate(sets) }
+        ans = []
+        for nn in range(min_rule_size[0], max_rule_size[0]+1):
+            for mm in range(min_rule_size[1], max_rule_size[1]+1):
+                for res in generate_rules(nn, mm, small_input, sets, cnt, allowed_neighbors, use_allowed_neighbors, mn_at_most=mn_at_most):
+                    ans.append({ (x,y):rev[v] for (x,y),v in res.rule.items() })
+        if not ignore_cache:
+            Cache.put(key,ans)
+    for i in range(len(ans)):
+        ans[i] = GeneratingRule({ (x,y):sets[v] for (x,y),v in ans[i].items() })
+    return ans
+
+def generate_rules_with_overlay_upto(min_rule_size, max_rule_size, small_input, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
 
     for nn in range(min_rule_size[0], max_rule_size[0]+1):
         for mm in range(min_rule_size[1], max_rule_size[1]+1):
-            for res in generate_rules(nn, mm, perm_prop, perm_bound, sets, cnt, allowed_neighbors, use_allowed_neighbors):
-                yield res
-
-def generate_rules_with_overlay_upto(min_rule_size, max_rule_size, perm_prop, perm_bound, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
-
-    for nn in range(min_rule_size[0], max_rule_size[0]+1):
-        for mm in range(min_rule_size[1], max_rule_size[1]+1):
-            for res in generate_rules_with_overlay(nn, mm, perm_prop, perm_bound, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
+            for res in generate_rules_with_overlay(nn, mm, small_input, sets, cnt, overlay_preds, max_overlay_cnt, max_overlay_size):
                 yield res
 
 def matches_rule(rule, atoms, B, permProp = (lambda perm : True), permCount = (lambda n : 0)):
