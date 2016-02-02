@@ -42,7 +42,6 @@ class Hasher(object):
                 a = getattr(v, k)
                 if inspect.isroutine(a):
                     continue
-                # print(k)
                 self.update(k)
                 self.update(a)
 

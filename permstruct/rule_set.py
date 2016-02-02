@@ -2,6 +2,7 @@ from __future__ import print_function
 from permuta import Permutations
 from permuta.misc import exact_cover, binary_search
 from permstruct.exact_cover import exact_cover_lb
+import sys
 
 class RuleSet:
 
@@ -31,8 +32,8 @@ class RuleSet:
         self.lens = [ len(self.permset[i]) for i in range(self.perm_bound+1) ]
 
     def print_stats(self):
-        print('Death by overlap: ', self.death_by_overlap)
-        print('Death by perm prop: ', self.death_by_perm_prop)
+        sys.stderr.write('Death by overlap: %s\n' % self.death_by_overlap)
+        sys.stderr.write('Death by perm prop: %s\n' % self.death_by_perm_prop)
 
     def add_rule(self, rule):
 
@@ -93,45 +94,54 @@ class RuleSet:
                 ignore_first=1,
                 allow_overlap_in_first=True,
                 lower_bound=None,
+                dag_elems_id=None,
             ):
 
-        print('Finding exact cover...')
+        sys.stderr.write('Finding exact cover...\n')
 
         bss = list(self.rules.keys())
 
         used_idx = set()
-        print('Found:')
+        sys.stderr.write('Found:\n')
         if lower_bound is None:
             for res in exact_cover(bss, self.validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first):
-                print(', '.join(map(str, res)))
+                print(repr(res))
                 used_idx |= set(res)
         else:
             for res in exact_cover_lb(bss, self.validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first, self.lens, lower_bound):
-                print(', '.join(map(str, res)))
+                print(repr(res))
                 used_idx |= set(res)
 
         print('')
-        print('Index:')
+        sys.stderr.write('Index:')
         for i, b in enumerate(bss):
             if i not in used_idx:
                 continue
 
-            print('%3d: ' % i)
-            print(''.join( '0' if (b & (1 << i)) == 0 else '1' for i in range(self.validcnt - 1, -1, -1) ))
+            if dag_elems_id is None:
+                print('%3d: ' % i)
+                print(''.join( '0' if (b & (1 << i)) == 0 else '1' for i in range(self.validcnt - 1, -1, -1) ))
 
-            cnt = 0
-            mx_cnt = 15
-            for rule in self.rules[b]:
-                if cnt == mx_cnt:
+                cnt = 0
+                mx_cnt = 15
+                for rule in self.rules[b]:
+                    if cnt == mx_cnt:
+                        print('')
+                        print('(and %d more)' % (len(self.rules[b]) - mx_cnt))
+                        break
+
                     print('')
-                    print('(and %d more)' % (len(self.rules[b]) - mx_cnt))
-                    break
+                    print(rule)
+                    cnt += 1
 
                 print('')
-                print(rule)
-                cnt += 1
+            else:
+                print(i)
 
-            print('')
+                for rule in self.rules[b]:
+                    print(repr({ k:dag_elems_id[v] for k,v in rule.rule.items() }))
+
+                print('')
 
         # TODO: return the results on some nice form
         return []

@@ -40,7 +40,7 @@ def generate_all_of_length(max_n, S, inp, min_n=0):
 
 
 def find_allowed_neighbors(small_input, sets, ignore_cache=False):
-
+    # TODO: Only hash small permutations in sets?
     key = (small_input, sets)
     if not ignore_cache and Cache.contains(key):
         neighb = Cache.get(key)
