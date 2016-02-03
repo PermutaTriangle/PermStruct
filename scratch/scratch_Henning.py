@@ -1,6 +1,6 @@
 import permstruct
 import permstruct.dag
-from permstruct.lib import Permutations
+from permuta import Permutations
 
 # Since we usually don't want overlays:
 overlays = False
@@ -118,14 +118,14 @@ overlays = False
 # Obtained by a rifle shuffle of a deck of cards. See Atkinson p. 29
 # Note that we have already done Av(321,2143). See Prop 3.4. Might be
 # good to illustrate how Struct can do most of the work here.
-# perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([2,1,4,3]) and p.avoids([2,4,1,3])
+perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([2,1,4,3]) and p.avoids([2,4,1,3])
 # perm_prop = lambda p: p.avoids([3,2,1]) and p.avoids([2,1,4,3]) and p.avoids([2,4,1,3]) and p.avoids([3,1,4,2])
-# perm_bound    = 7
-# inp_dag       = permstruct.dag.N_P_X_mon1(perm_prop, perm_bound)
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 100
-# ignored       = 1
+perm_bound    = 7
+inp_dag       = permstruct.dag.N_P_X_mon1(perm_prop, perm_bound)
+max_rule_size = (3, 3)
+max_non_empty = 3
+max_rules     = 100
+ignored       = 1
 
 #------------------------------------------------#
 

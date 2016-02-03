@@ -5,14 +5,38 @@ import permstruct.dag
 
 import sys
 
-# Avoidance of classical patterns of length 1
+# Avoidance of classical patterns of length 2
 
-# This is a bit trivial, there is of course just one Wilf-class
+#------------------------------------------------#
+#               1 pattern                        #
+#------------------------------------------------#
+
+# -- Wilf-class 1 -- #
+
+# # The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,2])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = None
+# upper_bound  = 3
+#
+# # Grids
+# max_rule_size = (2, 2)
+# max_non_empty = 2
+# max_rules     = 100
+
+#------------------------------------------------#
+#               2 patterns                        #
+#------------------------------------------------#
 
 # -- Wilf-class 1 -- #
 
 # The permutations ================================================== > SUCCESS!
-patts = [Permutation([1])]
+patts = [Permutation([1,2]), Permutation([2,1])]
 perm_prop = lambda p: all( p.avoids(q) for q in patts )
 
 perm_bound    = 7
@@ -26,7 +50,6 @@ upper_bound  = 3
 max_rule_size = (2, 2)
 max_non_empty = 2
 max_rules     = 100
-
 
 # Creating the dag
 inp_dag = permstruct.dag.taylor_dag(patts, max_len_patt=max_len_patt, perm_bound=perm_bound, remove=True, upper_bound=upper_bound)
