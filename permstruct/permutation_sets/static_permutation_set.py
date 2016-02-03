@@ -56,11 +56,17 @@ class StaticPermutationSet(PermutationSet):
         return sorted( p for k,v in self.perms.items() for p in v )
 
     def __eq__(self, other):
-        return type(self) is type(other) and self._sorted_seq() == other._sorted_seq()
+        return type(self) is type(other) and self._sorted_seq() == other._sorted_seq() and self.description == other.description and self.can_be_alone() == other.can_be_alone()
 
     def __hash__(self):
         return hash(tuple(self._sorted_seq()))
 
     def __lt__(self, other):
-        return self._sorted_seq() < other._sorted_seq()
+        if self.description != other.description:
+            return self.description < other.description
+        if self._sorted_seq() != other._sorted_seq():
+            return self._sorted_seq() < other._sorted_seq()
+        if self.can_be_alone() != other.can_be_alone():
+            return self.can_be_alone() < other.can_be_alone()
+        return False
 

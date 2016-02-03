@@ -36,7 +36,6 @@ class RuleSet:
         sys.stderr.write('Death by perm prop: %s\n' % self.death_by_perm_prop)
 
     def add_rule(self, rule):
-
         bs = 0
         curcnt = 0
         empty = True

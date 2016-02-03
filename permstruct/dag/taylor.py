@@ -34,6 +34,9 @@ def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove
     #                 sub[i][l-1].add(qp)
 
     def valid(picked):
+        if set(picked) == set(patterns):
+            return False
+
         picked = sorted(picked, key=lambda x: len(x))
 
         for i in range(len(picked)):
