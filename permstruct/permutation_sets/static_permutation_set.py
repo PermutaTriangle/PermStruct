@@ -5,11 +5,12 @@ from .permutation_set import PermutationSet
 class StaticPermutationSet(PermutationSet):
     """A static set of permutations."""
 
-    def __init__(self, perms, gf=None, description=None):
+    def __init__(self, perms, gf=None, description=None, alone_ok=True):
         super(StaticPermutationSet, self).__init__(description=description)
 
         self.perms = dict()
         self.gf = gf
+        self.alone_ok = alone_ok
 
         for perm in perms:
             n = len(perm)
@@ -47,6 +48,9 @@ class StaticPermutationSet(PermutationSet):
             if self.perms[k]:
                 return k
         assert False
+
+    def can_be_alone(self):
+        return self.alone_ok
 
     def _sorted_seq(self):
         return sorted( p for k,v in self.perms.items() for p in v )

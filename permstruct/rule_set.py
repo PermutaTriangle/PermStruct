@@ -118,7 +118,7 @@ class RuleSet:
             if i not in used_idx:
                 continue
 
-            if dag_elems_id is None:
+            if True or dag_elems_id is None:
                 print('%3d: ' % i)
                 print(''.join( '0' if (b & (1 << i)) == 0 else '1' for i in range(self.validcnt - 1, -1, -1) ))
 

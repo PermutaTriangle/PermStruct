@@ -27,6 +27,9 @@ class InputPermutationSet(PermutationSet):
                 return k
         assert False
 
+    def can_be_alone(self):
+        return False
+
     def __repr__(self):
         return 'InputPermutationSet()'
 

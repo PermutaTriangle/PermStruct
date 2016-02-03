@@ -103,6 +103,8 @@ def generate_rules(n, m, small_input, sets, cnt,
     def valid(rule):
         if n == 1 and m == 1:
             # edge case: all 1x1 rules are valid
+            if not rule[0][0] or not rule[0][0].can_be_alone():
+                return False
             return True
 
         if all( x is None for x in rule[0] ):

@@ -16,6 +16,9 @@ class PermutationSet(object):
     def min_length(self, input):
         raise NotImplementedError()
 
+    def can_be_alone(self):
+        return True
+
     def __hash__(self):
         print(type(self))
         raise NotImplementedError()
