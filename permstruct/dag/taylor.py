@@ -14,14 +14,16 @@ def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove
     sub = [ set([]) for _ in range(len(patterns)) ]
     for i,p in enumerate(patterns):
         last = set([ p ])
-        sub[i] |= last
+        if len(p) <= max_len_patt:
+            sub[i] |= last
         for l in range(len(p)-1, 1, -1):
             nxt = set([])
             for q in last:
                 for j in range(len(q)):
                     qp = Permutation.to_standard(q[:j] + q[j+1:]) # TODO: could do this in linear time
                     nxt.add(qp)
-            sub[i] |= nxt
+            if l <= max_len_patt:
+                sub[i] |= nxt
             last = nxt
 
         # sub[i][len(p)].add(p)
