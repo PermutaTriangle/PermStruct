@@ -1,6 +1,6 @@
 from __future__ import print_function
 from permuta import Permutations
-from permuta.misc import exact_cover, binary_search
+from permuta.misc import exact_cover, exact_cover_smallest, binary_search
 from permstruct.exact_cover import exact_cover_lb
 import sys
 
@@ -89,8 +89,8 @@ class RuleSet:
         self.rules[bs].append(rule)
 
     def exact_cover(self,
-                max_ec_cnt,
                 ignore_first=1,
+                max_ec_cnt=None,
                 allow_overlap_in_first=True,
                 lower_bound=None,
                 dag_elems_id=None,
@@ -103,7 +103,7 @@ class RuleSet:
         used_idx = set()
         sys.stderr.write('Found:\n')
         if lower_bound is None:
-            for res in exact_cover(bss, self.validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first):
+            for res in exact_cover_smallest(bss, self.validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first):
                 print(repr(res))
                 used_idx |= set(res)
         else:

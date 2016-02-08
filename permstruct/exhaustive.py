@@ -12,8 +12,8 @@ def exhaustive(
         dag,
         max_rule_size,
         max_nonempty,
-        max_rules,
 
+        max_rules=None,
         ignore_first=1,
         allow_overlap_in_first=True,
         min_rule_size=(1,1),
@@ -52,11 +52,11 @@ def exhaustive(
 
     dag_elems_id = { v:i for i,v in enumerate(sets) }
     res = rules.exact_cover(
-            max_rules,
-            ignore_first,
-            allow_overlap_in_first,
+            allow_overlap_in_first=allow_overlap_in_first,
+            ignore_first=ignore_first,
             lower_bound=lower_bound,
             dag_elems_id=dag_elems_id,
+            max_ec_cnt=max_rules,
         )
 
     for k,v in enumerate(sets):
@@ -71,12 +71,12 @@ def exhaustive_with_overlays(
         dag,
         max_rule_size,
         max_nonempty,
-        max_rules,
 
         overlay_dag,
         max_overlay_cnt,
         max_overlay_size,
 
+        max_rules=None,
         ignore_first=1,
         allow_overlap_in_first=True,
         min_rule_size=(1,1),
@@ -102,9 +102,9 @@ def exhaustive_with_overlays(
         ))
 
     return rules.exact_cover(
-            max_rules,
-            ignore_first,
-            allow_overlap_in_first,
+            allow_overlap_in_first=allow_overlap_in_first,
+            ignore_first=ignore_first,
             dag_elems_id=dag_elems_id,
+            max_ec_cnt=max_rules,
         )
 

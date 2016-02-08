@@ -18,6 +18,7 @@ import sys
 # patts = [Permutation([1,3,2]), Permutation([4,3,2,1])]
 # patts = [Permutation([3,2,1]), Permutation([1,3,2,4])]
 patts = [Permutation([3,2,1]), Permutation([1,3,2,4]), Permutation([3,4,1,2])] 
+# patts = [Permutation([1,3,2])]
 perm_prop = lambda p: all( p.avoids(q) for q in patts )
 perm_bound = 7
 
@@ -27,13 +28,14 @@ perm_bound = 7
 # inp_dag = permstruct.dag.N_P_X_mon1_taylored_for_av_132_4321(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.taylor_dag([Permutation([1,3,2]), Permutation([4,3,2,1])], perm_bound)
 # inp_dag = permstruct.dag.N_P_X_mon1_taylored_for_av_132_4321(perm_prop, perm_bound)
+# inp_dag = permstruct.dag.taylor_dag(patts, perm_bound, remove=True, upper_bound=3)
 inp_dag = permstruct.dag.taylor_dag(patts, perm_bound, remove=True, upper_bound=3)
 for el in inp_dag.elements:
     print(el.description if el is not None else 'None')
 
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (2,3), 3, 5, lower_bound=0.2)
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3,3), 3, 100)
-sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (4,4), 4, 100)
+sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3,3), 3) #, 100)
 
 
 # perm_bound    = 7
