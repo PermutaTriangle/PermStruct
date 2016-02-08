@@ -7,8 +7,6 @@ from .functions import (
     generate_rules_upto,
     generate_rules_with_overlay,
     generate_rules_with_overlay_upto,
-    matches_rule,
-    find_multiple_rules,
     X,
     P,
     N,

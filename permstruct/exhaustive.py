@@ -1,6 +1,6 @@
 from __future__ import print_function
 from permstruct import RuleSet
-from .functions import find_multiple_rules, generate_rules_with_overlay_upto, generate_rules_upto, generate_small_input
+from .functions import generate_rules_with_overlay_upto, generate_rules_upto, generate_small_input
 from permstruct.dag import DAG
 from permuta.misc import ProgressBar
 import sys
