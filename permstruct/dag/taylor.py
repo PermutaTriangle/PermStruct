@@ -4,7 +4,6 @@ from permstruct import E, N, P, X
 from permstruct.permutation_sets import InputPermutationSet, StaticPermutationSet
 from permstruct.dag import DAG
 
-# TODO: support outputting tuples of patterns of different length
 def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove=True):
     if max_len_patt is None:
         max_len_patt = max( len(p) for p in patterns )
@@ -20,60 +19,40 @@ def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove
             nxt = set([])
             for q in last:
                 for j in range(len(q)):
-                    qp = Permutation.to_standard(q[:j] + q[j+1:]) # TODO: could do this in linear time
+                    qp = Permutation([ x-1 if x>q[j] else x for x in q[:j] + q[j+1:] ])
+
                     nxt.add(qp)
             if l <= max_len_patt:
                 sub[i] |= nxt
             last = nxt
 
-        # sub[i][len(p)].add(p)
-
-    # for l in range(n,2,-1):
-    #     for i,p in enumerate(patterns):
-    #         for q in sub[i][l]:
-    #             for j in range(len(q)):
-    #                 qp = Permutation.to_standard(q[:j] + q[j+1:]) # TODO: could do this in linear time
-    #                 sub[i][l-1].add(qp)
-
-    def valid(picked):
-        if set(picked) == set(patterns):
-            return False
-
-        picked = sorted(picked, key=lambda x: len(x))
-
-        for i in range(len(picked)):
-            for j in range(i+1,len(picked)):
-                if picked[j].contains(picked[i]):
-                    return False
-
-                # if p != q and p.contains(q):
-                #     return False
-
-        # ps = {}
-        # for p in picked:
-        #     ps.setdefault(len(p), [])
-        #     ps[len(p)].append(p)
-        #
-        # its = sorted(ps.items())
-        # for (l1,ps1),(l2,ps2) in zip(its, its[1:]):
-        #     for q in ps2:
-        #         for p in ps1:
-        #             if q.contains(p):
-        #                 return False
+    def can_add(add, picked):
+        for p in picked:
+            if len(p) > len(add) and p.contains(add):
+                return False
+            if len(add) > len(p) and add.contains(p):
+                return False
         return True
 
     def bt(at,picked,seen):
         if upper_bound is not None and len(picked) > upper_bound:
             pass
-        elif not valid(picked):
+        elif picked == set(patterns):
             pass
         elif at == len(patterns):
             yield picked
         else:
             for s in subsets(list(sub[at] - picked - seen)):
-                npicked = picked | set(s)
-                if not (npicked & sub[at]):
+                npicked = set(picked)
+                ok = True
+                for add in set(s):
+                    if not can_add(add, npicked):
+                        ok = False
+                        break
+                    npicked.add(add)
+                if not ok or not (npicked & sub[at]):
                     continue
+
                 for res in bt(at+1,npicked,seen | sub[at]):
                     yield res
 
