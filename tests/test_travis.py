@@ -8,7 +8,7 @@ class TestTravis(unittest.TestCase):
         perm_prop = lambda p: p.avoids([2,3,1])
         perm_bound = 6
         inp_dag = permstruct.dag.incr_decr(perm_prop, perm_bound)
-        sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
+        sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 4)
         for sol in sol_iter:
             pass
 
