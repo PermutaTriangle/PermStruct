@@ -4,6 +4,8 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
+  - "pypy"
+  - "pypy3"
 before_script:
     - DIR=$(pwd)
     - git clone https://github.com/PermutaTriangle/Permuta.git /tmp/Permuta
