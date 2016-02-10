@@ -11,6 +11,11 @@ import sys
 #               1 pattern of length 3         1 pattern of length 4         #
 #---------------------------------------------------------------------------#
 
+# We are able to do every Av(132,q) where q has length 4 EXECpT ONE!!!!!. Out of the remaining
+# 8 classes of the form Av(321,q) we can only do two, q = 1234 (trivial, but
+# takes a very long time to find the set cover) and q = 2134. Hopefully we can
+# do more with mutation rules
+
                     # -- Wilf-class 1 -- #
 
 # # The permutations ================================================== > ?!
@@ -87,167 +92,256 @@ import sys
 # max_non_empty = 4
 # max_rules     = None
 
+                    # -- Wilf-class 5 -- #
+
+# The permutations ================================================== > FAILURE!
+# patts = [Permutation([3,2,1]), Permutation([1,3,4,2])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = True
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 4
+# max_rules     = None
+
+                    # -- Wilf-class 6 -- #
+
+# The permutations ================================================== > FAILURE!
+# patts = [Permutation([3,2,1]), Permutation([2,1,4,3])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = True
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 4
+# max_rules     = None
+
+                    # -- Wilf-class 7 -- #
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,3,2]), Permutation([4,3,1,2])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = True
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,3,2]), Permutation([4,2,3,1])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = True
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
+
+                    # -- Wilf-class 8 -- #
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,3,2]), Permutation([3,2,1,4])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = False
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
+
                     # -- Wilf-class 9 -- #
 
 # The permutations ================================================== > FAILURE!
-patts = [Permutation([1,3,2]), Permutation([4,2,1,3])]
+# patts = [Permutation([3,2,1]), Permutation([2,3,4,1])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = True
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 4
+# max_rules     = None
+
+# The permutations ================================================== > FAILURE!
+# patts = [Permutation([3,2,1]), Permutation([3,4,1,2])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = True
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 4
+# max_rules     = None
+
+# The permutations ================================================== > FAILURE!
+# patts = [Permutation([3,2,1]), Permutation([3,1,4,2])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = True
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 4
+# max_rules     = None
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,3,2]), Permutation([1,2,3,4])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = False
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,3,2]), Permutation([4,2,1,3])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = False
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,3,2]), Permutation([4,1,2,3])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = False
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,3,2]), Permutation([3,1,2,4])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = False
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,3,2]), Permutation([2,1,3,4])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = 2
+# remove       = False
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
+
+# The permutations ================================================== > FAILURE!
+patts = [Permutation([1,3,2]), Permutation([3,4,1,2])]
 perm_prop = lambda p: all( p.avoids(q) for q in patts )
 
 perm_bound    = 7
 ignored       = 0
 
 # The dag
-max_len_patt = 3
+max_len_patt = 2
 upper_bound  = 2
-remove       = False
+remove       = True
 
 # Grids
 max_rule_size = (3, 3)
 max_non_empty = 3
 max_rules     = None
 
-#------------------------------------------------#
-#               2 patterns                       #
-#------------------------------------------------#
-
-# -- Wilf-class 1 -- #
-
-# # The permutations ================================================== > SUCCESS!
-# # This class is a bit weird since it is finite. But we can still do it!
-# patts = [Permutation([1,2,3]), Permutation([3,2,1])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
-#
-# perm_bound    = 7
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = None
-# upper_bound  = 3
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 4 # <--------------------------------- Note!
-# max_rules     = 100
-
-# -- Wilf-class 2 -- #
-
-# # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([1,2,3]), Permutation([2,3,1])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
-#
-# perm_bound    = 7
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = None
-# upper_bound  = 3
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 100
-
-# -- Wilf-class 3 -- #
-
-# # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([1,2,3]), Permutation([1,3,2])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
-#
-# perm_bound    = 7
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 3
-# upper_bound  = 3
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 100
-
-# # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([1,3,2]), Permutation([3,1,2])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
-#
-# perm_bound    = 7
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 3
-# upper_bound  = 3
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 100
-
-# The permutations ================================================== > SUCCESS!
-# patts = [Permutation([2,3,1]), Permutation([3,1,2])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
-#
-# perm_bound    = 7
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 3
-# upper_bound  = 3
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 100
-
-#------------------------------------------------#
-#               3 patterns                       #
-#------------------------------------------------#
-
-# We use Simion and Schmidt to eliminate symmetric cases
-
-# # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([1,2,3]), Permutation([1,3,2]), Permutation([2,1,3])]
-# # patts = [Permutation([1,2,3]), Permutation([1,3,2]), Permutation([2,3,1])]
-# # patts = [Permutation([1,3,2]), Permutation([2,1,3]), Permutation([2,3,1])]
-# # patts = [Permutation([1,2,3]), Permutation([1,3,2]), Permutation([3,1,2])]
-# # patts = [Permutation([1,2,3]), Permutation([2,3,1]), Permutation([3,1,2])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
-#
-# perm_bound    = 7
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 3
-# upper_bound  = 3
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 100
-
-#------------------------------------------------#
-#               4 patterns                       #
-#------------------------------------------------#
-
-# We use Simion and Schmidt to eliminate symmetric cases
-
-# # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([2,3,1]), Permutation([1,3,2]), Permutation([3,1,2]), Permutation([2,1,3])]
-# # patts = [Permutation([2,3,1]), Permutation([3,2,1]), Permutation([1,3,2]), Permutation([3,1,2])]
-# # patts = [Permutation([3,1,2]), Permutation([3,2,1]), Permutation([1,3,2]), Permutation([2,1,3])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
-#
-# perm_bound    = 7
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 3
-# upper_bound  = 3
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = 100
-
 # Creating the dag
+# inp_dag       = permstruct.dag.N_P_X1_mon(perm_prop, perm_bound)
 inp_dag = permstruct.dag.taylor_dag(patts, max_len_patt=max_len_patt, perm_bound=perm_bound, remove=remove, upper_bound=upper_bound)
 for el in inp_dag.elements:
     print(el.description if el is not None else 'None')
