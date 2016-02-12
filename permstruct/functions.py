@@ -222,6 +222,7 @@ def generate_rules_upto(min_rule_size, max_rule_size, small_input, sets, cnt,
         ans = []
         for nn in range(min_rule_size[0], max_rule_size[0]+1):
             for mm in range(min_rule_size[1], max_rule_size[1]+1):
+                print('Generating rules of size (%d,%d)' % (nn,mm))
                 for res in generate_rules(nn, mm, small_input, sets, cnt, allowed_neighbors, use_allowed_neighbors, mn_at_most=mn_at_most):
                     ans.append({ (x,y):rev[v] for (x,y),v in res.rule.items() })
         if not ignore_cache:
