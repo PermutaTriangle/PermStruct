@@ -18,6 +18,7 @@ def exhaustive(
         allow_overlap_in_first=True,
         min_rule_size=(1,1),
         lower_bound=None,
+        is_classical=False,
     ):
 
     rules = RuleSet(perm_prop, perm_bound)
@@ -29,7 +30,10 @@ def exhaustive(
 
     sys.stderr.write('Generating rules\n')
     sets = sorted(dag.elements, key=lambda x: (repr(type(x)), x))
-    gen = generate_rules_upto(min_rule_size, max_rule_size, small_input, sets, max_nonempty, mn_at_most=perm_bound)
+    gen = generate_rules_upto(min_rule_size, max_rule_size, small_input, sets, max_nonempty,
+            mn_at_most=perm_bound,
+            is_classical=is_classical,
+            ocreated=rules.ocreated)
 
     sys.stderr.write('Processing rules\n')
     ProgressBar.create(len(gen))

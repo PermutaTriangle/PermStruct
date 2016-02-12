@@ -39,6 +39,40 @@ def generate_all_of_length(max_n, S, inp, min_n=0):
 # 
 
 
+def find_allowed_neighbors_classical_perm_prop(ocreated, sets):
+    max_check = max( l for l in ocreated )
+    for l in range(max_check+1):
+        ocreated.setdefault(l, [])
+        ocreated[l] = sorted(ocreated[l])
+
+    neighb = {}
+    for i in range(len(sets)):
+        for j in range(len(sets)):
+            for di in range(-1, 2):
+                for dj in range(-1, 2):
+                    if di == 0 and dj == 0:
+                        continue
+
+                    neighb.setdefault((sets[i], di, dj), set())
+
+                    a = min(0, di)
+                    b = min(0, dj)
+                    G = GeneratingRule({ (-a, -b): sets[i], (di-a, dj-b): sets[j] })
+
+                    ok = True
+                    for l in range(max_check+1):
+                        for perm in G.generate_of_length(l, ocreated):
+                            perm = Permutation(list(perm))
+                            if not binary_search(ocreated[len(perm)], perm):
+                                ok = False
+                                break
+                        if not ok:
+                            break
+                    if ok:
+                        neighb[(sets[i], di, dj)].add(sets[j])
+    return neighb
+
+
 def find_allowed_neighbors(small_input, sets, ignore_cache=False):
     small_bound = 2
     small_perms = [[] for i in range(len(sets))]
@@ -95,12 +129,18 @@ def find_allowed_neighbors(small_input, sets, ignore_cache=False):
 def generate_rules(n, m, small_input, sets, cnt,
         allowed_neighbors=None,
         use_allowed_neighbors=True,
-        mn_at_most=None):
+        mn_at_most=None,
+        is_classical=False,
+        allowed_neighbors_cpp=None,
+        ocreated=None):
 
     if allowed_neighbors is None and use_allowed_neighbors:
         allowed_neighbors = find_allowed_neighbors(small_input, sets)
     if not use_allowed_neighbors:
         allowed_neighbors = None
+
+    if is_classical and allowed_neighbors_cpp is None:
+        allowed_neighbors_cpp = find_allowed_neighbors_classical_perm_prop(ocreated, sets)
 
     # key = (n,m,perm_bound, sets, cnt, allowed_neighbors)
     # print('a')
@@ -131,6 +171,9 @@ def generate_rules(n, m, small_input, sets, cnt,
 
         return True
 
+    def signum(n):
+        return 1 if n > 0 else -1 if n < 0 else 0
+
     ssets = set(sets)
     def gen(i, j):
         if j == m:
@@ -154,14 +197,19 @@ def generate_rules(n, m, small_input, sets, cnt,
                                 curs = allowed_neighbors[(rule[ci][cj], -di, -dj)]
                                 ss &= curs
 
-                # for s in sets:
+                if allowed_neighbors_cpp is not None:
+                    for ci in range(i,n):
+                        for cj in range(m):
+                            if (ci, cj) > (i, j):
+                                di = signum(ci-i)
+                                dj = signum(cj-j)
+                                curs = allowed_neighbors_cpp[(rule[ci][cj], -di, -dj)]
+                                ss &= curs
+
                 for s in ss:
                     if s is not None:
                         if left == 0 or s.min_length(small_input) > at_most:
                             continue
-                    # if left == 0 and s is not None:
-                    #     continue
-
                     rule[i][j] = s
                     yield rule
 
@@ -218,7 +266,14 @@ def generate_rules_upto(min_rule_size, max_rule_size, small_input, sets, cnt,
         allowed_neighbors=None,
         use_allowed_neighbors=True,
         ignore_cache=False,
-        mn_at_most=None):
+        mn_at_most=None,
+        is_classical=False,
+        ocreated=None):
+
+    if is_classical:
+        # Classical optimizations depend on the perm prop (and not only the
+        # smallest elements), so this is probably for the best
+        ignore_cache = True
 
     key = (min_rule_size,max_rule_size,small_input,sets,cnt,allowed_neighbors,use_allowed_neighbors,mn_at_most)
     if not ignore_cache and Cache.contains(key):
@@ -227,12 +282,20 @@ def generate_rules_upto(min_rule_size, max_rule_size, small_input, sets, cnt,
         if allowed_neighbors is None:
             allowed_neighbors = find_allowed_neighbors(small_input, sets)
 
+        if is_classical:
+            allowed_neighbors_cpp = find_allowed_neighbors_classical_perm_prop(ocreated, sets)
+        else:
+            allowed_neighbors_cpp = None
+
         rev = { v:i for i,v in enumerate(sets) }
         ans = []
         for nn in range(min_rule_size[0], max_rule_size[0]+1):
             for mm in range(min_rule_size[1], max_rule_size[1]+1):
                 print('Generating rules of size (%d,%d)' % (nn,mm))
-                for res in generate_rules(nn, mm, small_input, sets, cnt, allowed_neighbors, use_allowed_neighbors, mn_at_most=mn_at_most):
+                for res in generate_rules(nn, mm, small_input, sets, cnt, allowed_neighbors, use_allowed_neighbors,
+                        mn_at_most=mn_at_most,
+                        is_classical=is_classical,
+                        allowed_neighbors_cpp=allowed_neighbors_cpp):
                     ans.append({ (x,y):rev[v] for (x,y),v in res.rule.items() })
         if not ignore_cache:
             Cache.put(key,ans)
