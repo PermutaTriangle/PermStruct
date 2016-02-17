@@ -12,6 +12,7 @@ before_script:
     - cd /tmp/Permuta
     - python setup.py install
     - cd $DIR
+    - make -C exact_cover
     - sudo make -C exact_cover install
 script:
     - python setup.py test
