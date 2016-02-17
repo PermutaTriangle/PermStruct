@@ -1,12 +1,20 @@
-from permuta import Permutation, Permutations
+from permuta import Permutation, Permutations, AvoidanceClass
 from permuta.misc import choose, subsets
 from permstruct import E, N, P, X
 from permstruct.permutation_sets import InputPermutationSet, StaticPermutationSet
 from permstruct.dag import DAG
+import datetime
 
-def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove=True):
+# def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove=True):
+def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True):
+    assert settings.sinput.avoidance is not None, "Tayloring is only supported for avoidance"
+    patterns = settings.sinput.avoidance
+
     if max_len_patt is None:
         max_len_patt = max( len(p) for p in patterns )
+
+    started = datetime.datetime.now()
+    settings.logger.log('Tayloring DAG')
 
     n = max( len(p) for p in patterns )
     # sub = [ [ set([]) for i in range(n+1) ] for _ in range(len(patterns)) ]
@@ -60,17 +68,14 @@ def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove
     for ps in bt(0,set(),set()):
 
         here = set()
-        for m in range(perm_bound+1):
-            for perm in Permutations(m):
-                if all( perm.avoids(p) for p in ps ):
-                    here.add(perm)
+        for perm in AvoidanceClass(settings.perm_bound, avoiding=ps, upto=True):
+            here.add(perm)
 
         descr = 'Av(%s)' % ', '.join(map(str, sorted(ps)))
         elems.append((ps, here, descr))
 
-    perm_prop = lambda p: all( p.avoids(q) for q in patterns )
-    input = set( p for l in range(perm_bound+1) for p in Permutations(l) if perm_prop(p) )
-    elems.append((InputPermutationSet(perm_prop), input, None))
+    input = settings.sinput.get_permutation_set()
+    elems.append((InputPermutationSet(settings), input, None))
     elems.append((N, set([ Permutation([]) ]), None))
     elems.append((P, set([ Permutation([1]) ]), None))
 
@@ -101,15 +106,7 @@ def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove
                 ps = StaticPermutationSet(here, description=descr)
             res.add_element(ps)
 
+    ended = datetime.datetime.now()
+    settings.logger.log('Finished in %.3fs' % (ended - started).total_seconds())
     return res
-
-if __name__ == '__main__':
-    res = taylor_dag([
-        Permutation([3,2,1]),
-        Permutation([1,3,2,4]),
-        Permutation([3,4,1,2]),
-    ], 7, upper_bound=3)
-
-    for el in res.elements:
-        print(el.description if el is not None else None)
 

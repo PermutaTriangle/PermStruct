@@ -17,8 +17,8 @@ import sys
 
 # patts = [Permutation([1,3,2]), Permutation([4,3,2,1])]
 # patts = [Permutation([3,2,1]), Permutation([1,3,2,4])]
-patts = [Permutation([3,2,1]), Permutation([1,3,2,4]), Permutation([3,4,1,2])] 
-# patts = [Permutation([1,3,2])]
+# patts = [Permutation([3,2,1]), Permutation([1,3,2,4]), Permutation([3,4,1,2])]
+patts = [Permutation([1,3,2])]
 perm_prop = lambda p: all( p.avoids(q) for q in patts )
 perm_bound = 7
 
@@ -35,7 +35,7 @@ for el in inp_dag.elements:
 
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (2,3), 3, 5, lower_bound=0.2)
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3,3), 3, 100)
-sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3,3), 3) #, 100)
+sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3,3), 3, is_classical=True)
 
 
 # perm_bound    = 7
@@ -53,4 +53,16 @@ for sol in sol_iter:
     for rule in sol:
         print(rule)
         print("")
+
+# Found 1436 rules, 235 of which are valid, 205 of which are distinct
+# Death by overlap: 87
+# Death by perm prop: 1114
+
+# Found 1436 rules, 235 of which are valid, 205 of which are distinct
+# Death by overlap: 87
+# Death by perm prop: 1114
+
+# Found 394 rules, 235 of which are valid, 205 of which are distinct
+# Death by overlap: 87
+# Death by perm prop: 72
 

@@ -11,13 +11,15 @@ import sys
 # perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([3,2,1])
 # perm_prop = lambda p: True
 perm_prop = lambda p: p.avoids([2,3,1])
+# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([3,4,1,2])
+# perm_prop = lambda p: p.avoids([1,3,2]) and p.avoids([4,3,1,2])
 # perm_prop = lambda p: p.avoids([1,2])
 # perm_prop = lambda p: p.avoids([1])
 
-perm_bound = 6
+perm_bound = 8
 
-# inp_dag = permstruct.dag.elementary(perm_prop, perm_bound)
-inp_dag = permstruct.dag.incr_decr(perm_prop, perm_bound)
+inp_dag = permstruct.dag.elementary(perm_prop, perm_bound)
+# inp_dag = permstruct.dag.incr_decr(perm_prop, perm_bound)
 # overlay_dag = permstruct.dag.elementary(perm_prop, perm_bound)
 # overlay_dag = permstruct.dag.x_dag(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.incr_decr_nonempty(perm_prop, perm_bound)
@@ -25,6 +27,8 @@ inp_dag = permstruct.dag.incr_decr(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.classic_avoiders_length_3(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.classic_avoiders_length_3_with_input_without_incrdecr(perm_prop, perm_bound)
 # inp_dag = permstruct.dag.len_3_pairs(perm_prop, perm_bound)
+
+# inp_dag = permstruct.dag.N_P_X_mon2_taylored_for_av_132_4312(perm_prop, perm_bound)
 
 # Found 19525 rules, 86 of which are valid, 72 of which are distinct
 # Found 12445 rules, 86 of which are valid, 72 of which are distinct
@@ -48,9 +52,12 @@ inp_dag = permstruct.dag.incr_decr(perm_prop, perm_bound)
 # sys.exit(0)
 
 
+# sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3,3), 3, 6, ignore_first=0)
+permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (5,5), 5, 6)
+
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (4, 4), 6, 6, ignore_first=1)
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (4, 4), 4, 6, ignore_first=1)
-sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
+# sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 3, 100)
 # sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
 # sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, (3, 3), 4, 100)
@@ -58,12 +65,4 @@ sol_iter = permstruct.construct_rule(perm_prop, perm_bound, inp_dag, (3, 3), 4, 
 # sol_iter = permstruct.exhaustive_with_overlays(perm_prop, perm_bound, inp_dag, (2, 3), 4, 5, overlay_dag, 1, (1, 3), min_rule_size=(2,3))
 
 # permstruct.exhaustive(perm_prop, perm_bound, dag, (3, 3), 4, 5)
-
-for sol in sol_iter:
-
-    print '===================================='
-    print ""
-    for rule in sol:
-        print(rule)
-        print ""
 
