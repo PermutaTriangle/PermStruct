@@ -10,9 +10,8 @@ before_script:
     - DIR=$(pwd)
     - git clone https://github.com/PermutaTriangle/Permuta.git /tmp/Permuta
     - cd /tmp/Permuta
-    - make -C exact_cover
-    - make -C exact_cover install
     - python setup.py install
     - cd $DIR
+    - sudo make -C exact_cover install
 script:
     - python setup.py test
