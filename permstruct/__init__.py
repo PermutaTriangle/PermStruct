@@ -1,12 +1,15 @@
 
+from .logger import StructLogger
+from .input import StructInput
+from .settings import StructSettings
 from .rule_set import RuleSet
 
 from .functions import (
     generate_all_of_length,
     generate_rules,
     generate_rules_upto,
-    generate_rules_with_overlay,
-    generate_rules_with_overlay_upto,
+    # generate_rules_with_overlay,
+    # generate_rules_with_overlay_upto,
     X,
     P,
     N,
@@ -16,6 +19,6 @@ from .functions import (
     find_allowed_neighbors,
 )
 
-from .exhaustive import exhaustive, exhaustive_with_overlays
+from .exhaustive import exhaustive #, exhaustive_with_overlays
 from .construct import construct_rule
 

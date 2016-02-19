@@ -9,20 +9,22 @@ derive generating functions for the permutation sets.
 ## Installing
 To install PermStruct on your system, start by installing the
 [Permuta](https://github.com/PermutaTriangle/Permuta) library. Then simply run
-the following command as a superuser:
+the following commands:
 ```
-# ./setup.py install
+$ make -C exact_cover
+$ sudo make -C exact_cover install
+$ sudo ./setup.py install
 ```
 
 It is also possible to install PermStruct in development mode, in which case you
 run the following instead:
 ```
-# ./setup.py develop
+$ sudo ./setup.py develop
 ```
 
 To run the unit tests, you can run the following command:
 ```
-./setup.py test
+$ ./setup.py test
 ```
 
 ## Usage
@@ -32,7 +34,7 @@ like any other Python library:
 import permstruct
 ```
 
-For instructions on how to run the algorithm, see the (soon to be written)
+For instructions on how to run the algorithm, see the (soon-to-be written)
 documentation.
 
 ## License

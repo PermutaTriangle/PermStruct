@@ -2,6 +2,8 @@ from __future__ import print_function
 from permuta import *
 import permstruct
 import permstruct.dag
+from permstruct import *
+from permstruct.dag import taylor_dag
 
 import sys
 
@@ -41,7 +43,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([3,2,1]), Permutation([2,1,3,4])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -60,7 +61,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([4,3,2,1])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -79,7 +79,6 @@ is_classical = True
 
 # The permutations ================================================== > FAILURE!
 # patts = [Permutation([3,2,1]), Permutation([1,3,2,4])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -98,7 +97,6 @@ is_classical = True
 
 # The permutations ================================================== > FAILURE! (Didn't wait for exact cover to finish)
 # patts = [Permutation([3,2,1]), Permutation([1,3,4,2])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -117,9 +115,8 @@ is_classical = True
 
 # The permutations ================================================== > FAILURE! (Didn't wait for exact cover to finish)
 # patts = [Permutation([3,2,1]), Permutation([2,1,4,3])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
-# perm_bound    = 7
+# perm_bound    = 13
 # ignored       = 0
 #
 # # The dag
@@ -136,7 +133,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([4,3,1,2])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -153,7 +149,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([4,2,3,1])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -172,7 +167,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([3,2,1,4])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -191,7 +185,6 @@ is_classical = True
 
 # The permutations ================================================== > FAILURE!
 # patts = [Permutation([3,2,1]), Permutation([2,3,4,1])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -208,7 +201,6 @@ is_classical = True
 
 # The permutations ================================================== > FAILURE!
 # patts = [Permutation([3,2,1]), Permutation([3,4,1,2])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -225,7 +217,6 @@ is_classical = True
 
 # The permutations ================================================== > FAILURE! (Didn't wait for exact cover to finish)
 # patts = [Permutation([3,2,1]), Permutation([3,1,4,2])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -242,7 +233,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([1,2,3,4])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -259,7 +249,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([4,2,1,3])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -276,7 +265,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([4,1,2,3])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -293,7 +281,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([3,1,2,4])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -310,7 +297,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([2,1,3,4])]
-# perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
 # ignored       = 0
@@ -329,8 +315,6 @@ is_classical = True
 patts = [Permutation([1,3,2]), Permutation([3,4,1,2])]
 perm_prop = lambda p: all( p.avoids(q) for q in patts )
 
-perm_bound    = 7
-ignored       = 0
 
 # The dag
 max_len_patt = 2
@@ -342,22 +326,18 @@ max_rule_size = (3, 3)
 max_non_empty = 3
 max_rules     = None
 
-print('')
-print('Creating the dag')
-# inp_dag       = permstruct.dag.N_P_X1_mon(perm_prop, perm_bound)
-inp_dag = permstruct.dag.taylor_dag(patts, max_len_patt=max_len_patt, perm_bound=perm_bound, remove=remove, upper_bound=upper_bound)
-for el in inp_dag.elements:
-    print(el.description if el is not None else 'None')
+# ===================================================
 
-# Finding the rules and running exact cover
-print('')
-print('Finding rules')
-sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, max_rule_size, max_non_empty, max_rules, ignore_first=ignored)
+settings = StructSettings(
+        perm_bound=perm_bound,
+        max_rule_size=max_rule_size,
+        max_non_empty=max_non_empty,
+        max_rules=max_rules,
+        verbosity=StructLogger.INFO)
+settings.set_input(StructInput.from_avoidance(settings, patts))
+settings.set_dag(taylor_dag(settings,
+                    max_len_patt=max_len_patt,
+                    remove=remove,
+                    upper_bound=upper_bound))
 
-for sol in sol_iter:
-
-    print('====================================')
-    print("")
-    for rule in sol:
-        print(rule)
-        print("")
+exhaustive(settings)

@@ -1,5 +1,6 @@
 import unittest
 import permstruct
+from permstruct import *
 import permstruct.dag
 import sys
 from permstruct.dag import taylor_dag
@@ -20,27 +21,36 @@ class TestDAG(unittest.TestCase):
 
     def test_taylor(self):
 
-        res = taylor_dag([
-            Permutation([1,2,3]),
-            Permutation([3,2,1]),
-        ], 7, remove=False)
+        settings = StructSettings(
+                perm_bound=7,
+                max_rule_size=(3,3),
+                max_non_empty=3)
+
+        patts = [Permutation([1,2,3]),
+                 Permutation([3,2,1])]
+        settings.set_input(StructInput.from_avoidance(settings, patts))
+        res = taylor_dag(settings, remove=False)
         self.check([
             [[1,2], [2,1]],
             [[1,2,3], [2,1]],
             [[1,2], [3,2,1]],
         ], res)
 
-        res = taylor_dag([
+        patts = [
             Permutation([1,2,3]),
             Permutation([3,2,1]),
-        ], 7, upper_bound=1, remove=False)
+        ]
+        settings.set_input(StructInput.from_avoidance(settings, patts))
+        res = taylor_dag(settings, upper_bound=1, remove=False)
         self.check([
         ], res)
 
-        res = taylor_dag([
+        patts = [
             Permutation([1,2,3]),
             Permutation([3,2,1]),
-        ], 7, max_len_patt=2, remove=False)
+        ]
+        settings.set_input(StructInput.from_avoidance(settings, patts))
+        res = taylor_dag(settings, max_len_patt=2, remove=False)
         self.check([
             [[1,2], [2,1]],
         ], res)

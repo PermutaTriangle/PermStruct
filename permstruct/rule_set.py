@@ -1,49 +1,31 @@
 from __future__ import print_function
-from permuta import Permutations
+from permuta import Permutations, Permutation
 from permuta.misc import exact_cover, exact_cover_smallest, binary_search
-from permstruct.exact_cover import exact_cover_lb
+from permstruct.exact_cover import exact_cover_lb, exact_cover as ps_exact_cover
 import sys
 
 class RuleSet:
 
-    def __init__(self, perm_prop, perm_bound):
-        self.perm_prop = perm_prop
-        self.perm_bound = perm_bound
+    def __init__(self, settings):
+        self.settings = settings
         self.rules = {}
-
         self.death_by_overlap = 0
         self.death_by_perm_prop = 0
-
-        # some preprocessing: cache all permutations of length at most
-        # perm_bound that satisfy perm_prop
-        self.validcnt = 0
-        self.ball = 0
-        self.permset = [ [] for _ in range(self.perm_bound+1) ]
-        self.ocreated = {}
-        for l in range(self.perm_bound+1):
-            self.ocreated.setdefault(l, [])
-            for perm in Permutations(l):
-                if self.perm_prop(perm):
-                    self.permset[l].append(tuple(perm))
-                    self.ocreated[l].append(perm)
-                    self.ball |= 1 << self.validcnt
-                    self.validcnt += 1
-
-        self.lens = [ len(self.permset[i]) for i in range(self.perm_bound+1) ]
+        self.ball = (1<<settings.sinput.validcnt)-1
+        self.permset = [ sorted(settings.sinput.permutations[l]) for l in range(settings.perm_bound+1) ]
 
     def print_stats(self):
-        sys.stderr.write('Death by overlap: %s\n' % self.death_by_overlap)
-        sys.stderr.write('Death by perm prop: %s\n' % self.death_by_perm_prop)
+        self.settings.logger.log('Death by overlap: %s' % self.death_by_overlap)
+        self.settings.logger.log('Death by perm prop: %s' % self.death_by_perm_prop)
 
     def add_rule(self, rule):
         bs = 0
         curcnt = 0
         empty = True
-        for l in range(self.perm_bound+1):
+        for l in range(self.settings.perm_bound+1):
             curlevel = []
-            for perm in rule.generate_of_length(l, self.ocreated):
-                # if not self.perm_prop(perm):
-                if not binary_search(self.permset[l], perm):
+            for perm in rule.generate_of_length(l, self.settings.sinput.permutations):
+                if not self.settings.sinput.contains(perm):
                     # the rule generated something that doesn't satisfy perm_prop
                     self.death_by_perm_prop += 1
                     return False
@@ -60,10 +42,10 @@ class RuleSet:
             i = 0
             j = 0
             while i < len(cur) and j < len(self.permset[l]):
-                if self.permset[l][j] < cur[i]:
+                if self.permset[l][j] < Permutation(cur[i]):
                     j += 1
                     curcnt += 1
-                elif cur[i] == self.permset[l][j]:
+                elif Permutation(cur[i]) == self.permset[l][j]:
                     bs |= 1 << curcnt
                     i += 1
                     j += 1
@@ -82,44 +64,42 @@ class RuleSet:
             return
 
         # print(rule)
-        # print(''.join( '0' if (bs & (1 << i)) == 0 else '1' for i in range(self.validcnt - 1, -1, -1) ))
+        # print(''.join( '0' if (bs & (1 << i)) == 0 else '1' for i in range(self.settings.sinput.validcnt - 1, -1, -1) ))
         # print('')
 
         self.rules.setdefault(bs, [])
         self.rules[bs].append(rule)
 
     def exact_cover(self,
-                ignore_first=1,
                 max_ec_cnt=None,
                 allow_overlap_in_first=True,
-                lower_bound=None,
                 dag_elems_id=None,
             ):
 
-        sys.stderr.write('Finding exact cover...\n')
+        self.settings.logger.log('Finding exact cover...')
 
         bss = list(self.rules.keys())
 
         used_idx = set()
-        sys.stderr.write('Found:\n')
-        if lower_bound is None:
-            for res in exact_cover_smallest(bss, self.validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first):
-                print(repr(res))
-                used_idx |= set(res)
+        self.settings.logger.log('Found:')
+        if self.settings.lower_bound is None:
+            covers = ps_exact_cover(self.settings, bss)
         else:
-            for res in exact_cover_lb(bss, self.validcnt, max_ec_cnt, ignore_first, allow_overlap_in_first, self.lens, lower_bound):
-                print(repr(res))
-                used_idx |= set(res)
+            covers = exact_cover_lb(self.settings, bss)
+
+        for res in covers:
+            print(repr(res))
+            used_idx |= set(res)
 
         print('')
-        sys.stderr.write('Index:')
+        self.settings.logger.log('Index:')
         for i, b in enumerate(bss):
             if i not in used_idx:
                 continue
 
             if True or dag_elems_id is None:
                 print('%3d: ' % i)
-                print(''.join( '0' if (b & (1 << i)) == 0 else '1' for i in range(self.validcnt - 1, -1, -1) ))
+                print(''.join( '0' if (b & (1 << i)) == 0 else '1' for i in range(self.settings.sinput.validcnt - 1, -1, -1) ))
 
                 cnt = 0
                 mx_cnt = 15

@@ -1,9 +1,16 @@
 
 - Generate rules more efficiently.
     - Support bound on number of non-empty boxes.
+    - NEW IDEA: When classical=True:
+        - When backtracking to generate rules, check if partial generating rule creates disallowed permutations
+        - In a DP kind of way, reuse results for smaller grid sizes
 - Framework for tests.
 - The XX-overlay rule for Av(123) also comes up for Av(231)
 - Can we order the output of the exact cover by the number of rules glued?
+- Make a general Settings class to simplify function interfaces
+- Make a class that holds perm_prop, perm_bound, etc. and does everything that relates to these properties
+    - Should include an is_classical flag, which would turn on classical-specific optimizations
+- Use Length0PermutationSet() instead of None for the empty permutation
 
 
 DONE:
@@ -19,4 +26,6 @@ DONE:
 - When we search for 1x1 rules for Av(231) we only get the rule |I| but should also get |Av(231)|
 - Generate_of_length: Don't generate rules where the smallest generated permutation is > perm_bound (so perm_bound will now part of the cache key)
 - Cache: when saving permutation sets, save identifiers instead of the sets themselves
+- Make taylor_dag faster:
+    - Generate avoiders of input patterns instead of brute force finding them
 
