@@ -303,8 +303,8 @@ def generate_rules(settings, n, m,
                         if left == 0 or s.min_length(settings.sinput.permutations) > at_most:
                             continue
                     rule[i][j] = s
-                    if generates_subset(GeneratingRule(rule)):
-                        yield rule
+                    # if generates_subset(GeneratingRule(rule)):
+                    yield rule
 
     res = []
     a, b = 0, 0
