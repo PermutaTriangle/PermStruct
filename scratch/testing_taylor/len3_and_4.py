@@ -20,7 +20,7 @@ is_classical = True
 
                     # -- Wilf-class 1 -- #
 
-# # The permutations ================================================== > ?!
+# # The permutations ================================================ > SUCCESS!
 # # Finite and not very interesting
 # # perhaps we must use inp_dag = permstruct.dag.N_P(perm_bound)
 # patts = [Permutation([3,2,1]), Permutation([1,2,3,4])]
@@ -35,7 +35,7 @@ is_classical = True
 # remove       = False
 #
 # # Grids
-# max_rule_size = (5, 5)
+# max_rule_size = (6, 6)
 # max_non_empty = 6
 # max_rules     = 100
 
