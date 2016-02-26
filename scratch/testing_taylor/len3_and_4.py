@@ -7,13 +7,13 @@ from permstruct.dag import taylor_dag
 
 import sys
 
-# Avoidance of classical patterns of length 3
+is_classical = True
 
 #---------------------------------------------------------------------------#
 #               1 pattern of length 3         1 pattern of length 4         #
 #---------------------------------------------------------------------------#
 
-# We are able to do every Av(132,q) where q has length 4 EXECpT ONE!!!!!. Out of the remaining
+# We are able to do every Av(132,q) where q has length 4. Out of the remaining
 # 8 classes of the form Av(321,q) we can only do two, q = 1234 (trivial, but
 # takes a very long time to find the set cover) and q = 2134. Hopefully we can
 # do more with mutation rules
@@ -23,20 +23,21 @@ import sys
 # # The permutations ================================================== > ?!
 # # Finite and not very interesting
 # # perhaps we must use inp_dag = permstruct.dag.N_P(perm_bound)
-patts = [Permutation([3,2,1]), Permutation([1,2,3,4])]
-
-perm_bound    = 7
-ignored       = 0
-
-# The dag
-max_len_patt = 2
-upper_bound  = 1
-remove       = True
-
-# Grids
-max_rule_size = (6, 6)
-max_non_empty = 6
-max_rules     = 30
+# patts = [Permutation([3,2,1]), Permutation([1,2,3,4])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 2
+# upper_bound  = 1
+# remove       = False
+#
+# # Grids
+# max_rule_size = (5, 5)
+# max_non_empty = 6
+# max_rules     = 100
 
                     # -- Wilf-class 2 -- #
 
@@ -84,17 +85,17 @@ max_rules     = 30
 #
 # # The dag
 # max_len_patt = 3
-# upper_bound  = 2
+# upper_bound  = 3
 # remove       = True
 #
 # # Grids
 # max_rule_size = (4, 4)
-# max_non_empty = 4
+# max_non_empty = 5
 # max_rules     = None
 
                     # -- Wilf-class 5 -- #
 
-# The permutations ================================================== > FAILURE!
+# The permutations ================================================== > FAILURE! (Didn't wait for exact cover to finish)
 # patts = [Permutation([3,2,1]), Permutation([1,3,4,2])]
 #
 # perm_bound    = 7
@@ -102,32 +103,31 @@ max_rules     = 30
 #
 # # The dag
 # max_len_patt = 3
-# upper_bound  = 2
+# upper_bound  = 4
 # remove       = True
 #
 # # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 4
+# max_rule_size = (4, 4)
+# max_non_empty = 5
 # max_rules     = None
 
                     # -- Wilf-class 6 -- #
 
-# The permutations ================================================== > FAILURE!
+# The permutations ================================================== > FAILURE! (Didn't wait for exact cover to finish)
 # patts = [Permutation([3,2,1]), Permutation([2,1,4,3])]
 #
 # perm_bound    = 13
 # ignored       = 0
 #
 # # The dag
-# max_len_patt = 3
-# upper_bound  = 2
+# max_len_patt = 2
+# upper_bound  = 1
 # remove       = True
 #
 # # Grids
-# max_rule_size = (5, 5)
-# max_non_empty = 5
+# max_rule_size = (4, 4)
+# max_non_empty = 6
 # max_rules     = None
-
 
                     # -- Wilf-class 7 -- #
 
@@ -191,12 +191,12 @@ max_rules     = 30
 #
 # # The dag
 # max_len_patt = 3
-# upper_bound  = 2
+# upper_bound  = 3
 # remove       = True
 #
 # # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 4
+# max_rule_size = (4, 4)
+# max_non_empty = 5
 # max_rules     = None
 
 # The permutations ================================================== > FAILURE!
@@ -211,11 +211,11 @@ max_rules     = 30
 # remove       = True
 #
 # # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 4
+# max_rule_size = (5, 5)
+# max_non_empty = 5
 # max_rules     = None
 
-# The permutations ================================================== > FAILURE!
+# The permutations ================================================== > FAILURE! (Didn't wait for exact cover to finish)
 # patts = [Permutation([3,2,1]), Permutation([3,1,4,2])]
 #
 # perm_bound    = 7
@@ -223,11 +223,11 @@ max_rules     = 30
 #
 # # The dag
 # max_len_patt = 3
-# upper_bound  = 2
+# upper_bound  = 3
 # remove       = True
 #
 # # Grids
-# max_rule_size = (3, 3)
+# max_rule_size = (4, 4)
 # max_non_empty = 4
 # max_rules     = None
 
@@ -311,22 +311,20 @@ max_rules     = 30
 # max_non_empty = 3
 # max_rules     = None
 
-# The permutations ================================================== > FAILURE!
-# patts = [Permutation([1,3,2]), Permutation([3,4,1,2])]
-#
-# perm_bound    = 7
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 3
-# upper_bound  = 3
-# remove       = True
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = None
+# The permutations ================================================== > SUCCESS!
+patts = [Permutation([1,3,2]), Permutation([3,4,1,2])]
+perm_prop = lambda p: all( p.avoids(q) for q in patts )
 
+
+# The dag
+max_len_patt = 2
+upper_bound  = 1
+remove       = True
+
+# Grids
+max_rule_size = (3, 3)
+max_non_empty = 3
+max_rules     = None
 
 # ===================================================
 
@@ -343,4 +341,3 @@ settings.set_dag(taylor_dag(settings,
                     upper_bound=upper_bound))
 
 exhaustive(settings)
-
