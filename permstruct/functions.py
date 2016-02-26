@@ -6,6 +6,10 @@ from copy import deepcopy
 from .misc.cache import Cache
 import marshal
 
+
+# TODO: throw out unused code
+
+
 # def generate_small_input(perm_prop):
 #     bound = 2
 #     ocreated = {}
@@ -359,7 +363,7 @@ def generate_rules(settings, n, m,
 #             yield overlay_rule
 
 
-def generate_rules_upto(settings):
+def generate_rules_upto_old(settings):
 
     ignore_cache = settings.ignore_cache
     if settings.sinput.is_classical:
@@ -398,6 +402,305 @@ def generate_rules_upto(settings):
     return ans
 
 
+# def extend(settings, n, m, cur, reuse, allowed_neighbors, allowed_neighbors_cpp):
+#     def signum(n):
+#         return 1 if n > 0 else -1 if n < 0 else 0
+#
+#     def valid(rule):
+#         if n == 1 and m == 1:
+#             # edge case: all 1x1 rules are valid
+#             if rule[0][0] and not rule[0][0].can_be_alone():
+#                 return False
+#             return True
+#
+#         if all( x is None for x in rule[0] ):
+#             return False
+#
+#         for y in range(m):
+#             found = False
+#             for x in range(n):
+#                 if rule[x][y] is not None:
+#                     found = True
+#                     break
+#
+#             if not found:
+#                 return False
+#
+#         return True
+#
+#     ssets = set(settings.sets)
+#     def gen(i, j):
+#         if j == m:
+#             for rule in gen(i + 1, 0):
+#                 if i + 1 == n or any( x is not None for x in rule[i + 1] ):
+#                     yield rule
+#         elif i == n:
+#             yield [ [ None for y in range(m) ] for x in range(n) ]
+#         else:
+#             for trule in gen(i, j + 1):
+#                 rule = [ [ trule[x][y] for y in range(m) ] for x in range(n) ]
+#                 left = settings.max_non_empty - sum( rule[x][y] is not None for x in range(n) for y in range(m) )
+#                 at_most = settings.mn_at_most - sum( 0 if rule[x][y] is None else rule[x][y].min_length(settings.sinput.permutations) for x in range(n) for y in range(m) )
+#
+#                 ss = set(ssets)
+#                 for di in range(-1, 2):
+#                     for dj in range(-1, 2):
+#                         ci, cj = i+di, j+dj
+#                         if (ci, cj) > (i, j) and 0 <= ci < n and 0 <= cj < m:
+#                             curs = allowed_neighbors[(rule[ci][cj], -di, -dj)]
+#                             ss &= curs
+#
+#                 if allowed_neighbors_cpp is not None:
+#                     for ci in range(i,n):
+#                         for cj in range(m):
+#                             if (ci, cj) > (i, j):
+#                                 di = signum(ci-i)
+#                                 dj = signum(cj-j)
+#                                 curs = allowed_neighbors_cpp[(rule[ci][cj], -di, -dj)]
+#                                 ss &= curs
+#
+#                 if (i,j) in reuse:
+#                     ss &= {cur.rule.get((i,j), None)}
+#
+#                 for s in ss:
+#                     if s is not None:
+#                         if left == 0 or s.min_length(settings.sinput.permutations) > at_most:
+#                             continue
+#                     rule[i][j] = s
+#                     # if generates_subset(GeneratingRule(rule)):
+#                     yield rule
+#
+#     res = []
+#     a, b = 0, 0
+#     for rule in gen(0, 0):
+#         # if (n,m) == (3,3):
+#         #     print(GeneratingRule(rule))
+#         a += 1
+#         if valid(rule):
+#             b += 1
+#             res.append(GeneratingRule(rule))
+#
+#     return res
+
+
+# def generate_rules_upto(settings):
+#
+#     if not settings.sinput.is_classical:
+#         return generate_rules_upto_old(settings)
+#
+#     allowed_neighbors = find_allowed_neighbors(settings)
+#     allowed_neighbors_cpp = find_allowed_neighbors_classical_perm_prop(settings)
+#
+#     def valid(n, m, rule):
+#         if n == 1 and m == 1:
+#             # edge case: all 1x1 rules are valid
+#             if rule[0][0] and not rule[0][0].can_be_alone():
+#                 return False
+#             return True
+#
+#         if all( x is None for x in rule[0] ):
+#             return False
+#
+#         for y in range(m):
+#             found = False
+#             for x in range(n):
+#                 if rule[x][y] is not None:
+#                     found = True
+#                     break
+#
+#             if not found:
+#                 return False
+#
+#         return True
+#
+#     def generates_subset(rule):
+#         for l in range(settings.perm_bound+1):
+#             found = set()
+#             for p in rule.generate_of_length(l, settings.sinput.permutations):
+#                 if p in found or not settings.sinput.contains(p):
+#                     return False
+#                 found.add(p)
+#         return True
+#
+#     done = {}
+#     done[(1,1)] = [ ]
+#     for s in settings.sets:
+#         g = [[s]]
+#         if valid(1, 1, g):
+#             done[(1,1)].append(GeneratingRule(g))
+#
+#     for nn in range(1, settings.max_rule_size[0]+1):
+#         for mm in range(1, settings.max_rule_size[1]+1):
+#             if (nn,mm) == (1,1):
+#                 continue
+#
+#             settings.logger.log('Generating rules of size (%d,%d)' % (nn,mm))
+#             done[(nn,mm)] = []
+#             if (nn-1,mm) in done:
+#                 reuse = { (i,j) for i in range(nn-1) for j in range(mm) }
+#                 for cur in done[(nn-1,mm)]:
+#                     for nxt in extend(settings, nn, mm, cur, reuse, allowed_neighbors=allowed_neighbors, allowed_neighbors_cpp=allowed_neighbors_cpp):
+#                         if generates_subset(nxt):
+#                             done[(nn,mm)].append(nxt)
+#             elif (nn,mm-1) in done:
+#                 reuse = { (i,j) for i in range(nn) for j in range(mm-1) }
+#                 for cur in done[(nn,mm-1)]:
+#                     for nxt in extend(settings, nn, mm, cur, reuse, allowed_neighbors=allowed_neighbors, allowed_neighbors_cpp=allowed_neighbors_cpp):
+#                         if generates_subset(nxt):
+#                             done[(nn,mm)].append(nxt)
+#             else:
+#                 assert False
+#
+#             # for res in generate_rules(settings, nn, mm, allowed_neighbors=allowed_neighbors, use_allowed_neighbors=True, allowed_neighbors_cpp=allowed_neighbors_cpp):
+#             #     yield res
+#
+#     ans = []
+#     for k, v in done.items():
+#         for res in v:
+#             ans.append(res)
+#     return ans
+
+
+def generate_rules_upto(settings):
+
+    if not settings.sinput.is_classical:
+        return generate_rules_upto_old(settings)
+
+    allowed_neighbors = find_allowed_neighbors(settings)
+    allowed_neighbors_cpp = find_allowed_neighbors_classical_perm_prop(settings)
+
+    def valid(n, m, rule):
+        if n == 1 and m == 1:
+            # edge case: all 1x1 rules are valid
+            if rule[0][0] and not rule[0][0].can_be_alone():
+                return False
+            return True
+
+        if all( x is None for x in rule[0] ):
+            return False
+
+        for y in range(m):
+            found = False
+            for x in range(n):
+                if rule[x][y] is not None:
+                    found = True
+                    break
+
+            if not found:
+                return False
+
+        return True
+
+    def generates_subset(rule):
+        for l in range(settings.perm_bound+1):
+            found = set()
+            for p in rule.generate_of_length(l, settings.sinput.permutations):
+                if p in found or not settings.sinput.contains(p):
+                    return False
+                found.add(p)
+        return True
+
+    def signum(n):
+        return 1 if n > 0 else -1 if n < 0 else 0
+
+    ssets = set(settings.sets)
+    n = settings.max_rule_size[0]
+    m = settings.max_rule_size[1]
+    res = []
+
+    # Special case: the empty rule
+    res.append(GeneratingRule({ (0,0): None }))
+
+    def gen(i, j):
+        if j == m:
+            for rule in gen(i + 1, 0):
+                if i + 1 == n or any( x is not None for x in rule[i + 1] ):
+                    yield rule
+        elif i == n:
+            yield [ [ None for y in range(m) ] for x in range(n) ]
+        else:
+            for trule in gen(i, j + 1):
+                rule = [ [ trule[x][y] for y in range(m) ] for x in range(n) ]
+                left = settings.max_non_empty - sum( rule[x][y] is not None for x in range(n) for y in range(m) )
+                at_most = settings.mn_at_most - sum( 0 if rule[x][y] is None else rule[x][y].min_length(settings.sinput.permutations) for x in range(n) for y in range(m) )
+
+                ss = set(ssets)
+                # if use_allowed_neighbors:
+                for di in range(-1, 2):
+                    for dj in range(-1, 2):
+                        ci, cj = i+di, j+dj
+                        if (ci, cj) > (i, j) and 0 <= ci < n and 0 <= cj < m:
+                            curs = allowed_neighbors[(rule[ci][cj], -di, -dj)]
+                            ss &= curs
+
+                if allowed_neighbors_cpp is not None:
+                    for ci in range(i,n):
+                        for cj in range(m):
+                            if (ci, cj) > (i, j):
+                                di = signum(ci-i)
+                                dj = signum(cj-j)
+                                curs = allowed_neighbors_cpp[(rule[ci][cj], -di, -dj)]
+                                ss &= curs
+
+                # TODO: if i == 0 and column j is empty, then ss.remove(None)
+
+                for s in ss:
+                    if s is not None:
+                        if left == 0 or s.min_length(settings.sinput.permutations) > at_most:
+                            continue
+                    rule[i][j] = s
+
+                    is_done = True
+                    for x in range(i,n):
+                        for y in range(j):
+                            if rule[x][y] is not None:
+                                is_done = False
+                                break
+                        if not is_done:
+                            break
+
+                    if is_done:
+                        for y in range(j,m):
+                            found = False
+                            for x in range(i,n):
+                                if rule[x][y] is not None:
+                                    found = True
+                                    break
+                            if not found:
+                                is_done = False
+                                break
+
+                    if is_done and any( rule[i][y] is not None for y in range(j,m) ):
+                        g = GeneratingRule({ (x-i,y-j): rule[x][y] for x in range(i,n) for y in range(j,m) })
+                        if not generates_subset(GeneratingRule(rule)):
+                            continue
+
+                        ok = True
+                        if (i,j) == (n-1,m-1) and not rule[i][j].can_be_alone():
+                            ok = False
+                        if ok:
+                            res.append(g)
+
+                    # if (i,j) == (0,0):
+                    #     print(rule)
+
+                    # if 
+                    yield rule
+
+    # Iterate through the rules, so that the results are generated
+    for rule in gen(0, 0):
+        pass
+        # if (n,m) == (3,3):
+        #     print(GeneratingRule(rule))
+        # a += 1
+        # if valid(rule):
+        #     b += 1
+        #     res.append(GeneratingRule(rule))
+
+    # print('b')
+    # Cache.put(key,res)
+    # print('c')
+    return res
 
 # def generate_rules_upto(settings):
 #     allowed_neighbors = find_allowed_neighbors(settings)
