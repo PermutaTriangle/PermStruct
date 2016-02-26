@@ -1,9 +1,71 @@
 from subprocess import Popen, PIPE
+import sys
+import tempfile
+import shutil
+import os
 
 def exact_cover(settings, bss):
+    try:
+        for res in exact_cover_gurobi(settings, bss):
+            yield res
+    except:
+        for res in exact_cover_lingeling(settings, bss):
+            yield res
+
+    # TODO: call Permuta's Algorithm X implementation if everything else fails
+
+def exact_cover_gurobi(settings, bss):
     assert settings.allow_overlap_in_first or settings.ignore_first == 0, "Not supported"
     bss = [ bs >> settings.ignore_first for bs in bss ]
+    width = settings.sinput.validcnt
 
+    tdir = None
+    used = set()
+    anything = False
+    try:
+        tdir = tempfile.mkdtemp(prefix='struct_tmp')
+        inp = os.path.join(tdir, 'inp.lp')
+        outp = os.path.join(tdir, 'out.sol')
+
+        with open(inp, 'w') as lp:
+            lp.write('Minimize %s\n' % ' + '.join( 'x%d' % i for i in range(len(bss)) ))
+            lp.write('Subject To\n')
+
+            for i in range(width):
+                here = []
+                for j in range(len(bss)):
+                    if (bss[j] & (1<<i)) != 0:
+                        here.append(j)
+                lp.write('    %s = 1\n' % ' + '.join( 'x%d' % x for x in here ))
+
+            lp.write('Binary\n')
+            lp.write('    %s\n' % ' '.join( 'x%d' % i for i in range(len(bss)) ))
+            lp.write('End\n')
+
+        p = Popen('gurobi_cl ResultFile=%s %s' % (outp, inp), shell=True)
+        assert p.wait() == 0
+
+        with open(outp, 'r') as f:
+            while True:
+                line = f.readline()
+                if not line:
+                    break
+                if line.startswith('#') or not line.strip():
+                    continue
+                anything = True
+                k,v = line.strip().split()
+                if int(v) == 1:
+                    used.add(int(k[1:]))
+    finally:
+        if tdir is not None:
+            shutil.rmtree(tdir)
+
+    if anything:
+        yield sorted(used)
+
+def exact_cover_lingeling(settings, bss):
+    assert settings.allow_overlap_in_first or settings.ignore_first == 0, "Not supported"
+    bss = [ bs >> settings.ignore_first for bs in bss ]
     width = settings.sinput.validcnt
     n = len(bss)
     clauses = []
@@ -33,6 +95,7 @@ def exact_cover(settings, bss):
     p.wait()
     res = p.stdout.read()
     found = False
+
     used = set()
     for line in res.split('\n'):
         if line.startswith('s '):
@@ -42,7 +105,9 @@ def exact_cover(settings, bss):
                 if num > 0:
                     used.add(num-1)
 
-    yield sorted(used)
+    if found:
+        yield sorted(used)
+
 
 def exact_cover_lb(settings, bss):
 
