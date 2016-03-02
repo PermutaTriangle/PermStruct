@@ -18,7 +18,31 @@ is_classical = True
 # -- Wilf-class 1 -- #
 
 # # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([1,2])]
+patts = [Permutation([1,2])]
+perm_prop = lambda p: all( p.avoids(q) for q in patts )
+
+perm_bound    = 7
+verify_bound  = 13
+ignored       = 0
+
+# The dag
+max_len_patt = None
+upper_bound  = None
+remove       = False
+
+# Grids
+max_rule_size = (2, 2)
+max_non_empty = 2
+max_rules     = None
+
+#------------------------------------------------#
+#               2 patterns                        #
+#------------------------------------------------#
+
+# -- Wilf-class 1 -- #
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([1,2]), Permutation([2,1])]
 # perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
@@ -34,30 +58,6 @@ is_classical = True
 # max_rule_size = (2, 2)
 # max_non_empty = 2
 # max_rules     = None
-
-#------------------------------------------------#
-#               2 patterns                        #
-#------------------------------------------------#
-
-# -- Wilf-class 1 -- #
-
-# The permutations ================================================== > SUCCESS!
-patts = [Permutation([1,2]), Permutation([2,1])]
-perm_prop = lambda p: all( p.avoids(q) for q in patts )
-
-perm_bound    = 7
-ignored       = 0
-verify_bound  = 13
-
-# The dag
-max_len_patt = None
-upper_bound  = None
-remove       = False
-
-# Grids
-max_rule_size = (2, 2)
-max_non_empty = 2
-max_rules     = None
 
 # ===================================================
 
