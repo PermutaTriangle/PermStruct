@@ -2,6 +2,7 @@ from __future__ import print_function
 from permuta import Permutations, Permutation
 from permuta.misc import exact_cover, exact_cover_smallest, binary_search
 from permstruct.exact_cover import exact_cover_lb, exact_cover as ps_exact_cover
+from permstruct.functions import verify_cover, RuleDeath
 import sys
 
 class RuleSet:
@@ -13,12 +14,14 @@ class RuleSet:
         self.death_by_perm_prop = 0
         self.ball = (1<<settings.sinput.validcnt)-1
         self.permset = [ sorted(settings.sinput.permutations[l]) for l in range(settings.perm_bound+1) ]
+        self.total_rules = 0
 
     def print_stats(self):
         self.settings.logger.log('Death by overlap: %s' % self.death_by_overlap)
         self.settings.logger.log('Death by perm prop: %s' % self.death_by_perm_prop)
 
     def add_rule(self, rule):
+        self.total_rules += 1
         bs = 0
         curcnt = 0
         empty = True
@@ -28,7 +31,7 @@ class RuleSet:
                 if not self.settings.sinput.contains(perm):
                     # the rule generated something that doesn't satisfy perm_prop
                     self.death_by_perm_prop += 1
-                    return False
+                    return RuleDeath.PERM_PROP
 
                 curlevel.append(perm)
 
@@ -37,7 +40,7 @@ class RuleSet:
                 if a == b:
                     # the rule generated something more than once (i.e. there is overlap)
                     self.death_by_overlap += 1
-                    return False
+                    return RuleDeath.OVERLAP
 
             i = 0
             j = 0
@@ -59,9 +62,6 @@ class RuleSet:
 
         if empty:
             assert False
-            # TODO
-            # print(rule)
-            return
 
         # print(rule)
         # print(''.join( '0' if (bs & (1 << i)) == 0 else '1' for i in range(self.settings.sinput.validcnt - 1, -1, -1) ))
@@ -69,6 +69,7 @@ class RuleSet:
 
         self.rules.setdefault(bs, [])
         self.rules[bs].append(rule)
+        return RuleDeath.ALIVE
 
     def exact_cover(self,
                 max_ec_cnt=None,
@@ -87,6 +88,7 @@ class RuleSet:
         else:
             covers = exact_cover_lb(self.settings, bss)
 
+        covers = list(covers)
         for res in covers:
             print(repr(res))
             used_idx |= set(res)
@@ -121,6 +123,27 @@ class RuleSet:
                     print(repr({ k:dag_elems_id[v] for k,v in rule.rule.items() }))
 
                 print('')
+
+        if self.settings.verify_bound is not None:
+            # TODO: ask if we should verify a bit higher
+            for res in covers:
+                self.settings.logger.log('Verifying cover %s up to length %d' % (res, self.settings.verify_bound))
+                cover = []
+                warned = False
+                for bi in res:
+                    b = bss[bi]
+                    if len(self.rules[b]) > 1 and not warned:
+                        warned = True
+                        self.settings.logger.warn('Multiple covers, but only using one for verification')
+                    cover.append(self.rules[b][0])
+
+                status = verify_cover(self.settings, cover)
+                if status == RuleDeath.PERM_PROP:
+                    self.settings.logger.error('Death by perm prop!!!!!!!!!!!!!')
+                elif status == RuleDeath.OVERLAP:
+                    self.settings.logger.error('Death by overlap!!!!!!!!!!!!!')
+                elif status == RuleDeath.ALIVE:
+                    self.settings.logger.log('Cover verified')
 
         # TODO: return the results on some nice form
         return []

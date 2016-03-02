@@ -1,11 +1,15 @@
 
 from .permutation_sets import PointPermutationSet, InputPermutationSet, SimpleGeneratingRule, GeneratingRule, OverlayGeneratingRule, StaticPermutationSet, UniversePermutationSet, EmptyPermutationSet
 from permuta import Permutation, Permutations
-from permuta.misc import binary_search
+from permuta.misc import binary_search, TrieMap, ProgressBar
+from permuta.math import signum
 from copy import deepcopy
 from .misc.cache import Cache
-import marshal
 
+class RuleDeath:
+    PERM_PROP = 0
+    OVERLAP = 1
+    ALIVE = 2
 
 # TODO: throw out unused code
 
@@ -19,6 +23,25 @@ import marshal
 #             if perm_prop(perm):
 #                 ocreated[l].append(perm)
 #     return ocreated
+
+def verify_cover(settings, rules):
+    for l in range(settings.perm_bound+1, settings.verify_bound+1):
+        found = set()
+        for rule in rules:
+            for p in rule.generate_of_length(l, settings.sinput.permutations):
+                if p in found:
+                    settings.logger.log('Overlap: %s' % p)
+                    settings.logger.log('\n%s' % rule)
+                    return RuleDeath.OVERLAP
+                if not settings.sinput.contains(p):
+                    settings.logger.log('Perm prop: %s' % p)
+                    settings.logger.log('\n%s' % rule)
+                    return RuleDeath.PERM_PROP
+                found.add(p)
+        if len(found) != settings.sinput.count_of_length(l):
+            settings.logger.log('Perm prop: not everything generated in length %d' % l)
+            return RuleDeath.PERM_PROP
+    return RuleDeath.ALIVE
 
 def generate_all_of_length(max_n, S, inp, min_n=0):
 
@@ -688,6 +711,170 @@ def generate_rules_upto(settings):
         pass
 
     return res
+
+def populate_rule_set(settings, rule_set):
+    assert settings.sinput.is_classical
+
+    settings.logger.log('Generate allowed neighbors, overlap')
+    allowed_neighbors = find_allowed_neighbors(settings)
+
+    settings.logger.log('Generate allowed neighbors, perm prop')
+    allowed_neighbors_cpp = find_allowed_neighbors_classical_perm_prop(settings)
+
+    ssets = set(settings.sets)
+    n = settings.max_rule_size[0]
+    m = settings.max_rule_size[1]
+
+    for s in ssets:
+        if type(s) is PointPermutationSet:
+            pps = s
+            break
+
+    def generates_subset(rule):
+        for l in range(settings.perm_bound+1):
+            for p in rule.generate_of_length(l, settings.sinput.permutations):
+                if not settings.sinput.contains(p):
+                    return False
+        return True
+
+    # Special case: the empty rule
+    rule_set.add_rule(GeneratingRule({ (0,0): None }))
+
+    settings.logger.log('Generating point rules')
+    valid = TrieMap()
+    cur = [ [ [ None for j in range(m) ] for i in range(n) ] ]
+    for i in range(n-1,-1,-1):
+        for j in range(m-1,-1,-1):
+            settings.logger.log('Cell (%d,%d)' % (i,j))
+            ProgressBar.create(len(cur))
+            nxt = []
+            for rule in cur:
+                ProgressBar.progress()
+
+                left = settings.max_non_empty - sum( rule[x][y] is not None for x in range(n) for y in range(m) )
+                at_most = settings.mn_at_most - sum( 0 if rule[x][y] is None else rule[x][y].min_length(settings.sinput.permutations) for x in range(n) for y in range(m) )
+
+                ss = set([ None, pps ])
+                for s in ss:
+                    if s is not None:
+                        if left == 0 or s.min_length(settings.sinput.permutations) > at_most:
+                            continue
+                    rule[i][j] = s
+
+                    if j == 0:
+                        found = False
+                        for y in range(m):
+                            if rule[i][y] is not None:
+                                found = True
+                                break
+                        if not found:
+                            continue
+
+                    if rule[i][j] is not None and not generates_subset(GeneratingRule(rule)):
+                        continue
+
+                    is_done = True
+                    for x in range(i,n):
+                        for y in range(j):
+                            if rule[x][y] is not None:
+                                is_done = False
+                                break
+                        if not is_done:
+                            break
+
+                    if is_done:
+                        for y in range(j,m):
+                            found = False
+                            for x in range(i,n):
+                                if rule[x][y] is not None:
+                                    found = True
+                                    break
+                            if not found:
+                                is_done = False
+                                break
+
+                    if is_done and any( rule[i][y] is not None for y in range(j,m) ):
+                        key = [ (x,y) for x in range(n-1,-1,-1) for y in range(m-1,-1,-1) if rule[x][y] is not None ]
+                        valid[key] = True
+
+                    nxt.append([ [ rule[x][y] for y in range(m) ] for x in range(n) ])
+            cur = nxt
+            ProgressBar.finish()
+
+    settings.logger.log('Generating rules, %d iterations' % valid.height())
+    cur = [ ([ [ None for j in range(m) ] for i in range(n) ], valid.root) ]
+    it = 1
+    while cur:
+        settings.logger.log('Iteration %d' % it)
+        it += 1
+        ProgressBar.create(len(cur))
+        nxt = []
+        for (tmp,node) in cur:
+            ProgressBar.progress()
+            for ((i,j),node2) in node.down.items():
+                rule = [ [ tmp[x][y] for y in range(m) ] for x in range(n) ]
+                ss = set(ssets)
+                ss.remove(None)
+                for di in range(-1, 2):
+                    for dj in range(-1, 2):
+                        ci, cj = i+di, j+dj
+                        if (ci, cj) > (i, j) and 0 <= ci < n and 0 <= cj < m:
+                            ss &= allowed_neighbors[(rule[ci][cj], -di, -dj)]
+                            if not ss:
+                                break
+                    if not ss:
+                        break
+                if not ss:
+                    continue
+
+                for ci in range(i,n):
+                    for cj in range(m):
+                        if (ci, cj) > (i, j):
+                            di = signum(ci-i)
+                            dj = signum(cj-j)
+                            ss &= allowed_neighbors_cpp[(rule[ci][cj], -di, -dj)]
+                            if not ss:
+                                break
+                    if not ss:
+                        break
+                if not ss:
+                    continue
+
+                at_most = settings.mn_at_most - sum( 0 if rule[x][y] is None else rule[x][y].min_length(settings.sinput.permutations) for x in range(n) for y in range(m) )
+
+                # TODO: if i == 0 and column j is empty, then ss.remove(None)
+
+                for s in ss:
+                    if s.min_length(settings.sinput.permutations) > at_most:
+                        continue
+                    rule[i][j] = s
+
+                    if node2.end:
+                        si = i
+                        sj = None
+                        for y in range(m):
+                            found = False
+                            for x in range(si,n):
+                                if rule[x][y] is not None:
+                                    found = True
+                                    break
+                            if found:
+                                sj = y
+                                break
+                        assert sj is not None
+                        g = GeneratingRule({ (x-si,y-sj): rule[x][y] for x in range(si,n) for y in range(sj,m) })
+                        ok = True
+                        if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
+                            ok = False
+                        if ok:
+                            if rule_set.add_rule(g) == RuleDeath.PERM_PROP:
+                                continue
+                    elif not generates_subset(GeneratingRule(rule)):
+                        continue
+
+                    nxt.append(([ [ rule[x][y] for y in range(m) ] for x in range(n) ], node2))
+        cur = nxt
+        ProgressBar.finish()
 
 # def generate_rules_upto(settings):
 #     allowed_neighbors = find_allowed_neighbors(settings)

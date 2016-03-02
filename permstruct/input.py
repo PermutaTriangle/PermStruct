@@ -38,21 +38,28 @@ class StructInput(object):
 
         self.validcnt = 0
         self.permutations = {}
-        for l in range(self.settings.perm_bound+1):
+        upto = self.settings.perm_bound
+        if self.settings.verify_bound is not None:
+            upto = self.settings.verify_bound
+        for l in range(upto+1):
             self.permutations[l] = set([])
             for perm in self.generator(l):
                 self.permutations[l].add(perm)
-                self.validcnt += 1
+                if l <= self.settings.perm_bound:
+                    self.validcnt += 1
 
         ended = datetime.datetime.now()
         self.settings.logger.log('Finished in %.3fs' % (ended - started).total_seconds())
-        self.settings.logger.log('Enumeration is %s' % [ len(self.permutations[l]) for l in range(self.settings.perm_bound+1) ])
+        self.settings.logger.log('Enumeration is %s' % [ len(self.permutations[l]) for l in range(upto+1) ])
         assert self.settings.ignore_first < self.validcnt, "All permutations from the set are ignored"
 
     def contains(self, perm):
         if type(perm) is not Permutation:
             perm = Permutation(list(perm))
         return perm in self.permutations[len(perm)]
+
+    def count_of_length(self, l):
+        return len(self.permutations[l])
 
     def get_permutations(self):
         # XXX: should we return a deep copy?

@@ -1,6 +1,6 @@
 from __future__ import print_function
 from permstruct import RuleSet
-from .functions import generate_rules_upto
+from .functions import generate_rules_upto, populate_rule_set
 # from .functions import generate_rules_with_overlay_upto, generate_rules_upto, generate_small_input
 from permstruct.dag import DAG
 from permuta.misc import ProgressBar
@@ -16,22 +16,26 @@ def exhaustive(settings):
 
     settings.logger.log('Generating rules')
     # sets = sorted(dag.elements, key=lambda x: (repr(type(x)), x))
-    gen = generate_rules_upto(settings)
+    # gen = generate_rules_upto(settings)
             # min_rule_size, max_rule_size, small_input, sets, max_nonempty,
             # mn_at_most=perm_bound,
             # is_classical=is_classical,
             # ocreated=rules.ocreated)
 
-    settings.logger.log('Processing rules')
-    ProgressBar.create(len(gen))
-    for rule in gen:
-        ProgressBar.progress()
-        rule_cnt += 1
-        rules.add_rule(rule)
-    ProgressBar.finish()
+
+    # gen = generate_rules_upto(settings)
+    populate_rule_set(settings, rules)
+
+    # settings.logger.log('Processing rules')
+    # ProgressBar.create(len(gen))
+    # for rule in gen:
+    #     ProgressBar.progress()
+    #     rule_cnt += 1
+    #     rules.add_rule(rule)
+    # ProgressBar.finish()
 
     settings.logger.log('Found %d rules, %d of which are valid, %d of which are distinct' % (
-            rule_cnt,
+            rules.total_rules,
             sum( len(v) for k, v in rules.rules.items() ),
             len(rules.rules),
         ))

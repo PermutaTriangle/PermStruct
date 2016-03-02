@@ -4,6 +4,7 @@ class StructSettings(object):
     def __init__(self,
             # General
             perm_bound=None, # The upper bound on the length of the permutations to consider from the input
+            verify_bound=None, # The upper bound on the length of the permutations used to verify an output rule
             verbosity=StructLogger.WARNING, # Verbosity of output
 
             # Rule generation
@@ -26,9 +27,11 @@ class StructSettings(object):
         assert perm_bound is not None, 'perm_bound is required'
         assert max_rule_size is not None, 'max_rule_size is required'
         assert max_non_empty is not None, 'max_non_empty is required'
+        assert verify_bound is None or verify_bound > perm_bound, 'If verify_bound is set, it should be larger than perm_bound'
 
         # General
         self.perm_bound = perm_bound
+        self.verify_bound = verify_bound
         self.logger = StructLogger(verbosity=verbosity)
 
         # Rule generation

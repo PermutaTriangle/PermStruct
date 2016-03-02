@@ -16,8 +16,8 @@ class StructLogger(object):
             self.output.write(self.output_format % { 'date': datetime.datetime.now(), 'message': message })
 
     def warn(self, message):
-        self.log(message, level=WARNING)
+        self.log(message, level=StructLogger.WARNING)
 
     def error(self, message):
-        self.log(message, level=ERROR)
+        self.log(message, level=StructLogger.ERROR)
 
