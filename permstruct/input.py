@@ -38,9 +38,7 @@ class StructInput(object):
 
         self.validcnt = 0
         self.permutations = {}
-        upto = self.settings.perm_bound
-        if self.settings.verify_bound is not None:
-            upto = self.settings.verify_bound
+        upto = self.settings.verify_bound
         for l in range(upto+1):
             self.permutations[l] = set([])
             for perm in self.generator(l):

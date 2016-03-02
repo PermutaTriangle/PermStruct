@@ -14,6 +14,7 @@ class StructLogger(object):
     def log(self, message, level=INFO):
         if level >= self.verbosity:
             self.output.write(self.output_format % { 'date': datetime.datetime.now(), 'message': message })
+            self.output.flush()
 
     def warn(self, message):
         self.log(message, level=StructLogger.WARNING)

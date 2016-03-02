@@ -68,7 +68,7 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True):
     for ps in bt(0,set(),set()):
 
         here = set()
-        for perm in AvoidanceClass(settings.perm_bound, avoiding=ps, upto=True):
+        for perm in AvoidanceClass(settings.verify_bound, avoiding=ps, upto=True):
             here.add(perm)
 
         descr = 'Av(%s)' % ', '.join(map(str, sorted(ps)))

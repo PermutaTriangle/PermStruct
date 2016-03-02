@@ -27,11 +27,10 @@ class StructSettings(object):
         assert perm_bound is not None, 'perm_bound is required'
         assert max_rule_size is not None, 'max_rule_size is required'
         assert max_non_empty is not None, 'max_non_empty is required'
-        assert verify_bound is None or verify_bound > perm_bound, 'If verify_bound is set, it should be larger than perm_bound'
 
         # General
         self.perm_bound = perm_bound
-        self.verify_bound = verify_bound
+        self.verify_bound = max(perm_bound, verify_bound if verify_bound is not None else 0)
         self.logger = StructLogger(verbosity=verbosity)
 
         # Rule generation
