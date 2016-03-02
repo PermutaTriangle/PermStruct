@@ -121,38 +121,40 @@ is_classical = True
 # max_rules     = None
 
 # # The permutations ================================================== > SUCCESS!
-patts = [Permutation([1,3,2]), Permutation([3,1,2])]
-perm_prop = lambda p: all( p.avoids(q) for q in patts )
-
-perm_bound    = 7
-verify_bound  = 10
-ignored       = 0
-
-# The dag
-max_len_patt = None
-upper_bound  = None
-remove       = False
-
-# Grids
-max_rule_size = (3, 3)
-max_non_empty = 3
-max_rules     = None
+# patts = [Permutation([1,3,2]), Permutation([3,1,2])]
+# perm_prop = lambda p: all( p.avoids(q) for q in patts )
+#
+# perm_bound    = 7
+# verify_bound  = 10
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = None
+# upper_bound  = None
+# remove       = False
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([2,3,1]), Permutation([3,1,2])]
 # perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
+# verify_bound  = 10
 # ignored       = 0
 #
 # # The dag
-# max_len_patt = 3
-# upper_bound  = 3
+# max_len_patt = None
+# upper_bound  = None
+# remove       = False
 #
 # # Grids
 # max_rule_size = (3, 3)
 # max_non_empty = 3
-# max_rules     = 100
+# max_rules     = None
 
 #------------------------------------------------#
 #               3 patterns                       #
@@ -169,16 +171,18 @@ max_rules     = None
 # perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
+# verify_bound  = 10
 # ignored       = 0
 #
 # # The dag
-# max_len_patt = 3
-# upper_bound  = 3
+# max_len_patt = None
+# upper_bound  = None
+# remove       = False
 #
 # # Grids
 # max_rule_size = (3, 3)
 # max_non_empty = 3
-# max_rules     = 100
+# max_rules     = None
 
 #------------------------------------------------#
 #               4 patterns                       #
@@ -193,16 +197,18 @@ max_rules     = None
 # perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
+# verify_bound  = 10
 # ignored       = 0
 #
 # # The dag
-# max_len_patt = 3
-# upper_bound  = 3
+# max_len_patt = None
+# upper_bound  = None
+# remove       = False
 #
 # # Grids
 # max_rule_size = (3, 3)
 # max_non_empty = 3
-# max_rules     = 100
+# max_rules     = None
 #
 # ===================================================
 
