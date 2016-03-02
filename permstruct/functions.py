@@ -30,11 +30,11 @@ def verify_cover(settings, rules):
         for rule in rules:
             for p in rule.generate_of_length(l, settings.sinput.permutations):
                 if p in found:
-                    settings.logger.log('Overlap: %s' % p)
+                    settings.logger.log('Overlap: %s' % repr(p))
                     settings.logger.log('\n%s' % rule)
                     return RuleDeath.OVERLAP
                 if not settings.sinput.contains(p):
-                    settings.logger.log('Perm prop: %s' % p)
+                    settings.logger.log('Perm prop: %s' % repr(p))
                     settings.logger.log('\n%s' % rule)
                     return RuleDeath.PERM_PROP
                 found.add(p)
@@ -973,4 +973,3 @@ S = UniversePermutationSet()
 E = EmptyPermutationSet()
 N = None
 empty = { 0: [()] }
-

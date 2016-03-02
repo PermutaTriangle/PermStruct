@@ -2,8 +2,12 @@ from __future__ import print_function
 from permuta import *
 import permstruct
 import permstruct.dag
+from permstruct import *
+from permstruct.dag import taylor_dag
 
 import sys
+
+is_classical = True
 
 # Avoidance of classical patterns of length 3
 
@@ -19,34 +23,36 @@ import sys
 # perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
+# verify_bound  = 10
 # ignored       = 0
 #
 # # The dag
 # max_len_patt = None
-# upper_bound  = 3
+# upper_bound  = None
+# remove       = False
 #
 # # Grids
 # max_rule_size = (3, 3)
 # max_non_empty = 3
-# max_rules     = 100
+# max_rules     = None
 
 # # The permutations ================================================== > SUCCESS!
-# # TODO: The dag that is created is too big, it contains incr and decr. We
-# # should iteratively enlarge it: Special case the elements/add elements
 # patts = [Permutation([1,3,2])]
 # perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
+# verify_bound  = 10
 # ignored       = 0
 #
 # # The dag
 # max_len_patt = None
-# upper_bound  = 3
+# upper_bound  = None
+# remove       = False
 #
 # # Grids
 # max_rule_size = (3, 3)
 # max_non_empty = 3
-# max_rules     = 100
+# max_rules     = None
 
 #------------------------------------------------#
 #               2 patterns                       #
@@ -60,16 +66,18 @@ import sys
 # perm_prop = lambda p: all( p.avoids(q) for q in patts )
 #
 # perm_bound    = 7
+# verify_bound  = 10
 # ignored       = 0
 #
 # # The dag
 # max_len_patt = None
-# upper_bound  = 3
+# upper_bound  = None
+# remove       = False
 #
 # # Grids
 # max_rule_size = (3, 3)
 # max_non_empty = 4 # <--------------------------------- Note!
-# max_rules     = 100
+# max_rules     = None
 
 # -- Wilf-class 2 -- #
 
@@ -78,16 +86,18 @@ patts = [Permutation([1,2,3]), Permutation([2,3,1])]
 perm_prop = lambda p: all( p.avoids(q) for q in patts )
 
 perm_bound    = 7
-ignored       = 4
+verify_bound  = 9
+ignored       = 0
 
 # The dag
 max_len_patt = None
-upper_bound  = 3
+upper_bound  = None
+remove       = True
 
 # Grids
 max_rule_size = (3, 3)
 max_non_empty = 3
-max_rules     = 100
+max_rules     = None
 
 # -- Wilf-class 3 -- #
 
@@ -189,18 +199,19 @@ max_rules     = 100
 # max_non_empty = 3
 # max_rules     = 100
 #
-# # Creating the dag
-inp_dag = permstruct.dag.taylor_dag(patts, max_len_patt=max_len_patt, perm_bound=perm_bound, remove=False, upper_bound=upper_bound)
-for el in inp_dag.elements:
-    print(el.description if el is not None else 'None')
+# ===================================================
 
-# Finding the rules and running exact cover
-sol_iter = permstruct.exhaustive(perm_prop, perm_bound, inp_dag, max_rule_size, max_non_empty, max_rules, ignore_first=ignored)
+settings = StructSettings(
+        perm_bound=perm_bound,
+        verify_bound=verify_bound,
+        max_rule_size=max_rule_size,
+        max_non_empty=max_non_empty,
+        max_rules=max_rules,
+        verbosity=StructLogger.INFO)
+settings.set_input(StructInput.from_avoidance(settings, patts))
+settings.set_dag(taylor_dag(settings,
+                    max_len_patt=max_len_patt,
+                    remove=remove,
+                    upper_bound=upper_bound))
 
-for sol in sol_iter:
-
-    print('====================================')
-    print("")
-    for rule in sol:
-        print(rule)
-        print("")
+exhaustive(settings)
