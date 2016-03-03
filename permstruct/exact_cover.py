@@ -89,11 +89,11 @@ def exact_cover_lingeling(settings, bss):
     inp = '\n'.join(lines)
 
     p = Popen(['lingeling'], stdin=PIPE, stderr=PIPE, stdout=PIPE)
-    p.stdin.write(inp)
+    p.stdin.write(inp.encode('utf-8'))
     p.stdin.flush()
     p.stdin.close()
     p.wait()
-    res = p.stdout.read()
+    res = str(p.stdout.read().decode('utf-8'))
     found = False
 
     used = set()
