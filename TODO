@@ -2,6 +2,7 @@
 - Create the verification permutations when you need them, do the verification length by length (and ask if we should go higher)
 - If cover verification fails, add a constraint to the exact cover, find a new cover, and repeat
 - Throw Av(12,21) out of DAG when remove=False
+- When verifying a cover, generate bit strings for all rules that had the same bit string, and try to glue again. Possibly consider other options.
 - Generate rules more efficiently.
     - Support bound on number of non-empty boxes.
     - NEW IDEA: When classical=True:
