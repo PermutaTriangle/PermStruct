@@ -17,7 +17,6 @@ is_classical = True
 
 # The permutations ================================================== > SUCCESS!
 patts = [Permutation([1])]
-perm_prop = lambda p: all( p.avoids(q) for q in patts )
 
 perm_bound    = 7
 verify_bound  = 13
