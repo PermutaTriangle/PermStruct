@@ -11,17 +11,18 @@ patts = [ Permutation([1,3,2]) ]
 perm_bound = 7
 settings = StructSettings(
         perm_bound=perm_bound,
-        verify_bound=9,
+        verify_bound=7,
         max_rule_size=(3,3),
         max_non_empty=3,
         verbosity=StructLogger.INFO)
-settings.set_input(StructInput.from_avoidance(settings, patts))
+# settings.set_input(StructInput.from_avoidance(settings, patts))
+settings.set_input(AvoiderInput(settings, patts))
 # settings.set_dag(taylor_dag(settings, max_len_patt=3, remove=True, upper_bound=3))
 # settings.set_dag(taylor_dag(settings, remove=False))
 # el = taylor_dag(settings, remove=True, max_len_patt=2, upper_bound=1).elements
 # print(el)
 # print(len(el))
-settings.set_dag(taylor_dag(settings, remove=False))
+settings.set_dag(taylor_dag(settings, remove=True))
 # settings.set_dag(taylor_dag(settings, max_len_patt=3, remove=False, upper_bound=3))
 
 exhaustive(settings)

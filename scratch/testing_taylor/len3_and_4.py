@@ -21,45 +21,45 @@ is_classical = True
 
 # The permutations ================================================ > SUCCESS!
 # Finite and not very interesting
-# patts = [Permutation([3,2,1]), Permutation([1,2,3,4])]
-#
-# perm_bound    = 7
-# verify_bound  = 12
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = None
-# upper_bound  = None
-# remove       = False
-#
-# # Grids
-# max_rule_size = (6, 6)
-# max_non_empty = 6
-# max_rules     = None
+patts = [Permutation([3,2,1]), Permutation([1,2,3,4])]
+
+perm_bound    = 7
+verify_bound  = 12
+ignored       = 0
+
+# The dag
+max_len_patt = None
+upper_bound  = None
+remove       = False
+
+# Grids
+max_rule_size = (6, 6)
+max_non_empty = 6
+max_rules     = None
 
                     # -- Wilf-class 2 -- #
 
 # The permutations ================================================== > SUCCESS!
-patts = [Permutation([3,2,1]), Permutation([2,1,3,4])]
-
-perm_bound    = 8
-verify_bound  = 9 # also verifies in 12
-ignored       = 0
-
-# The dag
-# max_len_patt = 2
-# upper_bound  = 1
-# remove       = True
-
+# patts = [Permutation([3,2,1]), Permutation([2,1,3,4])]
+#
+# perm_bound    = 8
+# verify_bound  = 9 # also verifies in 12
+# ignored       = 0
+#
 # # The dag
-max_len_patt = None
-upper_bound  = None
-remove       = True
-
-# Grids
-max_rule_size = (3, 3)
-max_non_empty = 4
-max_rules     = None
+# # max_len_patt = 2
+# # upper_bound  = 1
+# # remove       = True
+#
+# # # The dag
+# max_len_patt = None
+# upper_bound  = None
+# remove       = True
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 4
+# max_rules     = None
 
                     # -- Wilf-class 3 -- #
 
@@ -445,7 +445,8 @@ settings = StructSettings(
         max_non_empty=max_non_empty,
         max_rules=max_rules,
         verbosity=StructLogger.INFO)
-settings.set_input(StructInput.from_avoidance(settings, patts))
+# settings.set_input(StructInput.from_avoidance(settings, patts))
+settings.set_input(AvoiderInput(settings, patts))
 settings.set_dag(taylor_dag(settings,
                     max_len_patt=max_len_patt,
                     remove=remove,

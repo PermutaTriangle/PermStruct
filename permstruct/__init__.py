@@ -1,6 +1,6 @@
 
 from .logger import StructLogger
-from .input import StructInput
+from .input import StructInput, AvoiderInput
 from .settings import StructSettings
 from .rule_set import RuleSet
 

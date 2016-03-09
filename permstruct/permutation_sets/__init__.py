@@ -8,4 +8,6 @@ from .overlay_generating_rule import OverlayGeneratingRule
 from .static_permutation_set import StaticPermutationSet
 from .universe_permutation_set import UniversePermutationSet
 from .empty_permutation_set import EmptyPermutationSet
+from .avoider_permutation_set import AvoiderPermutationSet
+from .subtract_permutation_set import SubtractPermutationSet
 

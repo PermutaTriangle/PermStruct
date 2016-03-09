@@ -4,7 +4,6 @@ class StructSettings(object):
     def __init__(self,
             # General
             perm_bound=None, # The upper bound on the length of the permutations to consider from the input
-            verify_bound=None, # The upper bound on the length of the permutations used to verify an output rule
             verbosity=StructLogger.WARNING, # Verbosity of output
 
             # Rule generation
@@ -18,6 +17,10 @@ class StructSettings(object):
             ignore_first=0, # The number of permutations to ignore in the exact cover, counted from the smallest up
             allow_overlap_in_first=True, # Whether to allow overlap in the `ignore_first` permutations
 
+            # Verification
+            verify_bound=None, # The upper bound on the length of the permutations used to verify an output rule
+            ask_verify_higher=True, # If everything verifies up to length verify_bound, whether to ask if verification should be continued
+
             # Bounds
             lower_bound=None, # The ratio of permutations that need to be found, at least
 
@@ -30,7 +33,6 @@ class StructSettings(object):
 
         # General
         self.perm_bound = perm_bound
-        self.verify_bound = max(perm_bound, verify_bound if verify_bound is not None else 0)
         self.logger = StructLogger(verbosity=verbosity)
 
         # Rule generation
@@ -43,6 +45,10 @@ class StructSettings(object):
         self.max_rules = max_rules
         self.ignore_first = ignore_first
         self.allow_overlap_in_first = allow_overlap_in_first
+
+        # Verification
+        self.verify_bound = max(perm_bound, verify_bound if verify_bound is not None else 0)
+        self.ask_verify_higher = ask_verify_higher
 
         # Bounds
         self.lower_bound = lower_bound

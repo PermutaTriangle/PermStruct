@@ -41,7 +41,8 @@ settings = StructSettings(
         max_non_empty=max_non_empty,
         max_rules=max_rules,
         verbosity=StructLogger.INFO)
-settings.set_input(StructInput.from_avoidance(settings, patts))
+# settings.set_input(StructInput.from_avoidance(settings, patts))
+settings.set_input(AvoiderInput(settings, patts))
 settings.set_dag(taylor_dag(settings,
                     max_len_patt=max_len_patt,
                     remove=remove,

@@ -5,6 +5,7 @@ from permuta.misc import binary_search, TrieMap, ProgressBar
 from permuta.math import signum
 from copy import deepcopy
 from .misc.cache import Cache
+import sys
 
 class RuleDeath:
     PERM_PROP = 0
@@ -25,22 +26,35 @@ class RuleDeath:
 #     return ocreated
 
 def verify_cover(settings, rules):
-    for l in range(settings.perm_bound+1, settings.verify_bound+1):
-        found = set()
-        for rule in rules:
-            for p in rule.generate_of_length(l, settings.sinput.permutations):
-                if p in found:
-                    settings.logger.log('Overlap: %s' % repr(p))
-                    settings.logger.log('\n%s' % rule)
-                    return RuleDeath.OVERLAP
-                if not settings.sinput.contains(p):
-                    settings.logger.log('Perm prop: %s' % repr(p))
-                    settings.logger.log('\n%s' % rule)
-                    return RuleDeath.PERM_PROP
-                found.add(p)
-        if len(found) != settings.sinput.count_of_length(l):
-            settings.logger.log('Perm prop: not everything generated in length %d' % l)
-            return RuleDeath.PERM_PROP
+
+    check_from = settings.perm_bound+1
+    check_to = settings.verify_bound
+
+    while True:
+        for l in range(check_from, check_to+1):
+            curinp = settings.sinput.get_permutations(upto=l)
+            found = set()
+            for rule in rules:
+                for p in rule.generate_of_length(l, curinp):
+                    if p in found:
+                        settings.logger.log('Overlap: %s' % repr(p))
+                        settings.logger.log('\n%s' % rule)
+                        return RuleDeath.OVERLAP
+                    if not settings.sinput.contains(p):
+                        settings.logger.log('Perm prop: %s' % repr(p))
+                        settings.logger.log('\n%s' % rule)
+                        return RuleDeath.PERM_PROP
+                    found.add(p)
+            if len(found) != settings.sinput.count_of_length(l):
+                settings.logger.log('Perm prop: not everything generated in length %d' % l)
+                return RuleDeath.PERM_PROP
+        settings.logger.log('Cover verified up to length %d' % check_to)
+        check_from = check_to + 1
+        if settings.ask_verify_higher:
+            sys.stdout.write("Next verify_bound (or 0 to stop): ")
+            check_to = int(sys.stdin.readline().strip())
+        if check_from > check_to:
+            break
     return RuleDeath.ALIVE
 
 def generate_all_of_length(max_n, S, inp, min_n=0):

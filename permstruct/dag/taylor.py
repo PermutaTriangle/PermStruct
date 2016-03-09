@@ -1,7 +1,7 @@
 from permuta import Permutation, Permutations, AvoidanceClass
 from permuta.misc import choose, subsets
 from permstruct import E, N, P, X
-from permstruct.permutation_sets import InputPermutationSet, StaticPermutationSet
+from permstruct.permutation_sets import InputPermutationSet, StaticPermutationSet, AvoiderPermutationSet, SubtractPermutationSet
 from permstruct.dag import DAG
 import datetime
 
@@ -66,13 +66,10 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True):
 
     elems = []
     for ps in bt(0,set(),set()):
-
-        here = set()
-        for perm in AvoidanceClass(settings.verify_bound, avoiding=ps, upto=True):
-            here.add(perm)
-
-        descr = 'Av(%s)' % ', '.join(map(str, sorted(ps)))
-        elems.append((ps, here, descr))
+        s = AvoiderPermutationSet(ps)
+        s._assure_length(settings.perm_bound)
+        here = { p for l in range(settings.perm_bound+1) for p in s.generate_of_length(l, {}) }
+        elems.append((s, here, None))
 
     input = settings.sinput.get_permutation_set()
     elems.append((InputPermutationSet(settings), input, None))
@@ -83,27 +80,21 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True):
     if remove:
         for ps,here,descr in elems:
             rem = set()
-            remdescr = ''
+            rems = []
             for qs,other,odescr in elems:
-                # if other and qs is not None and other < here:
-                if other and other < here:
+                if other and qs is not None and other < here:
+                    rems.append(qs)
                     rem |= other
-                    remdescr += ' - ' + (odescr if odescr is not None else 'empty permutation' if qs is None else qs.description)
 
             if not here-rem:
                 continue
 
-            if descr is not None:
-                ps = StaticPermutationSet(here-rem, description=descr + remdescr)
-            if type(ps) is InputPermutationSet:
-                ps = StaticPermutationSet(here-rem, description=ps.description + remdescr, alone_ok=False)
-            # if ps is not None:
-
-            res.add_element(ps)
+            if rems:
+                res.add_element(SubtractPermutationSet(ps, rems, alone_ok=type(ps) is not InputPermutationSet))
+            else:
+                res.add_element(ps)
     else:
         for ps,here,descr in elems:
-            if descr is not None:
-                ps = StaticPermutationSet(here, description=descr)
             res.add_element(ps)
 
     ended = datetime.datetime.now()
