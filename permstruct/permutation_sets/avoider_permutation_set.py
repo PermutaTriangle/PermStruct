@@ -11,11 +11,10 @@ class AvoiderPermutationSet(PermutationSet):
     def __init__(self, avoid):
         self.avoid = sorted([ list(a) for a in avoid ])
         super(AvoiderPermutationSet, self).__init__(description='Av(%s)' % self.avoid)
-        self.length = -1
         self.permutations = {}
 
     def _assure_length(self, l):
-        if l <= self.length:
+        if l in self.permutations:
             return
         if l == 0:
             self.permutations[0] = [ tuple() ]
