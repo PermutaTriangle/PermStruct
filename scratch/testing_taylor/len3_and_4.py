@@ -43,15 +43,10 @@ max_rules     = None
 # patts = [Permutation([3,2,1]), Permutation([2,1,3,4])]
 #
 # perm_bound    = 8
-# verify_bound  = 9 # also verifies in 12
+# verify_bound  = 12
 # ignored       = 0
 #
 # # The dag
-# # max_len_patt = 2
-# # upper_bound  = 1
-# # remove       = True
-#
-# # # The dag
 # max_len_patt = None
 # upper_bound  = None
 # remove       = True
@@ -71,14 +66,14 @@ max_rules     = None
 # ignored       = 0
 #
 # # The dag
-# # max_len_patt = 3
-# # upper_bound  = 2
-# # remove       = True
-#
-# # # The dag
-# max_len_patt = None
-# upper_bound  = None
+# max_len_patt = 3
+# upper_bound  = 2
 # remove       = True
+#
+# # The dag
+# # max_len_patt = None
+# # upper_bound  = None
+# # remove       = True
 #
 # # Grids
 # max_rule_size = (3, 3)
