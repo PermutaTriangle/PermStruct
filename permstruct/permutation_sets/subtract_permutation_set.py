@@ -24,7 +24,14 @@ class SubtractPermutationSet(PermutationSet):
             mainp.add(tuple(p))
             here.add(tuple(p))
         for s in self.sub:
-            for p in s.generate_of_length(l, input):
+            if s is None:
+                if l == 0:
+                    st = [ tuple() ]
+                else:
+                    st = [ ]
+            else:
+                st = s.generate_of_length(l, input)
+            for p in st:
                 assert p in mainp, "Permutation set %s is invalid. Perhaps perm_bound is too small?" % self.description
                 if p in here:
                     here.remove(p)

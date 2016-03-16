@@ -1,7 +1,4 @@
-- remove=True is broken
 - If cover verification fails, add a constraint to the exact cover, find a new cover, and repeat
-- Throw Av(12,21) out of DAG when remove=False, or more generally:
-    - Have an option (defaulted to True) that throws Av(increasing, decreasing) out of the DAG
 - When verifying a cover, generate bit strings for all rules that had the same bit string, and try to glue again. Possibly consider other options.
 - Generate rules more efficiently.
     - Support bound on number of non-empty boxes.
@@ -37,3 +34,5 @@ DONE:
     - If the previous step is ok, then we generate the permutations from the
       input (or in some way get the enumeration) and check that everything was
       generated in the previous step.
+- Throw Av(12,21) out of DAG when remove=False, or more generally:
+    - Have an option (defaulted to True) that throws Av(increasing, decreasing) out of the DAG
