@@ -6,7 +6,7 @@ from permstruct.dag import DAG
 import datetime
 
 # def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove=True):
-def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remove_av_incr_decr=True):
+def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remove_finite=True):
     assert settings.sinput.avoidance is not None, "Tayloring is only supported for avoidance"
     patterns = settings.sinput.avoidance
 
@@ -66,11 +66,24 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remov
 
     elems = []
     for ps in bt(0,set(),set()):
-        if remove_av_incr_decr:
-            if any( p.is_increasing() for p in ps ) and any( p.is_decreasing() for p in ps ):
-                continue
+        # if remove_av_incr_decr:
+        #     if any( p.is_increasing() for p in ps ) and any( p.is_decreasing() for p in ps ):
+        #         continue
         s = AvoiderPermutationSet(ps)
         s._assure_length(settings.perm_bound)
+        here = set()
+        finite = False
+        for l in range(settings.perm_bound+1):
+            found = False
+            for p in s.generate_of_length(l, {}):
+                here.add(Permutation(list(p)))
+                found = True
+            if not found:
+                finite = True
+            if finite and remove_finite and settings.sinput.is_classical:
+                break
+        if finite and remove_finite and settings.sinput.is_classical:
+            continue
         here = { Permutation(list(p)) for l in range(settings.perm_bound+1) for p in s.generate_of_length(l, {}) }
         elems.append((s, here, None))
 
