@@ -39,7 +39,7 @@ patts = list(patts)
 print(patts)
 
 perm_bound    = 10
-verify_bound  = 16
+verify_bound  = 13
 ignored       = 0
 
 # The dag
@@ -61,6 +61,7 @@ max_rules     = None
 settings = StructSettings(
         perm_bound=perm_bound,
         verify_bound=verify_bound,
+        ask_verify_higher=False,
         max_rule_size=max_rule_size,
         max_non_empty=max_non_empty,
         max_rules=max_rules,
