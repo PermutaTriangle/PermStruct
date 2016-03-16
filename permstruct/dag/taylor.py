@@ -68,7 +68,7 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True):
     for ps in bt(0,set(),set()):
         s = AvoiderPermutationSet(ps)
         s._assure_length(settings.perm_bound)
-        here = { p for l in range(settings.perm_bound+1) for p in s.generate_of_length(l, {}) }
+        here = { Permutation(list(p)) for l in range(settings.perm_bound+1) for p in s.generate_of_length(l, {}) }
         elems.append((s, here, None))
 
     input = settings.sinput.get_permutation_set()
