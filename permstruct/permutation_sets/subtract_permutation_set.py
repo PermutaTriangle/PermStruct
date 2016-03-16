@@ -8,7 +8,7 @@ from copy import deepcopy
 
 class SubtractPermutationSet(PermutationSet):
     def __init__(self, main, sub, alone_ok=True):
-        super(SubtractPermutationSet, self).__init__(description=main.description + ''.join([ ' - ' + x.description for x in sub ]))
+        super(SubtractPermutationSet, self).__init__(description=main.description + ''.join([ ' - ' + (x.description if x is not None else 'empty permutation') for x in sub ]))
         self.main = main
         self.sub = sub
         self.length = -1

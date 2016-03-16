@@ -6,7 +6,7 @@ from permstruct.dag import DAG
 import datetime
 
 # def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove=True):
-def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True):
+def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remove_av_incr_decr=True):
     assert settings.sinput.avoidance is not None, "Tayloring is only supported for avoidance"
     patterns = settings.sinput.avoidance
 
@@ -66,6 +66,9 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True):
 
     elems = []
     for ps in bt(0,set(),set()):
+        if remove_av_incr_decr:
+            if any( p.is_increasing() for p in ps ) and any( p.is_decreasing() for p in ps ):
+                continue
         s = AvoiderPermutationSet(ps)
         s._assure_length(settings.perm_bound)
         here = { Permutation(list(p)) for l in range(settings.perm_bound+1) for p in s.generate_of_length(l, {}) }
@@ -82,7 +85,7 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True):
             rem = set()
             rems = []
             for qs,other,odescr in elems:
-                if other and qs is not None and other < here:
+                if other and other < here:
                     rems.append(qs)
                     rem |= other
 
