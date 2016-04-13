@@ -9,6 +9,9 @@ import sys
 
 def exhaustive(settings):
 
+    for k,v in enumerate(settings.sets):
+        settings.logger.log(repr(tuple([k,v.description if v is not None else 'None'])))
+
     rules = RuleSet(settings)
 
     # small_input = generate_small_input(settings)

@@ -5,8 +5,14 @@ from permstruct.permutation_sets import InputPermutationSet, StaticPermutationSe
 from permstruct.dag import DAG
 import datetime
 
+class SubPatternType:
+    EVERY = 0
+    RECTANGULAR = 1
+    CONSECUTIVE = 2
+
 # def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove=True):
-def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remove_finite=True):
+def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remove_finite=True,
+               subpattern_type=SubPatternType.RECTANGULAR):
     assert settings.sinput.avoidance is not None, "Tayloring is only supported for avoidance"
     patterns = settings.sinput.avoidance
 
@@ -17,8 +23,8 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remov
     settings.logger.log('Tayloring DAG')
 
     n = max( len(p) for p in patterns )
-    # sub = [ [ set([]) for i in range(n+1) ] for _ in range(len(patterns)) ]
     sub = [ set([]) for _ in range(len(patterns)) ]
+
     for i,p in enumerate(patterns):
         last = set([ p ])
         if len(p) <= max_len_patt:
@@ -33,6 +39,35 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remov
             if l <= max_len_patt:
                 sub[i] |= nxt
             last = nxt
+
+    valid = set()
+    for i,p in enumerate(patterns):
+        if subpattern_type == SubPatternType.RECTANGULAR:
+            for l in range(len(p)):
+                for r in range(l,len(p)):
+                    here = sorted(p.perm[l:r+1])
+                    for x in range(len(here)):
+                        want = set()
+                        for y in range(x,len(here)):
+                            want.add(here[y])
+                            cur = []
+                            for j in range(l,r+1):
+                                if p.perm[j] in want:
+                                    cur.append(p.perm[j])
+                            if len(cur) <= max_len_patt:
+                                valid.add(Permutation.to_standard(cur))
+        elif subpattern_type == SubPatternType.CONSECUTIVE:
+            for l in range(len(p)):
+                for r in range(l,len(p)):
+                    if r - l + 1 > max_len_patt:
+                        break
+                    here = p.perm[l:r+1]
+                    if max(here) - min(here) + 1 == len(here):
+                        valid.add(Permutation.to_standard(here))
+
+    if subpattern_type != SubPatternType.EVERY:
+        for i,p in enumerate(patterns):
+            sub[i] &= valid
 
     def can_add(add, picked):
         for p in picked:
@@ -58,7 +93,15 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remov
                         ok = False
                         break
                     npicked.add(add)
-                if not ok or not (npicked & sub[at]):
+                if not ok:
+                    continue
+
+                found = False
+                for q in npicked:
+                    if patterns[at].contains(q):
+                        found = True
+                        break
+                if not found:
                     continue
 
                 for res in bt(at+1,npicked,seen | sub[at]):

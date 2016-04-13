@@ -4,7 +4,7 @@ from permuta import Permutations
 from permstruct.permutation_sets.units import *
 
 from .dag import DAG
-from .taylor import taylor_dag
+from .taylor import taylor_dag, SubPatternType
 
 def x_dag(perm_prop, n):
     dag = DAG()
