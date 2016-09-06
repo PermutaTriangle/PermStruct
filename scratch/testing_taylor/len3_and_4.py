@@ -21,21 +21,21 @@ is_classical = True
 
 # The permutations ================================================ > SUCCESS!
 # Finite and not very interesting
-patts = [Permutation([3,2,1]), Permutation([1,2,3,4])]
-
-perm_bound    = 7
-verify_bound  = 12
-ignored       = 0
-
-# The dag
-max_len_patt = None
-upper_bound  = None
-remove       = False
-
-# Grids
-max_rule_size = (6, 6)
-max_non_empty = 6
-max_rules     = None
+# patts = [Permutation([3,2,1]), Permutation([1,2,3,4])]
+#
+# perm_bound    = 7
+# verify_bound  = 12
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = None
+# upper_bound  = None
+# remove       = False
+#
+# # Grids
+# max_rule_size = (6, 6)
+# max_non_empty = 6
+# max_rules     = None
 
                     # -- Wilf-class 2 -- #
 
@@ -102,24 +102,9 @@ max_rules     = None
 # max_non_empty = 9
 # max_rules     = None
 
-                    # -- Wilf-class 5 -- # CHECK BACK
+                    # -- Wilf-class 5 -- #
 
-# The permutations ================================================== > FAILURE! (Didn't wait for exact cover to finish)
-# # No covers
-# perm_bound    = 10
-# verify_bound  = 13
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 2
-# upper_bound  = 1
-# remove       = False
-#
-# # Grids
-# max_rule_size = (8,8)
-# max_non_empty = 8
-# max_rules     = None
-
+# The permutations ================================================== > SUCCESS!
 # patts = [Permutation([3,2,1]), Permutation([1,3,4,2])]
 #
 # perm_bound    = 9
@@ -155,7 +140,7 @@ max_rules     = None
 # max_non_empty = 5
 # max_rules     = None
 
-                    # -- Wilf-class 7 -- #
+                    # -- Wilf-class 7 -- # Success for 2/2
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([4,3,1,2])]
@@ -170,8 +155,8 @@ max_rules     = None
 # remove       = True
 #
 # # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
+# max_rule_size = (4, 4)
+# max_non_empty = 4
 # max_rules     = None
 
 # The permutations ================================================== > SUCCESS!
@@ -210,7 +195,7 @@ max_rules     = None
 # max_non_empty = 3
 # max_rules     = None
 
-                    # -- Wilf-class 9 -- #
+                    # -- Wilf-class 9 -- # Success for 7/9
 
 # The permutations ================================================== > FAILURE!
 # We know mutation rules for this set, so perhaps there are no covers
@@ -311,23 +296,23 @@ max_rules     = None
 # max_non_empty = 8
 # max_rules     = None
 
-# The permutations ================================================== > SUCCESS! Note the 15 :)
-# Rerunning with remove=False gives no result
-# patts = [Permutation([3,2,1]), Permutation([3,1,4,2])]
-#
-# perm_bound    = 10
-# verify_bound  = 15
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 2
-# upper_bound  = 1
-# remove       = True
-#
-# # Grids
-# max_rule_size = (4, 4)
-# max_non_empty = 4
-# max_rules     = None
+# The permutations ================================================== > SUCCESS!
+Rerunning with remove=False gives no result
+patts = [Permutation([3,2,1]), Permutation([3,1,4,2])]
+
+perm_bound    = 10
+verify_bound  = 12
+ignored       = 0
+
+# The dag
+max_len_patt = 2
+upper_bound  = 1
+remove       = True
+
+# Grids
+max_rule_size = (4, 4)
+max_non_empty = 4
+max_rules     = None
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([1,2,3,4])]
