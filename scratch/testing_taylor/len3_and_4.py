@@ -42,25 +42,6 @@ is_classical = True
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([3,2,1]), Permutation([2,1,3,4])]
 #
-# perm_bound    = 7
-# verify_bound  = 12
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = None
-# upper_bound  = None
-# remove       = False
-#
-# # Grids
-# max_rule_size = (6, 6)
-# max_non_empty = 6
-# max_rules     = None
-
-                    # -- Wilf-class 2 -- #
-
-# The permutations ================================================== > SUCCESS!
-# patts = [Permutation([3,2,1]), Permutation([2,1,3,4])]
-#
 # perm_bound    = 8
 # verify_bound  = 12
 # ignored       = 0
@@ -68,7 +49,7 @@ is_classical = True
 # # The dag
 # max_len_patt = None
 # upper_bound  = None
-# remove       = False
+# remove       = False # True (3, 3) 4 works
 #
 # # Grids
 # max_rule_size = (6, 6)
@@ -78,28 +59,23 @@ is_classical = True
                     # -- Wilf-class 3 -- #
 
 # The permutations ================================================== > SUCCESS!
-patts = [Permutation([1,3,2]), Permutation([4,3,2,1])]
+# patts = [Permutation([1,3,2]), Permutation([4,3,2,1])]
+#
+# perm_bound    = 9
+# verify_bound  = 15
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 2
+# upper_bound  = 1
+# remove       = False # True (3,3) 4, max_len_patt = 3, upper_bound  = 2
 
-perm_bound    = 7
-verify_bound  = 12
-ignored       = 0
+# # Grids
+# max_rule_size = (8, 8)
+# max_non_empty = 8
+# max_rules     = None
 
-# The dag
-max_len_patt = 3
-upper_bound  = 2
-remove       = False
-
-# The dag
-# max_len_patt = None
-# upper_bound  = None
-# remove       = True
-
-# Grids
-max_rule_size = (6, 6)
-max_non_empty = 6
-max_rules     = None
-
-                    # -- Wilf-class 4 -- #
+                    # -- Wilf-class 4 -- # Success with remove=True, need to try 999 with remove=False
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([3,2,1]), Permutation([1,3,2,4])]
@@ -140,24 +116,24 @@ max_rules     = None
 # max_non_empty = 6
 # max_rules     = None
 
-                    # -- Wilf-class 6 -- #
+                    # -- Wilf-class 6 -- # Success with remove=True, need to try 888 with remove=False
 
 # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([3,2,1]), Permutation([2,1,4,3])]
-#
-# perm_bound    = 9
-# verify_bound  = 12
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 2
-# upper_bound  = 1
-# remove       = True
-#
-# # Grids
-# max_rule_size = (5,5)
-# max_non_empty = 5
-# max_rules     = None
+patts = [Permutation([3,2,1]), Permutation([2,1,4,3])]
+
+perm_bound    = 9
+verify_bound  = 12
+ignored       = 0
+
+# The dag
+max_len_patt = 2
+upper_bound  = 1
+remove       = False # True (5, 5) 5 works
+
+# Grids
+max_rule_size = (8,8)
+max_non_empty = 8
+max_rules     = None
 
                     # -- Wilf-class 7 -- # Success for 2/2
 
@@ -171,11 +147,11 @@ max_rules     = None
 # # The dag
 # max_len_patt = 3
 # upper_bound  = 2
-# remove       = True
+# remove       = False # True (4,4) 4
 #
 # # Grids
-# max_rule_size = (4, 4)
-# max_non_empty = 4
+# max_rule_size = (6, 6)
+# max_non_empty = 6
 # max_rules     = None
 
 # The permutations ================================================== > SUCCESS!
@@ -188,11 +164,11 @@ max_rules     = None
 # # The dag
 # max_len_patt = 3
 # upper_bound  = 2
-# remove       = True
+# remove       = False # True (3,3) 3
 #
 # # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
+# max_rule_size = (5, 5)
+# max_non_empty = 5
 # max_rules     = None
 
                     # -- Wilf-class 8 -- #
@@ -316,22 +292,21 @@ max_rules     = None
 # max_rules     = None
 
 # The permutations ================================================== > SUCCESS!
-Rerunning with remove=False gives no result
-patts = [Permutation([3,2,1]), Permutation([3,1,4,2])]
-
-perm_bound    = 10
-verify_bound  = 12
-ignored       = 0
-
-# The dag
-max_len_patt = 2
-upper_bound  = 1
-remove       = True
-
-# Grids
-max_rule_size = (4, 4)
-max_non_empty = 4
-max_rules     = None
+# patts = [Permutation([3,2,1]), Permutation([3,1,4,2])]
+#
+# perm_bound    = 6
+# verify_bound  = 12
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 2
+# upper_bound  = 1
+# remove       = False #True with (4, 4) 4 works
+#
+# # Grids
+# max_rule_size = (5, 5)
+# max_non_empty = 5
+# max_rules     = None
 
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([1,3,2]), Permutation([1,2,3,4])]
@@ -428,11 +403,11 @@ max_rules     = None
 # # The dag
 # max_len_patt = 2
 # upper_bound  = 1
-# remove       = True
+# remove       = False # With remove=True we can use (3,3) 3
 #
 # # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
+# max_rule_size = (5, 5)
+# max_non_empty = 5
 # max_rules     = None
 
 # ===================================================
