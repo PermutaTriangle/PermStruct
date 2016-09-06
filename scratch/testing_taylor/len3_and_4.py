@@ -42,6 +42,25 @@ is_classical = True
 # The permutations ================================================== > SUCCESS!
 # patts = [Permutation([3,2,1]), Permutation([2,1,3,4])]
 #
+# perm_bound    = 7
+# verify_bound  = 12
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = None
+# upper_bound  = None
+# remove       = False
+#
+# # Grids
+# max_rule_size = (6, 6)
+# max_non_empty = 6
+# max_rules     = None
+
+                    # -- Wilf-class 2 -- #
+
+# The permutations ================================================== > SUCCESS!
+# patts = [Permutation([3,2,1]), Permutation([2,1,3,4])]
+#
 # perm_bound    = 8
 # verify_bound  = 12
 # ignored       = 0
@@ -49,36 +68,36 @@ is_classical = True
 # # The dag
 # max_len_patt = None
 # upper_bound  = None
-# remove       = True
+# remove       = False
 #
 # # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 4
+# max_rule_size = (6, 6)
+# max_non_empty = 6
 # max_rules     = None
 
                     # -- Wilf-class 3 -- #
 
 # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([1,3,2]), Permutation([4,3,2,1])]
-#
-# perm_bound    = 7
-# verify_bound  = 12
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = 3
-# upper_bound  = 2
+patts = [Permutation([1,3,2]), Permutation([4,3,2,1])]
+
+perm_bound    = 7
+verify_bound  = 12
+ignored       = 0
+
+# The dag
+max_len_patt = 3
+upper_bound  = 2
+remove       = False
+
+# The dag
+# max_len_patt = None
+# upper_bound  = None
 # remove       = True
-#
-# # The dag
-# # max_len_patt = None
-# # upper_bound  = None
-# # remove       = True
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 4
-# max_rules     = None
+
+# Grids
+max_rule_size = (6, 6)
+max_non_empty = 6
+max_rules     = None
 
                     # -- Wilf-class 4 -- #
 
