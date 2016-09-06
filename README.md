@@ -8,12 +8,16 @@ derive generating functions for the permutation sets.
 
 ## Installing
 To install PermStruct on your system, start by installing the
-[Permuta](https://github.com/PermutaTriangle/Permuta) library. Then simply run
+[Permuta](https://github.com/PermutaTriangle/Permuta) library. Then run
 the following commands:
+```
+$ sudo ./setup.py install
+```
+If you have [Gurobi](http://www.gurobi.com) installed then you are done. If you
+do not have it run:
 ```
 $ make -C exact_cover
 $ sudo make -C exact_cover install
-$ sudo ./setup.py install
 ```
 
 It is also possible to install PermStruct in development mode, in which case you
