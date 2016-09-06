@@ -23,7 +23,8 @@ class TestTravis(unittest.TestCase):
         settings = StructSettings(
                 perm_bound=6,
                 max_rule_size=(3,3),
-                max_non_empty=4)
+                max_non_empty=4,
+                ask_verify_higher=False)
         settings.set_input(StructInput.from_avoidance(settings, patts))
         settings.set_dag(taylor_dag(settings))
 

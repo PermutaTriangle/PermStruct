@@ -68,85 +68,52 @@ def generate_all_of_length(max_n, S, inp, min_n=0):
 
     return inp
 
-def find_allowed_neighbors_classical_perm_prop(settings):
-
+def _find_allowed_neighbors(settings, is_ok):
     neighb = {}
     for i in range(len(settings.sets)):
-        for j in range(len(settings.sets)):
+        for j in range(i, len(settings.sets)):
+            grid = [ [ True ]*3 for _ in range(3) ]
+            grid[1][1] = False
             for di in range(-1, 2):
                 for dj in range(-1, 2):
-                    if di == 0 and dj == 0:
+                    if not grid[di+1][dj+1]:
                         continue
 
                     neighb.setdefault((settings.sets[i], di, dj), set())
+                    neighb.setdefault((settings.sets[j], -di, -dj), set())
 
                     a = min(0, di)
                     b = min(0, dj)
                     G = GeneratingRule({ (-a, -b): settings.sets[i], (di-a, dj-b): settings.sets[j] })
 
-                    ok = True
-                    for l in range(settings.perm_bound+1):
-                        for perm in G.generate_of_length(l, settings.sinput.permutations):
-                            perm = Permutation(list(perm))
-                            if not settings.sinput.contains(perm):
-                                ok = False
-                                break
-                        if not ok:
-                            break
-                    if ok:
+                    if not is_ok(G):
+                        grid[di+1][dj+1] = False
+                        if (di+dj)%2 == 0:
+                            grid[1][dj+1] = False
+                            grid[di+1][1] = False
+                    else:
                         neighb[(settings.sets[i], di, dj)].add(settings.sets[j])
+                        neighb[(settings.sets[j], -di, -dj)].add(settings.sets[i])
     return neighb
 
+def find_allowed_neighbors_classical_perm_prop(settings):
+    def is_ok(G):
+        for l in range(settings.perm_bound+1):
+            for perm in G.generate_of_length(l, settings.sinput.permutations):
+                perm = Permutation(list(perm))
+                if not settings.sinput.contains(perm):
+                    return False
+        return True
+    return _find_allowed_neighbors(settings, is_ok)
 
 def find_allowed_neighbors(settings):
-    small_bound = 2
-    small_perms = [[] for i in range(len(settings.sets))]
-    for l in range(small_bound+1):
-        for i in range(len(settings.sets)):
-            if settings.sets[i]:
-                for perm in settings.sets[i].generate_of_length(l, settings.sinput.permutations):
-                    small_perms[i].append(perm)
-    for i in range(len(settings.sets)):
-        small_perms[i] = sorted(small_perms[i])
-
-    key = small_perms
-    if not settings.ignore_cache and Cache.contains(key):
-        neighb = Cache.get(key)
-    else:
-        neighb = {}
-
-        for i in range(len(settings.sets)):
-            for j in range(len(settings.sets)):
-                for di in range(-1, 2):
-                    for dj in range(-1, 2):
-                        if di == 0 and dj == 0:
-                            continue
-
-                        # neighb.setdefault((cur_elem, di, dj), set())
-                        neighb.setdefault((i, di, dj), set())
-
-                        a = min(0, di)
-                        b = min(0, dj)
-                        # G = GeneratingRule({ (-a, -b): cur_elem, (di-a, dj-b): other_elem })
-                        G = GeneratingRule({ (-a, -b): settings.sets[i], (di-a, dj-b): settings.sets[j] })
-
-                        ok = True
-                        for l in range(settings.perm_bound+1):
-                            perms = list(G.generate_of_length(l, settings.sinput.permutations))
-                            if len(perms) != len(set(perms)):
-                                ok = False
-                                break
-                        if ok:
-                            # neighb[(cur_elem, di, dj)].add(other_elem)
-                            neighb[(i, di, dj)].add(j)
-
-        if not settings.ignore_cache:
-            Cache.put(key,neighb)
-
-    res = {}
-    for (i,di,dj),v in neighb.items():
-        res[(settings.sets[i],di,dj)] = set([ settings.sets[j] for j in v ])
-    return res
+    def is_ok(G):
+        for l in range(settings.perm_bound+1):
+            perms = list(G.generate_of_length(l, settings.sinput.permutations))
+            if len(perms) != len(set(perms)):
+                return False
+        return True
+    return _find_allowed_neighbors(settings, is_ok)
 
 
 # def generate_rules(settings, n, m,
