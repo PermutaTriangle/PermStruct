@@ -9,14 +9,8 @@ import sys
 
 is_classical = True
 
-# Avoidance of classical patterns of length 1
-
-# This is a bit trivial, there is of course just one Wilf-class
-
-# -- Wilf-class 1 -- #
-
 # The permutations ================================================== > SUCCESS!
-patts = [Permutation([1])]
+patts = [Permutation([1,2]), Permutation([2,1])]
 
 perm_bound    = 7
 verify_bound  = 13
