@@ -1,3 +1,5 @@
+- Look closely at Generate allowed neighbors. Can it be made faster?
+- Look closely at how we generate permutations, especially classical case, can it be made faster?
 - If cover verification fails, add a constraint to the exact cover, find a new cover, and repeat
 - When verifying a cover, generate bit strings for all rules that had the same bit string, and try to glue again. Possibly consider other options.
 - Generate rules more efficiently.

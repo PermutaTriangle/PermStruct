@@ -9,30 +9,47 @@ import sys
 
 is_classical = True
 
-# Avoidance of classical patterns of length 1
+# -- Wilf-class 4 in http://wikipedia.org/wiki/Enumerations_of_specific_permutation_classes -- #
 
-# This is a bit trivial, there is of course just one Wilf-class
+# STATUS ================================================ > SUCCESS!
 
-# -- Wilf-class 1 -- #
+patts = [Permutation([3,2,1]), Permutation([1,3,2,4])]
 
-# The permutations ================================================== > SUCCESS!
-patts = [Permutation([1])]
+# ----------------------
+# SUCCESS!
+# perm_bound    = 12 # perm_bound=11 overfits
+# verify_bound  = 15
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 2
+# upper_bound  = 1
+# remove       = True
+#
+# # Grids
+# max_rule_size = (9, 9)
+# max_non_empty = 9
+# max_rules     = None
+# ----------------------
 
-perm_bound    = 7
-verify_bound  = 13
+# ----------------------
+# ???
+perm_bound    = 12
+verify_bound  = 15
 ignored       = 0
 
 # The dag
-max_len_patt = None
-upper_bound  = None
+max_len_patt = 2
+upper_bound  = 1
 remove       = False
 
 # Grids
-max_rule_size = (2, 2)
-max_non_empty = 2
+max_rule_size = (9, 9)
+max_non_empty = 9
 max_rules     = None
+# ----------------------
 
-# ===================================================
+# ------------------------------------------------------------------------------
 
 settings = StructSettings(
         perm_bound=perm_bound,
