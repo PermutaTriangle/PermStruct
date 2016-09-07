@@ -9,19 +9,13 @@ import sys
 
 is_classical = True
 
-# Avoidance of classical patterns of length 2
-
-#------------------------------------------------#
-#               1 pattern                        #
-#------------------------------------------------#
-
-# -- Wilf-class 1 -- #
+# -- Wilf-class 3,1 -- #
 
 # # The permutations ================================================== > SUCCESS!
-patts = [Permutation([1,2])]
+patts = [Permutation([1,2,3]), Permutation([1,3,2])]
 
 perm_bound    = 7
-verify_bound  = 13
+verify_bound  = 10
 ignored       = 0
 
 # The dag
@@ -30,32 +24,9 @@ upper_bound  = None
 remove       = False
 
 # Grids
-max_rule_size = (2, 2)
-max_non_empty = 2
+max_rule_size = (3, 3)
+max_non_empty = 3
 max_rules     = None
-
-#------------------------------------------------#
-#               2 patterns                        #
-#------------------------------------------------#
-
-# -- Wilf-class 1 -- #
-
-# The permutations ================================================== > SUCCESS!
-# patts = [Permutation([1,2]), Permutation([2,1])]
-#
-# perm_bound    = 7
-# verify_bound  = 13
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = None
-# upper_bound  = None
-# remove       = False
-#
-# # Grids
-# max_rule_size = (2, 2)
-# max_non_empty = 2
-# max_rules     = None
 
 # ===================================================
 
