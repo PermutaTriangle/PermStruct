@@ -12,7 +12,7 @@ class TestDAG(unittest.TestCase):
         found = []
         for el in actual.elements:
             if el is not None and el.description.startswith('Av('):
-                here = eval('[%s]' % el.description[3:-1])
+                here = eval(el.description[3:-1])
                 here = sorted(here)
                 found.append(here)
         found = sorted(found)
@@ -31,6 +31,13 @@ class TestDAG(unittest.TestCase):
         settings.set_input(StructInput.from_avoidance(settings, patts))
         res = taylor_dag(settings, remove=False)
         self.check([
+        ], res)
+
+        patts = [Permutation([1,2,3]),
+                 Permutation([3,2,1])]
+        settings.set_input(StructInput.from_avoidance(settings, patts))
+        res = taylor_dag(settings, remove=False, remove_finite=False)
+        self.check([
             [[1,2], [2,1]],
             [[1,2,3], [2,1]],
             [[1,2], [3,2,1]],
@@ -41,7 +48,7 @@ class TestDAG(unittest.TestCase):
             Permutation([3,2,1]),
         ]
         settings.set_input(StructInput.from_avoidance(settings, patts))
-        res = taylor_dag(settings, upper_bound=1, remove=False)
+        res = taylor_dag(settings, upper_bound=1, remove=False, remove_finite=False)
         self.check([
         ], res)
 
@@ -50,7 +57,7 @@ class TestDAG(unittest.TestCase):
             Permutation([3,2,1]),
         ]
         settings.set_input(StructInput.from_avoidance(settings, patts))
-        res = taylor_dag(settings, max_len_patt=2, remove=False)
+        res = taylor_dag(settings, max_len_patt=2, remove=False, remove_finite=False)
         self.check([
             [[1,2], [2,1]],
         ], res)
