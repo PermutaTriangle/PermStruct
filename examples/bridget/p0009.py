@@ -9,24 +9,28 @@ import sys
 
 is_classical = True
 
-# # The permutations ================================================== > SUCCESS!
-patts = [Permutation([1,3,2])]
+# Stuff from Bridget's database
+# http://math.depaul.edu/bridget/patterns.html
 
-perm_bound    = 7
-verify_bound  = 10
-ignored       = 0
+                        #-- P0009 --#
+# The permutations ================================================== > FAILURE!
+# patts = [Permutation([3,2,1]), Permutation([4,6,7,1,8,2,3,5]), Permutation([4,6,7,8,1,2,3,5]), Permutation([5,6,7,1,8,2,3,4]), Permutation([5,6,7,8,1,2,3,4])]
+#
+# perm_bound    = 9
+# verify_bound  = 10
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = 3
+# upper_bound  = None
+# remove       = True
+#
+# # Grids
+# max_rule_size = (3, 3)
+# max_non_empty = 3
+# max_rules     = None
 
-# The dag
-max_len_patt = None
-upper_bound  = None
-remove       = False
-
-# Grids
-max_rule_size = (3, 3)
-max_non_empty = 3
-max_rules     = None
-
-# ===================================================
+# ------------------------------------------------------------------------------
 
 settings = StructSettings(
         perm_bound=perm_bound,
