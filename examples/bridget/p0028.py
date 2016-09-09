@@ -14,21 +14,21 @@ is_classical = True
 
                         #-- P0028 --#
 # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([1,3,2]), Permutation([2,1,3]), Permutation([4,3,2,1])]
+patts = [Permutation([1,3,2]), Permutation([2,1,3]), Permutation([4,3,2,1])]
 
-# perm_bound    = 7
-# verify_bound  = 8
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = None
-# upper_bound  = None
-# remove       = False
-#
-# # Grids
-# max_rule_size = (3, 3)
-# max_non_empty = 3
-# max_rules     = None
+perm_bound    = 7
+verify_bound  = 8
+ignored       = 0
+
+# The dag
+max_len_patt = None
+upper_bound  = None
+remove       = False
+
+# Grids
+max_rule_size = (3, 3)
+max_non_empty = 3
+max_rules     = None
 
 # ------------------------------------------------------------------------------
 

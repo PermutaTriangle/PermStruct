@@ -14,21 +14,21 @@ is_classical = True
 
                         #-- P0016 --#
 # The permutations ================================================== > FAILURE!
-# patts = [Permutation([3,2,1]), Permutation([2,3,4,1]), Permutation([3,4,1,2]), Permutation([4,1,2,3])]
-#
-# perm_bound    = 7
-# verify_bound  = 9
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = None
-# upper_bound  = None
-# remove       = False
-#
-# # Grids
-# max_rule_size = (6, 6) <------------------ Try larger rules
-# max_non_empty = 6
-# max_rules     = None
+patts = [Permutation([3,2,1]), Permutation([2,3,4,1]), Permutation([3,4,1,2]), Permutation([4,1,2,3])]
+
+perm_bound    = 7
+verify_bound  = 9
+ignored       = 0
+
+# The dag
+max_len_patt = None
+upper_bound  = None
+remove       = False
+
+# Grids
+max_rule_size = (6, 6) # <------------------ Try larger rules
+max_non_empty = 6
+max_rules     = None
 
 # ------------------------------------------------------------------------------
 

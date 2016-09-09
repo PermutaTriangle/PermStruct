@@ -14,23 +14,23 @@ is_classical = True
 
                         #-- P0029 --#
 # The permutations ================================================== > SUCCESS!
-# patts = [Permutation([1,3,2,4]), Permutation([1,3,4,2]), Permutation([2,4,1,3]), Permutation([2,4,3,1]),
-#          Permutation([3,1,2,4]), Permutation([3,1,4,2]), Permutation([4,2,1,3]),
-#          Permutation([4,2,3,1])]
-#
-# perm_bound    = 6
-# verify_bound  = 12
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = None
-# upper_bound  = None
-# remove       = False
-#
-# # Grids
-# max_rule_size = (5, 5)
-# max_non_empty = 5
-# max_rules     = None
+patts = [Permutation([1,3,2,4]), Permutation([1,3,4,2]), Permutation([2,4,1,3]), Permutation([2,4,3,1]),
+         Permutation([3,1,2,4]), Permutation([3,1,4,2]), Permutation([4,2,1,3]),
+         Permutation([4,2,3,1])]
+
+perm_bound    = 6
+verify_bound  = 12
+ignored       = 0
+
+# The dag
+max_len_patt = None
+upper_bound  = None
+remove       = False
+
+# Grids
+max_rule_size = (5, 5)
+max_non_empty = 5
+max_rules     = None
 
 # ------------------------------------------------------------------------------
 
