@@ -20,8 +20,8 @@ verify_bound  = 12
 ignored       = 0
 
 # The dag
-max_len_patt = 2
-upper_bound  = 1
+max_len_patt = 2 # None does not help with smaller grids
+upper_bound  = 1 # None does not help with smaller grids
 remove       = False #True with (4, 4) 4 works
 
 # Grids
