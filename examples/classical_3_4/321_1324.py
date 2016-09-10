@@ -33,19 +33,19 @@ patts = [Permutation([3,2,1]), Permutation([1,3,2,4])]
 # ----------------------
 
 # ----------------------
-# ???
-perm_bound    = 12
+# ??? This takes a long time and fails. Run on cluster with (9,9) 9
+perm_bound    = 9
 verify_bound  = 15
 ignored       = 0
 
 # The dag
-max_len_patt = 2
-upper_bound  = 1
+max_len_patt = None
+upper_bound  = None
 remove       = False
 
 # Grids
-max_rule_size = (9, 9)
-max_non_empty = 9
+max_rule_size = (8, 8)
+max_non_empty = 8
 max_rules     = None
 # ----------------------
 

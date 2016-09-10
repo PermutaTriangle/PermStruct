@@ -15,13 +15,13 @@ is_classical = True
 
 patts = [Permutation([1,3,2]), Permutation([4,2,3,1])]
 
-perm_bound    = 8
+perm_bound    = 7
 verify_bound  = 11
 ignored       = 0
 
 # The dag
-max_len_patt = 3
-upper_bound  = 2
+max_len_patt = None
+upper_bound  = None
 remove       = False # True (3,3) 3
 
 # Grids
