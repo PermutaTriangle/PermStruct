@@ -18,16 +18,6 @@ is_classical = True
 #
 # No covers
 # The dag
-# max_len_patt = None
-# upper_bound  = None
-# remove       = True
-
-# max_rule_size = (6, 6)
-# max_non_empty = 6
-# max_rules     = None
-
-# No covers
-# The dag
 # max_len_patt = 2
 # upper_bound  = 1
 # remove       = True
