@@ -33,8 +33,8 @@ patts = [Permutation([3,2,1]), Permutation([1,3,2,4])]
 # ----------------------
 
 # ----------------------
-# ??? This takes a long time and fails. Run on cluster with (9,9) 9
-perm_bound    = 9
+
+perm_bound    = 10 # +1 if fails
 verify_bound  = 15
 ignored       = 0
 
@@ -44,8 +44,8 @@ upper_bound  = None
 remove       = False
 
 # Grids
-max_rule_size = (8, 8)
-max_non_empty = 8
+max_rule_size = (9, 9) # +1 if fails
+max_non_empty = 9 # +1 if fails
 max_rules     = None
 # ----------------------
 
