@@ -13,22 +13,31 @@ is_classical = True
 
 # STATUS ================================================ >
 
-patts = [Permutation([3,2,1,4]), Permutation([2,4,3,1]), Permutation([2,4,1,3]), Permutation([2,1,4,3]), Permutation([2,1,3,4]), Permutation([3,1,4,2]), Permutation([3,1,2,4]), Permutation([4,1,3,2]), Permutation([1,4,3,2]), Permutation([1,3,4,2]), Permutation([1,2,3,4])]
-
-perm_bound    = 6
-verify_bound  = 12
-ignored       = 0
+patts = [Permutation([2,4,3,1]), Permutation([2,1,4,3]), Permutation([2,1,3,4]), Permutation([3,4,1,2]), Permutation([4,1,3,2]), Permutation([1,4,3,2]), Permutation([1,3,2,4])]
 
 # The dag
 max_len_patt = None
 upper_bound  = None
 remove       = False
 
+ignored       = 0
+
+# ------------------------------------------------------------------------------ FAILURE no cover
+perm_bound    = 6
+verify_bound  = 10
+
 # Grids
 max_rule_size = (4, 4)
 max_non_empty = 4
 max_rules     = None
+# ------------------------------------------------------------------------------
+perm_bound    = 6
+verify_bound  = 10
 
+# Grids
+max_rule_size = (6, 6)
+max_non_empty = 6
+max_rules     = None
 # ------------------------------------------------------------------------------
 
 settings = StructSettings(
