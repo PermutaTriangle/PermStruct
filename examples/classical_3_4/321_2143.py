@@ -15,18 +15,35 @@ is_classical = True
 
 patts = [Permutation([3,2,1]), Permutation([2,1,4,3])]
 
-perm_bound    = 9 # +1 if fails
-verify_bound  = 12 # +1 if fails
+# FAILURE! no cover found
+# perm_bound    = 9 # +1 if fails
+# verify_bound  = 12 # +1 if fails
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = None
+# upper_bound  = None
+# remove       = False # True (5, 5) 5 works
+#
+# # Grids
+# max_rule_size = (8,8) # +1 if fails
+# max_non_empty = 8 # +1 if fails
+# max_rules     = None
+
+# ------------------------------------------------------------------------------
+
+perm_bound    = 10
+verify_bound  = 12
 ignored       = 0
 
 # The dag
 max_len_patt = None
 upper_bound  = None
-remove       = False # True (5, 5) 5 works
+remove       = False
 
 # Grids
-max_rule_size = (7,7) # +1 if fails
-max_non_empty = 7 # +1 if fails
+max_rule_size = (9,9)
+max_non_empty = 9
 max_rules     = None
 
 # ------------------------------------------------------------------------------

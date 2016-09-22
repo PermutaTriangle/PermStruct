@@ -32,9 +32,22 @@ patts = [Permutation([3,2,1]), Permutation([1,3,2,4])]
 # max_rules     = None
 # ----------------------
 
+# ---------------------- FAILURE! No cover found
+# perm_bound    = 10 # +1 if fails
+# verify_bound  = 15
+# ignored       = 0
+#
+# # The dag
+# max_len_patt = None
+# upper_bound  = None
+# remove       = False
+#
+# # Grids
+# max_rule_size = (9, 9) # +1 if fails
+# max_non_empty = 9 # +1 if fails
+# max_rules     = None
 # ----------------------
-
-perm_bound    = 10 # +1 if fails
+perm_bound    = 11
 verify_bound  = 15
 ignored       = 0
 
@@ -44,10 +57,9 @@ upper_bound  = None
 remove       = False
 
 # Grids
-max_rule_size = (9, 9) # +1 if fails
-max_non_empty = 9 # +1 if fails
+max_rule_size = (10, 10)
+max_non_empty = 10
 max_rules     = None
-# ----------------------
 
 # ------------------------------------------------------------------------------
 
