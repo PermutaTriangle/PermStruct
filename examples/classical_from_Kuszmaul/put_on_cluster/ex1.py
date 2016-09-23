@@ -41,15 +41,15 @@ max_rule_size = (6, 6)
 max_non_empty = 6
 max_rules     = None
 # ------------------------------------------------------------------------------ Takes too long, move to server
-# perm_bound    = 6
-# verify_bound  = 10
-#
-# # Grids
-# max_len_patt = None
-# upper_bound  = None
-# max_rule_size = (5, 5)
-# max_non_empty = 5
-# max_rules     = None
+perm_bound    = 6
+verify_bound  = 10
+
+# Grids
+max_len_patt = None
+upper_bound  = None
+max_rule_size = (5, 5)
+max_non_empty = 5
+max_rules     = None
 # ------------------------------------------------------------------------------
 
 settings = StructSettings(
