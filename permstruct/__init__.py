@@ -17,6 +17,7 @@ from .functions import (
     E,
     empty,
     find_allowed_neighbors,
+    find_allowed_neighbors_classical_perm_prop,
 )
 
 from .exhaustive import exhaustive #, exhaustive_with_overlays

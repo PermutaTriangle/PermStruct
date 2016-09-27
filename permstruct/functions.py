@@ -6,6 +6,7 @@ from permuta.math import signum
 from copy import deepcopy
 from .misc.cache import Cache
 import sys
+import time
 
 class RuleDeath:
     PERM_PROP = 0
@@ -97,8 +98,14 @@ def _find_allowed_neighbors(settings, is_ok):
     return neighb
 
 def find_allowed_neighbors_classical_perm_prop(settings):
+
+    # Finding the length of the longest pattern in the basis
+    mx = 0
+    for p in settings.sinput.avoidance:
+        mx = max(mx, len(p))
+
     def is_ok(G):
-        for l in range(settings.perm_bound+1):
+        for l in range(mx+1):
             for perm in G.generate_of_length(l, settings.sinput.permutations):
                 perm = Permutation(list(perm))
                 if not settings.sinput.contains(perm):
@@ -695,9 +702,10 @@ def generate_rules_upto(settings):
 
 def populate_rule_set(settings, rule_set):
     assert settings.sinput.is_classical
+    tm = 0.0 # for timing
 
-    settings.logger.log('Generate allowed neighbors, overlap')
-    allowed_neighbors = find_allowed_neighbors(settings)
+    # settings.logger.log('Generate allowed neighbors, overlap')
+    # allowed_neighbors = find_allowed_neighbors(settings)
 
     settings.logger.log('Generate allowed neighbors, perm prop')
     allowed_neighbors_cpp = find_allowed_neighbors_classical_perm_prop(settings)
@@ -782,6 +790,7 @@ def populate_rule_set(settings, rule_set):
             cur = nxt
             ProgressBar.finish()
 
+    settings.logger.log('Number of point grids: %d' % len(valid))
     settings.logger.log('Generating rules, %d iterations' % valid.height())
     cur = [ ([ [ None for j in range(m) ] for i in range(n) ], valid.root) ]
     it = 1
@@ -794,19 +803,9 @@ def populate_rule_set(settings, rule_set):
             ProgressBar.progress()
             for ((i,j),node2) in node.down.items():
                 rule = [ [ tmp[x][y] for y in range(m) ] for x in range(n) ]
+
                 ss = set(ssets)
                 ss.remove(None)
-                for di in range(-1, 2):
-                    for dj in range(-1, 2):
-                        ci, cj = i+di, j+dj
-                        if (ci, cj) > (i, j) and 0 <= ci < n and 0 <= cj < m:
-                            ss &= allowed_neighbors[(rule[ci][cj], -di, -dj)]
-                            if not ss:
-                                break
-                    if not ss:
-                        break
-                if not ss:
-                    continue
 
                 for ci in range(i,n):
                     for cj in range(m):
@@ -818,6 +817,22 @@ def populate_rule_set(settings, rule_set):
                                 break
                     if not ss:
                         break
+                if not ss:
+                    continue
+
+                must_be_point = False
+                for di in range(-1, 2):
+                    for dj in range(-1, 2):
+                        ci, cj = i+di, j+dj
+                        if (ci, cj) > (i, j) and 0 <= ci < n and 0 <= cj < m:
+                            if rule[ci][cj] is not None and type(rule[ci][cj]) is not PointPermutationSet:
+                                must_be_point = True
+                                break
+                    if must_be_point:
+                        break
+
+                if must_be_point:
+                    ss &= set([ pps ])
                 if not ss:
                     continue
 
@@ -848,14 +863,22 @@ def populate_rule_set(settings, rule_set):
                         if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                             ok = False
                         if ok:
-                            if rule_set.add_rule(g) == RuleDeath.PERM_PROP:
+                            # if rule_set.add_rule(g) == RuleDeath.PERM_PROP:
+                            #     continue
+                            meow = rule_set.add_rule(g) == RuleDeath.PERM_PROP
+                            if meow:
                                 continue
-                    elif not generates_subset(GeneratingRule(rule)):
+                    elif settings.filter_rule_incrementally not generates_subset(GeneratingRule(rule)):
                         continue
+                    # else:
+                    #     meow = generates_subset(GeneratingRule(rule))
+                    #     if not meow:
+                    #         continue
 
                     nxt.append(([ [ rule[x][y] for y in range(m) ] for x in range(n) ], node2))
         cur = nxt
         ProgressBar.finish()
+        sys.stderr.write('time was %f\n' % tm)
 
 # def generate_rules_upto(settings):
 #     allowed_neighbors = find_allowed_neighbors(settings)
