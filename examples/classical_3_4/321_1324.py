@@ -52,8 +52,8 @@ verify_bound  = 15
 ignored       = 0
 
 # The dag
-max_len_patt = None
-upper_bound  = None
+max_len_patt = 2 #None These settings should be enough because the class is polynomial
+upper_bound  = 1 #None
 remove       = False
 
 # Grids
