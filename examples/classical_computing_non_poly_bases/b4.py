@@ -9,22 +9,27 @@ import sys
 
 is_classical = True
 
-# STATUS ================================================ >
-patts = [Permutation([1,3,2,4])]
+# -- Examples from Vatter paper -- #
 
-perm_bound    = 6
-verify_bound  = 7
+# STATUS ================================================ >
+
+patts = map(Permutation, [[1, 2, 3], [2, 1, 4, 3], [2, 4, 1, 3], [3, 1, 4, 2], [3, 2, 1], [3, 4, 1, 2]])
+
+# ------------------------------------------------------------------------------
+perm_bound    = 5
+verify_bound  = 10
 ignored       = 0
 
 # The dag
-max_len_patt = None
+max_len_patt = 3
 upper_bound  = None
 remove       = False
 
 # Grids
 max_rule_size = (4, 4)
-max_non_empty = 5
+max_non_empty = 4
 max_rules     = None
+# ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
 
