@@ -9,42 +9,27 @@ import sys
 
 is_classical = True
 
-# -- Wilf-class 6 in http://wikipedia.org/wiki/Enumerations_of_specific_permutation_classes -- #
+# -- Examples from Vatter paper -- #
 
-# STATUS ================================================ > SUCCESS!
+# STATUS ================================================ >
 
-patts = [Permutation([3,2,1]), Permutation([2,1,4,3])]
-
-# FAILURE! no cover found
-# perm_bound    = 9 # +1 if fails
-# verify_bound  = 12 # +1 if fails
-# ignored       = 0
-#
-# # The dag
-# max_len_patt = None
-# upper_bound  = None
-# remove       = False # True (5, 5) 5 works
-#
-# # Grids
-# max_rule_size = (8,8) # +1 if fails
-# max_non_empty = 8 # +1 if fails
-# max_rules     = None
+patts = map(Permutation, [[2, 1, 4, 3], [2, 4, 1, 3], [3, 2, 1]])
 
 # ------------------------------------------------------------------------------
-
-perm_bound    = 10
-verify_bound  = 12
+perm_bound    = 5
+verify_bound  = 10
 ignored       = 0
 
 # The dag
-max_len_patt = 2 # None These settings should suffice (done by hand)
-upper_bound  = 1 # None
+max_len_patt = 3
+upper_bound  = None
 remove       = False
 
 # Grids
-max_rule_size = (9,8) # <------------ NOTE!
-max_non_empty = 9
+max_rule_size = (5, 5)
+max_non_empty = 5
 max_rules     = None
+# ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
 

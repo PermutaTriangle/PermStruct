@@ -9,43 +9,48 @@ import sys
 
 is_classical = True
 
-# -- Wilf-class 6 in http://wikipedia.org/wiki/Enumerations_of_specific_permutation_classes -- #
+# -- Examples from Vatter paper -- #
 
-# STATUS ================================================ > SUCCESS!
+# STATUS ================================================ >
 
-patts = [Permutation([3,2,1]), Permutation([2,1,4,3])]
+patts = map(Permutation, [[1,2,3], [3,2,1,4], [2,1,4,3], [1,5,4,3,2]])
 
-# FAILURE! no cover found
-# perm_bound    = 9 # +1 if fails
-# verify_bound  = 12 # +1 if fails
+# ------------------------------------------------------------------------------ FAILURE no cover
+# perm_bound    = 8
+# verify_bound  = 10
 # ignored       = 0
 #
 # # The dag
-# max_len_patt = None
+# max_len_patt = 3
 # upper_bound  = None
-# remove       = False # True (5, 5) 5 works
+# remove       = False
 #
 # # Grids
-# max_rule_size = (8,8) # +1 if fails
-# max_non_empty = 8 # +1 if fails
+# max_rule_size = (7, 7)
+# max_non_empty = 7
 # max_rules     = None
-
-# ------------------------------------------------------------------------------
-
-perm_bound    = 10
-verify_bound  = 12
+# ------------------------------------------------------------------------------ Next
+perm_bound    = 8
+verify_bound  = 10
 ignored       = 0
 
 # The dag
-max_len_patt = 2 # None These settings should suffice (done by hand)
-upper_bound  = 1 # None
+max_len_patt = None
+upper_bound  = None
 remove       = False
 
 # Grids
-max_rule_size = (9,8) # <------------ NOTE!
-max_non_empty = 9
+max_rule_size = (7, 7)
+max_non_empty = 7
 max_rules     = None
-
+# ------------------------------------------------------------------------------
+# perm_bound    = 8
+# verify_bound  = 10
+#
+# # Grids
+# max_rule_size = (6, 6)
+# max_non_empty = 6
+# max_rules     = None
 # ------------------------------------------------------------------------------
 
 settings = StructSettings(

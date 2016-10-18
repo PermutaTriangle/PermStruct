@@ -111,7 +111,6 @@ def find_allowed_neighbors(settings):
 
 def populate_rule_set(settings, rule_set):
     assert settings.sinput.is_classical
-    tm = 0.0 # for timing
 
     # settings.logger.log('Generate allowed neighbors, overlap')
     # allowed_neighbors = find_allowed_neighbors(settings)
@@ -272,22 +271,14 @@ def populate_rule_set(settings, rule_set):
                         if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                             ok = False
                         if ok:
-                            # if rule_set.add_rule(g) == RuleDeath.PERM_PROP:
-                            #     continue
-                            meow = rule_set.add_rule(g) == RuleDeath.PERM_PROP
-                            if meow:
+                            if rule_set.add_rule(g) == RuleDeath.PERM_PROP:
                                 continue
                     elif settings.filter_rule_incrementally and not generates_subset(GeneratingRule(rule)):
                         continue
-                    # else:
-                    #     meow = generates_subset(GeneratingRule(rule))
-                    #     if not meow:
-                    #         continue
 
                     nxt.append(([ [ rule[x][y] for y in range(m) ] for x in range(n) ], node2))
         cur = nxt
         ProgressBar.finish()
-        sys.stderr.write('time was %f\n' % tm)
 
 
 X = InputPermutationSet()

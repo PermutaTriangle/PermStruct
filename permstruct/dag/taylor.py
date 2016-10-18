@@ -11,7 +11,7 @@ class SubPatternType:
     CONSECUTIVE = 2
 
 # def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove=True):
-def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remove_finite=True,
+def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=False, remove_finite=True,
                subpattern_type=SubPatternType.RECTANGULAR):
     assert settings.sinput.avoidance is not None, "Tayloring is only supported for avoidance"
     patterns = settings.sinput.avoidance
@@ -159,4 +159,3 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=True, remov
     ended = datetime.datetime.now()
     settings.logger.log('Finished in %.3fs' % (ended - started).total_seconds())
     return res
-

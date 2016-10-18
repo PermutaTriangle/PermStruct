@@ -11,7 +11,7 @@ class StructSettings(object):
             min_rule_size=(1,1), # The minimum rule size, a tuple
             max_non_empty=None, # The maximum number of non-empty cells in a rule
             mn_at_most=None, # The maximum minimum length permutation that a rule can generate
-            filter_rule_incrementally=True, # Whether the rules should be filtered at every step of the generation (a tradeoff)
+            filter_rule_incrementally=False, # Whether the rules should be filtered at every step of the generation (a tradeoff)
 
             # Exact cover
             max_rules=None, # Maximum number of rules to use in the exact cover, or None if unlimited
@@ -64,4 +64,3 @@ class StructSettings(object):
     def set_dag(self, dag):
         self.dag = dag
         self.sets = sorted(dag.elements, key=lambda x: (repr(type(x)), x))
-
