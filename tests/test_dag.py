@@ -2,9 +2,11 @@ import unittest
 import permstruct
 from permstruct import *
 import permstruct.dag
+from permstruct.dag import *
 import sys
 from permstruct.dag import taylor_dag
 from permuta import Permutation
+import random
 
 class TestDAG(unittest.TestCase):
 
@@ -61,4 +63,82 @@ class TestDAG(unittest.TestCase):
         self.check([
             [[1,2], [2,1]],
         ], res)
+
+    def test_reachable_above(self):
+        dag = DAG()
+        for i in range(5):
+            dag.add_element(i)
+            self.assertEqual([i], sorted(dag.get_reachable_above(i)))
+        for i in range(5):
+            self.assertEqual([i], sorted(dag.get_reachable_above(i)))
+
+        dag.put_below(3, 4)
+        self.assertEqual([3], sorted(dag.get_reachable_above(3)))
+        self.assertEqual([3,4], sorted(dag.get_reachable_above(4)))
+        self.assertEqual([1], sorted(dag.get_reachable_above(1)))
+
+        dag.put_below(1, 0)
+        dag.put_below(2, 1)
+        self.assertEqual([2], sorted(dag.get_reachable_above(2)))
+        self.assertEqual([1,2], sorted(dag.get_reachable_above(1)))
+        self.assertEqual([0,1,2], sorted(dag.get_reachable_above(0)))
+
+        dag.put_below(2, 0)
+        self.assertEqual([2], sorted(dag.get_reachable_above(2)))
+        self.assertEqual([1,2], sorted(dag.get_reachable_above(1)))
+        self.assertEqual([0,1,2], sorted(dag.get_reachable_above(0)))
+
+        dag.put_below(4, 1)
+        self.assertEqual([2], sorted(dag.get_reachable_above(2)))
+        self.assertEqual([1,2,3,4], sorted(dag.get_reachable_above(1)))
+        self.assertEqual([0,1,2,3,4], sorted(dag.get_reachable_above(0)))
+
+        dag.put_below(4, 2)
+        self.assertEqual([0,1,2,3,4], sorted(dag.get_reachable_above(0)))
+        self.assertEqual([1,2,3,4], sorted(dag.get_reachable_above(1)))
+        self.assertEqual([2,3,4], sorted(dag.get_reachable_above(2)))
+        self.assertEqual([3], sorted(dag.get_reachable_above(3)))
+        self.assertEqual([3,4], sorted(dag.get_reachable_above(4)))
+
+    def get_random_dag(self,n,p):
+        dag = DAG()
+        for i in range(n):
+            dag.add_element(i)
+        arr = [ i for i in range(n) ]
+        random.shuffle(arr)
+        for i in range(n):
+            for j in range(i+1,n):
+                if random.random() < p:
+                    dag.put_below(arr[i], arr[j])
+        return dag
+
+    def test_topological_order(self):
+        for n in range(100):
+            p = random.random()
+            dag = self.get_random_dag(n,p)
+            arr = dag.get_topological_order()
+            seen = set()
+            for x in arr:
+                seen.add(x)
+                for y in dag.get_reachable_above(x):
+                    self.assertTrue(y in seen)
+
+    def test_transitive_reduction(self):
+        def es(d):
+            return sum( len(v) for (k,v) in d.above.items() )
+
+        a = 0
+        b = 0
+        for n in range(100):
+            p = random.random()
+            dag = self.get_random_dag(n,p)
+            dag2 = dag.get_transitive_reduction()
+            for x in dag.elements:
+                self.assertEqual(sorted(dag.get_reachable_above(x)),
+                                 sorted(dag2.get_reachable_above(x)))
+
+            a += es(dag)
+            b += es(dag2)
+
+        self.assertTrue(a*20/100 > b) # just a sanity check, but can fail with low probability
 

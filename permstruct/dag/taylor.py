@@ -156,6 +156,11 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=False, remo
         for ps,here,descr in elems:
             res.add_element(ps)
 
+        for ps,here,descr in elems:
+            for qs,other,odescr in elems:
+                if other and other < here:
+                    res.put_below(qs,ps)
+
     ended = datetime.datetime.now()
     settings.logger.log('Finished in %.3fs' % (ended - started).total_seconds())
     return res

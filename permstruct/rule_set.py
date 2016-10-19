@@ -16,11 +16,25 @@ class RuleSet:
         self.permset = [ sorted(settings.sinput.permutations[l]) for l in range(settings.perm_bound+1) ]
         self.total_rules = 0
 
+        # self.seen = set()
+
     def print_stats(self):
         self.settings.logger.log('Death by overlap: %s' % self.death_by_overlap)
         self.settings.logger.log('Death by perm prop: %s' % self.death_by_perm_prop)
 
-    def add_rule(self, rule):
+        # for (k,v) in sorted(self.rules.items()):
+        #     print(k)
+        #     for x in v:
+        #         print(x)
+
+    def add_rule(self, rule, check=False):
+        # print(rule)
+        # print('')
+        # if check and rule not in self.seen:
+        #     print(rule)
+        #     print('')
+        # self.seen.add(rule)
+
         self.total_rules += 1
         bs = 0
         curcnt = 0
