@@ -11,10 +11,13 @@ class StructLogger(object):
         self.output = sys.stderr
         self.output_format = '[%(date)s] %(message)s\n'
 
-    def log(self, message, level=INFO):
+    def write(self, s, level=INFO):
         if level >= self.verbosity:
-            self.output.write(self.output_format % { 'date': datetime.datetime.now(), 'message': message })
+            self.output.write(s)
             self.output.flush()
+
+    def log(self, message, level=INFO):
+        self.write(self.output_format % { 'date': datetime.datetime.now(), 'message': message })
 
     def warn(self, message):
         self.log(message, level=StructLogger.WARNING)

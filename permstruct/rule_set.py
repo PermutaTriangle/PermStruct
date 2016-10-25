@@ -22,19 +22,7 @@ class RuleSet:
         self.settings.logger.log('Death by overlap: %s' % self.death_by_overlap)
         self.settings.logger.log('Death by perm prop: %s' % self.death_by_perm_prop)
 
-        # for (k,v) in sorted(self.rules.items()):
-        #     print(k)
-        #     for x in v:
-        #         print(x)
-
-    def add_rule(self, rule, check=False):
-        # print(rule)
-        # print('')
-        # if check and rule not in self.seen:
-        #     print(rule)
-        #     print('')
-        # self.seen.add(rule)
-
+    def add_rule(self, rule):
         self.total_rules += 1
         bs = 0
         curcnt = 0
@@ -76,10 +64,6 @@ class RuleSet:
 
         if empty:
             assert False
-
-        # print(rule)
-        # print(''.join( '0' if (bs & (1 << i)) == 0 else '1' for i in range(self.settings.sinput.validcnt - 1, -1, -1) ))
-        # print('')
 
         self.rules.setdefault(bs, [])
         self.rules[bs].append(rule)

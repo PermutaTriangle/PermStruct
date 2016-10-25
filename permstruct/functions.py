@@ -111,190 +111,9 @@ def find_allowed_neighbors(settings):
         return True
     return _find_allowed_neighbors(settings, is_ok)
 
-def populate_rule_set_old(settings, rule_set):
-    assert settings.sinput.is_classical
 
-    # settings.logger.log('Generate allowed neighbors, overlap')
-    # allowed_neighbors = find_allowed_neighbors(settings)
-
-    settings.logger.log('Generate allowed neighbors, perm prop')
-    allowed_neighbors_cpp = find_allowed_neighbors_classical_perm_prop(settings)
-
-    ssets = set(settings.sets)
-    n = settings.max_rule_size[0]
-    m = settings.max_rule_size[1]
-
-    for s in ssets:
-        if type(s) is PointPermutationSet:
-            pps = s
-            break
-
-    def generates_subset(rule):
-        for l in range(settings.perm_bound+1):
-            for p in rule.generate_of_length(l, settings.sinput.permutations):
-                if not settings.sinput.contains(p):
-                    return False
-        return True
-
-    # Special case: the empty rule
-    rule_set.add_rule(GeneratingRule({ (0,0): None }))
-
-    settings.logger.log('Generating point rules')
-    valid = TrieMap()
-    cur = [ [ [ None for j in range(m) ] for i in range(n) ] ]
-    for i in range(n-1,-1,-1):
-        for j in range(m-1,-1,-1):
-            settings.logger.log('Cell (%d,%d)' % (i,j))
-            ProgressBar.create(len(cur))
-            nxt = []
-            for rule in cur:
-                ProgressBar.progress()
-
-                left = settings.max_non_empty - sum( rule[x][y] is not None for x in range(n) for y in range(m) )
-                at_most = settings.mn_at_most - sum( 0 if rule[x][y] is None else rule[x][y].min_length(settings.sinput.permutations) for x in range(n) for y in range(m) )
-
-                ss = set([ None, pps ])
-                for s in ss:
-                    if s is not None:
-                        if left == 0 or s.min_length(settings.sinput.permutations) > at_most:
-                            continue
-                    rule[i][j] = s
-
-                    if j == 0:
-                        found = False
-                        for y in range(m):
-                            if rule[i][y] is not None:
-                                found = True
-                                break
-                        if not found:
-                            continue
-
-                    if rule[i][j] is not None and not generates_subset(GeneratingRule(rule)):
-                        continue
-
-                    is_done = True
-                    for x in range(i,n):
-                        for y in range(j):
-                            if rule[x][y] is not None:
-                                is_done = False
-                                break
-                        if not is_done:
-                            break
-
-                    if is_done:
-                        for y in range(j,m):
-                            found = False
-                            for x in range(i,n):
-                                if rule[x][y] is not None:
-                                    found = True
-                                    break
-                            if not found:
-                                is_done = False
-                                break
-
-                    if is_done and any( rule[i][y] is not None for y in range(j,m) ):
-                        key = [ (x,y) for x in range(n-1,-1,-1) for y in range(m-1,-1,-1) if rule[x][y] is not None ]
-                        valid[key] = True
-
-                    nxt.append([ [ rule[x][y] for y in range(m) ] for x in range(n) ])
-            cur = nxt
-            ProgressBar.finish()
-
-    settings.logger.log('Number of point grids: %d' % len(valid))
-    settings.logger.log('Generating rules, %d iterations' % valid.height())
-    cur = [ ([ [ None for j in range(m) ] for i in range(n) ], valid.root) ]
-    it = 1
-    while cur:
-        settings.logger.log('Iteration %d' % it)
-        it += 1
-        ProgressBar.create(len(cur))
-        nxt = []
-        for (tmp,node) in cur:
-            ProgressBar.progress()
-            for ((i,j),node2) in node.down.items():
-                rule = [ [ tmp[x][y] for y in range(m) ] for x in range(n) ]
-
-                ss = set(ssets)
-                ss.remove(None)
-
-                for ci in range(i,n):
-                    for cj in range(m):
-                        if (ci, cj) > (i, j):
-                            di = signum(ci-i)
-                            dj = signum(cj-j)
-                            ss &= allowed_neighbors_cpp[(rule[ci][cj], -di, -dj)]
-                            if not ss:
-                                break
-                    if not ss:
-                        break
-                if not ss:
-                    continue
-
-                must_be_point = False
-                for di in range(-1, 2):
-                    for dj in range(-1, 2):
-                        ci, cj = i+di, j+dj
-                        if (ci, cj) > (i, j) and 0 <= ci < n and 0 <= cj < m:
-                            if rule[ci][cj] is not None and type(rule[ci][cj]) is not PointPermutationSet:
-                                must_be_point = True
-                                break
-                    if must_be_point:
-                        break
-
-                if must_be_point:
-                    ss &= set([ pps ])
-                if not ss:
-                    continue
-
-                at_most = settings.mn_at_most - sum( 0 if rule[x][y] is None else rule[x][y].min_length(settings.sinput.permutations) for x in range(n) for y in range(m) )
-
-                # TODO: if i == 0 and column j is empty, then ss.remove(None)
-
-                for s in ss:
-                    if s.min_length(settings.sinput.permutations) > at_most:
-                        continue
-                    rule[i][j] = s
-
-                    if node2.end:
-                        si = i
-                        sj = None
-                        for y in range(m):
-                            found = False
-                            for x in range(si,n):
-                                if rule[x][y] is not None:
-                                    found = True
-                                    break
-                            if found:
-                                sj = y
-                                break
-                        assert sj is not None
-                        g = GeneratingRule({ (x-si,y-sj): rule[x][y] for x in range(si,n) for y in range(sj,m) })
-                        ok = True
-                        if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
-                            ok = False
-                        if ok:
-                            if rule_set.add_rule(g) == RuleDeath.PERM_PROP:
-                                continue
-                    elif settings.filter_rule_incrementally and not generates_subset(GeneratingRule(rule)):
-                        continue
-
-                    nxt.append(([ [ rule[x][y] for y in range(m) ] for x in range(n) ], node2))
-        cur = nxt
-        ProgressBar.finish()
-
-
-# XXX: toggle the comments on the following three lines to switch to the old implementation
-# populate_rule_set = populate_rule_set_old
-# def populate_rule_set2(settings, rule_set):
 def populate_rule_set(settings, rule_set):
     assert settings.sinput.is_classical
-
-    import cProfile
-    pr = cProfile.Profile()
-
-    # print('meow')
-    # populate_rule_set_old(settings, rule_set)
-    # print('moo')
 
     # settings.logger.log('Generate allowed neighbors, overlap')
     # allowed_neighbors = find_allowed_neighbors(settings)
@@ -404,29 +223,20 @@ def populate_rule_set(settings, rule_set):
             cur = nxt
             ProgressBar.finish()
 
-    # def dfs(cur,d):
-    #     print(cur.end)
-    #     for (k,nxt) in cur.down.items():
-    #         print(' '*d + '%s' % repr(k))
-    #         dfs(nxt, d+1)
-    # dfs(valid.root,0)
-
-    def disp(cur, elems):
-        if cur.end:
-            print(GeneratingRule({ k:v for (k,v) in elems }))
-            print('')
-        for (k,v) in sorted(cur.down.items(),key=lambda x:(x[0][0],x[0][1]))[::-1]:
-            disp(v, elems | set([ ((k[0],k[1]), k[2]) ]))
-    # disp(valid.root, set([]))
-
     dag = settings.dag.get_transitive_reduction()
-    for s in dag.get_topological_order():
+    order = dag.get_topological_order()
+    settings.logger.log('Number of elements: %d' % len(order))
+    ProgressBar.create(len(order) - 2)
+    for s in order:
         if s is None or type(s) is PointPermutationSet:
             continue
-        # TODO: shouldn't this just be the immediate parents?
-        # above = { a for a in dag.get_reachable_above(s) if a is not None and a != s }
+
+        ProgressBar.clear()
+        settings.logger.log('Promoting to: %s' % (s.description if s is not None else 'empty set'))
+        ProgressBar.draw()
+        ProgressBar.draw()
+
         above = { a for a in dag.get_parents(s) if a is not None and a != s }
-        # above_directly = { a for a in dag.get_parents(s) if a is not None }
         rule = [ [ None for y in range(m) ] for x in range(n) ]
 
         def intersect(cur, pos):
@@ -453,13 +263,7 @@ def populate_rule_set(settings, rule_set):
                 if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                     ok = False
                 if ok:
-
-                    pr.enable()
-
                     res = rule_set.add_rule(g,True)
-
-                    pr.disable()
-
                     if res == RuleDeath.PERM_PROP:
                         return None
                     elif res != RuleDeath.ALIVE:
@@ -552,96 +356,10 @@ def populate_rule_set(settings, rule_set):
                 if v is not None:
                     cur.down[k] = v
 
-        # print(s, above)
         promote(valid.root)
-        # disp(valid.root, set([]))
+        ProgressBar.progress()
 
-    # import sys
-    # sys.exit(0)
-
-    # settings.logger.log('Number of point grids: %d' % len(valid))
-    # settings.logger.log('Generating rules, %d iterations' % valid.height())
-    # cur = [ ([ [ None for j in range(m) ] for i in range(n) ], valid.root) ]
-    # it = 1
-    # while cur:
-    #     settings.logger.log('Iteration %d' % it)
-    #     it += 1
-    #     ProgressBar.create(len(cur))
-    #     nxt = []
-    #     for (tmp,node) in cur:
-    #         ProgressBar.progress()
-    #         for ((i,j),node2) in node.down.items():
-    #             rule = [ [ tmp[x][y] for y in range(m) ] for x in range(n) ]
-    #
-    #             ss = set(ssets)
-    #             ss.remove(None)
-    #
-    #             for ci in range(i,n):
-    #                 for cj in range(m):
-    #                     if (ci, cj) > (i, j):
-    #                         di = signum(ci-i)
-    #                         dj = signum(cj-j)
-    #                         ss &= allowed_neighbors_cpp[(rule[ci][cj], -di, -dj)]
-    #                         if not ss:
-    #                             break
-    #                 if not ss:
-    #                     break
-    #             if not ss:
-    #                 continue
-    #
-    #             must_be_point = False
-    #             for di in range(-1, 2):
-    #                 for dj in range(-1, 2):
-    #                     ci, cj = i+di, j+dj
-    #                     if (ci, cj) > (i, j) and 0 <= ci < n and 0 <= cj < m:
-    #                         if rule[ci][cj] is not None and type(rule[ci][cj]) is not PointPermutationSet:
-    #                             must_be_point = True
-    #                             break
-    #                 if must_be_point:
-    #                     break
-    #
-    #             if must_be_point:
-    #                 ss &= set([ pps ])
-    #             if not ss:
-    #                 continue
-    #
-    #             at_most = settings.mn_at_most - sum( 0 if rule[x][y] is None else rule[x][y].min_length(settings.sinput.permutations) for x in range(n) for y in range(m) )
-    #
-    #             # TODO: if i == 0 and column j is empty, then ss.remove(None)
-    #
-    #             for s in ss:
-    #                 if s.min_length(settings.sinput.permutations) > at_most:
-    #                     continue
-    #                 rule[i][j] = s
-    #
-    #                 if node2.end:
-    #                     si = i
-    #                     sj = None
-    #                     for y in range(m):
-    #                         found = False
-    #                         for x in range(si,n):
-    #                             if rule[x][y] is not None:
-    #                                 found = True
-    #                                 break
-    #                         if found:
-    #                             sj = y
-    #                             break
-    #                     assert sj is not None
-    #                     g = GeneratingRule({ (x-si,y-sj): rule[x][y] for x in range(si,n) for y in range(sj,m) })
-    #                     ok = True
-    #                     if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
-    #                         ok = False
-    #                     if ok:
-    #                         if rule_set.add_rule(g) == RuleDeath.PERM_PROP:
-    #                             continue
-    #                 elif settings.filter_rule_incrementally and not generates_subset(GeneratingRule(rule)):
-    #                     continue
-    #
-    #                 nxt.append(([ [ rule[x][y] for y in range(m) ] for x in range(n) ], node2))
-    #     cur = nxt
-    #     ProgressBar.finish()
-
-    pr.print_stats(sort='cumulative')
+    ProgressBar.finish()
 
 
 X = InputPermutationSet()
