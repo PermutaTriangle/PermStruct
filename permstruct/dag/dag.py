@@ -28,6 +28,9 @@ class DAG:
     def get_above(self, elem):
         return [ self.elements[x] for x in self.above[self.id(elem)] ]
 
+    def get_parents(self, elem):
+        return [ self.elements[s] for s in self.above[self.id(elem)] ]
+
     def get_reachable_above(self, elem):
         vis = set()
         def dfs(cur):

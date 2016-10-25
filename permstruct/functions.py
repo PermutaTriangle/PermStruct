@@ -418,7 +418,10 @@ def populate_rule_set(settings, rule_set):
     for s in dag.get_topological_order():
         if s is None or type(s) is PointPermutationSet:
             continue
-        above = { a for a in dag.get_reachable_above(s) if a is not None and a != s }
+        # TODO: shouldn't this just be the immediate parents?
+        # above = { a for a in dag.get_reachable_above(s) if a is not None and a != s }
+        above = { a for a in dag.get_parents(s) if a is not None and a != s }
+        # above_directly = { a for a in dag.get_parents(s) if a is not None }
         rule = [ [ None for y in range(m) ] for x in range(n) ]
 
         def intersect(cur, pos):
@@ -452,19 +455,18 @@ def populate_rule_set(settings, rule_set):
                 rule[i][j] = s2
 
                 ok = True
-                # XXX: for some reason uncommenting the following block breaks everything (but without it, we're not pruning as much as we could be pruning)
-                # if ok:
-                #     # make sure the current type is an allowed neighbor of all (not necessarily immediate) neighbors
-                #     for ci in range(i,n):
-                #         for cj in range(m):
-                #             if (ci, cj) > (i, j):
-                #                 di = signum(ci-i)
-                #                 dj = signum(cj-j)
-                #                 if s not in allowed_neighbors_cpp[(rule[ci][cj], -di, -dj)]:
-                #                     ok = False
-                #                     break
-                #         if not ok:
-                #             break
+                if ok:
+                    # make sure the current type is an allowed neighbor of all (not necessarily immediate) neighbors
+                    for ci in range(i,n):
+                        for cj in range(m):
+                            if (ci, cj) > (i, j):
+                                di = signum(ci-i)
+                                dj = signum(cj-j)
+                                if s2 not in allowed_neighbors_cpp[(rule[ci][cj], -di, -dj)]:
+                                    ok = False
+                                    break
+                        if not ok:
+                            break
                 if ok and type(s2) is not PointPermutationSet:
                     # check if any of my immediate neighbors are neither empty nor a point
                     # in that case, we can only put a point in the current box
