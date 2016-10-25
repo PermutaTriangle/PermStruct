@@ -455,7 +455,7 @@ def populate_rule_set(settings, rule_set):
                         here.end = False
 
             found = False
-            for (i,j,s2) in reduce(lambda x,y: x&y, [ c.down.keys() for c in cur ]):
+            for (i,j,s2) in reduce(lambda x,y: x&y, [ set(c.down.keys()) for c in cur ]):
                 rule[i][j] = s2
 
                 ok = True
