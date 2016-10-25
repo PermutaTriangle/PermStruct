@@ -42,7 +42,7 @@ def exact_cover_gurobi(settings, bss):
             lp.write('    %s\n' % ' '.join( 'x%d' % i for i in range(len(bss)) ))
             lp.write('End\n')
 
-        p = Popen('gurobi_cl ResultFile=%s %s' % (outp, inp), shell=True)
+        p = Popen('gurobi_cl ResultFile=%s %s' % (outp, inp), shell=True, stdout=PIPE, stderr=PIPE)
         assert p.wait() == 0
 
         with open(outp, 'r') as f:

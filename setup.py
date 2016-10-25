@@ -19,6 +19,7 @@ setup(
         'permstruct.dag',
         'permstruct.permutation_sets',
         'permstruct.permutation_sets.units',
+        'permstruct.misc',
     ],
     long_description=read('README.md'),
     test_suite = 'tests'

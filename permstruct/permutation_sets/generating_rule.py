@@ -16,9 +16,9 @@ class GeneratingRule(PermutationSet):
 
         # TODO: store rules as a 2d array, and benchmark
         if type(rule) is list:
-            self.rule = { (i,j): rule[i][j] for i in range(len(rule)) for j in range(len(rule[i])) if rule[i][j] is not None }
+            self.rule = dict([ ((i,j), rule[i][j]) for i in range(len(rule)) for j in range(len(rule[i])) if rule[i][j] is not None ])
         else:
-            self.rule = { (i,j): s for ((i,j), s) in rule.items() if s is not None }
+            self.rule = dict([ ((i,j), s) for ((i,j), s) in rule.items() if s is not None ])
 
 
     # When we implement generating_function, this is probably what it will

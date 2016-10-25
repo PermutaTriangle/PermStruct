@@ -5,6 +5,12 @@ from permstruct.permutation_sets import InputPermutationSet, StaticPermutationSe
 from permstruct.dag import DAG
 import datetime
 
+
+def timedelta_total_seconds(timedelta):
+    return (
+        timedelta.microseconds + 0.0 +
+        (timedelta.seconds + timedelta.days * 24 * 3600) * 10 ** 6) / 10 ** 6
+
 class SubPatternType:
     EVERY = 0
     RECTANGULAR = 1
@@ -127,7 +133,11 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=False, remo
                 break
         if finite and remove_finite and settings.sinput.is_classical:
             continue
-        here = { Permutation(list(p)) for l in range(settings.perm_bound+1) for p in s.generate_of_length(l, {}) }
+        here = set()
+        for l in range(settings.perm_bound+1):
+            for p in s.generate_of_length(l, {}):
+                here.add(Permutation(list(p)))
+        #here = { Permutation(list(p)) for l in range(settings.perm_bound+1) for p in s.generate_of_length(l, {}) }
         elems.append((s, here, None))
 
     input = settings.sinput.get_permutation_set()
@@ -162,5 +172,5 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=False, remo
                     res.put_below(qs,ps)
 
     ended = datetime.datetime.now()
-    settings.logger.log('Finished in %.3fs' % (ended - started).total_seconds())
+    settings.logger.log('Finished in %.3fs' % timedelta_total_seconds(ended - started))
     return res

@@ -121,7 +121,11 @@ def construct_rule(perm_prop,
 
 
                         for poss in product(*nonempty):
-                            rule = GeneratingRule({ (i,j): inp for i, j, inp in poss })
+                            d = dict()
+                            for i, j, inp in poss:
+                                d[(i,j)] = inp
+                            #rule = GeneratingRule({ (i,j): inp for i, j, inp in poss })
+                            rule = GeneratingRule(d)
                             if rule in tried_rules:
                                 continue
 

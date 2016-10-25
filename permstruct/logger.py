@@ -8,7 +8,8 @@ class StructLogger(object):
 
     def __init__(self, verbosity=WARNING):
         self.verbosity = verbosity
-        self.output = sys.stderr
+        #self.output = sys.stderr
+        self.output = sys.stdout
         self.output_format = '[%(date)s] %(message)s\n'
 
     def write(self, s, level=INFO):

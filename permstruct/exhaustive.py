@@ -29,7 +29,9 @@ def exhaustive(settings):
 
     settings.logger.log('')
 
-    dag_elems_id = { v:i for i,v in enumerate(settings.sets) }
+    dag_elems_id = dict()
+    for i,v in enumerate(settings.sets):
+        dag_elems_id[v] = i
     res = rules.exact_cover(settings)
 
     for k,v in enumerate(settings.sets):

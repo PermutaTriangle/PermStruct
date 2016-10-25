@@ -1,6 +1,9 @@
 from permuta import AvoidanceClass, Permutation
 import datetime
 
+def timedelta_total_seconds(timedelta):
+    return (timedelta.microseconds + 0.0 + (timedelta.seconds + timedelta.days * 24 * 3600) * 10 ** 6) / 10 ** 6
+
 class StructInput(object):
 
     def __init__(self, settings, perm_prop, generator, is_classical=False, avoidance=None):
@@ -32,6 +35,7 @@ class StructInput(object):
 
         return StructInput.from_perm_prop(settings, lambda p: p.avoids(patterns), generator=gen, is_classical=True, avoidance=patterns)
 
+
     def _compile(self):
         self.settings.logger.log('Generating permutations from input')
         started = datetime.datetime.now()
@@ -45,9 +49,8 @@ class StructInput(object):
                 self.permutations[l].add(perm)
                 if l <= self.settings.perm_bound:
                     self.validcnt += 1
-
         ended = datetime.datetime.now()
-        self.settings.logger.log('Finished in %.3fs' % (ended - started).total_seconds())
+        self.settings.logger.log('Finished in %.3fs' % timedelta_total_seconds(ended - started))
         self.settings.logger.log('Enumeration is %s' % [ len(self.permutations[l]) for l in range(upto+1) ])
         assert self.settings.ignore_first < self.validcnt, "All permutations from the set are ignored"
 
@@ -88,7 +91,7 @@ class AvoiderInput(StructInput):
         self.validcnt = sum( len(self.permutations[l]) for l in range(self.settings.perm_bound+1) )
 
         ended = datetime.datetime.now()
-        self.settings.logger.log('Finished in %.3fs' % (ended - started).total_seconds())
+        self.settings.logger.log('Finished in %.3fs' % timedelta_total_seconds(ended - started))
         self.settings.logger.log('Enumeration is %s' % [ len(self.permutations[l]) for l in range(self.settings.perm_bound+1) ])
         assert self.settings.ignore_first < self.validcnt, "All permutations from the set are ignored"
 
@@ -121,7 +124,7 @@ class AvoiderInput(StructInput):
         # XXX: should we return a deep copy?
         if upto is not None:
             self._assure_length(upto)
-            return { k:self.permutations[k] for k in range(upto+1) }
+            return dict([ (k,self.permutations[k]) for k in range(upto+1) ])
         else:
             return self.permutations
 

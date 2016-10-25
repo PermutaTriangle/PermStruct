@@ -5,8 +5,8 @@ from permuta.misc import binary_search, TrieMap, ProgressBar
 from permuta.misc.triemap import TrieNode
 from permuta.math import signum
 from copy import deepcopy
-from .misc.cache import Cache
 from functools import reduce
+from .misc import Cache
 import sys
 import time
 
@@ -14,6 +14,7 @@ class RuleDeath:
     PERM_PROP = 0
     OVERLAP = 1
     ALIVE = 2
+    NOT_FOUND = 3
 
 def verify_cover(settings, rules):
 
@@ -210,7 +211,7 @@ def populate_rule_set(settings, rule_set):
                                 sj = y
                                 break
                         assert sj is not None
-                        g = GeneratingRule({ (x-si,y-sj): rule[x][y] for x in range(si,n) for y in range(sj,m) })
+                        g = GeneratingRule(dict([ ((x-si,y-sj), rule[x][y]) for x in range(si,n) for y in range(sj,m) ]))
                         ok = True
                         if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                             ok = False

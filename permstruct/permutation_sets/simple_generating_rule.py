@@ -9,7 +9,7 @@ def flatten(lst):
     res = []
     def dfs(l):
         for i in l:
-            if type(i) in {list,tuple}:
+            if type(i) is list or type(i) is tuple:
                 dfs(i)
             else:
                 res.append(i)

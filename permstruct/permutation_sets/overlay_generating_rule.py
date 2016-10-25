@@ -16,7 +16,12 @@ class OverlayGeneratingRule(PermutationSet):
 
         # TODO: store rules as a 2d array, and benchmark
         if type(rule) is list:
-            self.rule = { (i,j): rule[i][j] for i in range(len(rule)) for j in range(len(rule[i])) if rule[i][j] is not None }
+            #self.rule = { (i,j): rule[i][j] for i in range(len(rule)) for j in range(len(rule[i])) if rule[i][j] is not None }
+            self.rule = dict()
+            for i in range(len(rule)):
+                for j in range(len(rule[i])):
+                    if rule[i][j] is not None:
+                        self.rule[(i,j)] = rule[i][j]
         else:
             self.rule = rule
 

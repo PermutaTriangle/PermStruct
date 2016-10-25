@@ -118,12 +118,15 @@ class RuleSet:
                 print(i)
 
                 for rule in self.rules[b]:
-                    print(repr({ k:dag_elems_id[v] for k,v in rule.rule.items() }))
+                    d = dict()
+                    for k,v in rule.rule.items():
+                        d[k] = dag_elems_id[v]
+                    print(repr(d))
 
                 print('')
 
+        status = RuleDeath.NOT_FOUND
         if self.settings.verify_bound is not None:
-            # TODO: ask if we should verify a bit higher
             for res in covers:
                 self.settings.logger.log('Verifying cover %s up to length %d' % (res, self.settings.verify_bound))
                 cover = []
@@ -142,7 +145,10 @@ class RuleSet:
                     self.settings.logger.error('Death by overlap!!!!!!!!!!!!!')
                 elif status == RuleDeath.ALIVE:
                     self.settings.logger.log('Cover verified')
+                    break
+                    #return True
 
+        return status
         # TODO: return the results on some nice form
-        return []
+        #return []
 
