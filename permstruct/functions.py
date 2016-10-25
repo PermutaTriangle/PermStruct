@@ -289,6 +289,9 @@ def populate_rule_set_old(settings, rule_set):
 def populate_rule_set(settings, rule_set):
     assert settings.sinput.is_classical
 
+    import cProfile
+    pr = cProfile.Profile()
+
     # print('meow')
     # populate_rule_set_old(settings, rule_set)
     # print('moo')
@@ -393,7 +396,9 @@ def populate_rule_set(settings, rule_set):
                         if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                             ok = False
                         if ok:
+                            pr.enable()
                             assert rule_set.add_rule(g) != RuleDeath.PERM_PROP
+                            pr.disable()
 
                     nxt.append([ [ rule[x][y] for y in range(m) ] for x in range(n) ])
             cur = nxt
@@ -448,7 +453,13 @@ def populate_rule_set(settings, rule_set):
                 if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                     ok = False
                 if ok:
+
+                    pr.enable()
+
                     res = rule_set.add_rule(g,True)
+
+                    pr.disable()
+
                     if res == RuleDeath.PERM_PROP:
                         return None
                     elif res != RuleDeath.ALIVE:
@@ -629,6 +640,8 @@ def populate_rule_set(settings, rule_set):
     #                 nxt.append(([ [ rule[x][y] for y in range(m) ] for x in range(n) ], node2))
     #     cur = nxt
     #     ProgressBar.finish()
+
+    pr.print_stats(sort='cumulative')
 
 
 X = InputPermutationSet()

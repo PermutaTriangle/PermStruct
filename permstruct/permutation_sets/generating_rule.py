@@ -59,19 +59,49 @@ class GeneratingRule(PermutationSet):
                     for ass in count_assignments(at + 1, left - cur):
                         yield [cur] + ass
 
+        # for count_ass in count_assignments(0, n):
+        #     for perm_ass in product(*[ s[1].generate_of_length(cnt, input) for cnt, s in zip(count_ass, rule) ]):
+        #
+        #         arr = [ [ [] for j in range(w) ] for i in range(h) ]
+        #
+        #         for i, perm in enumerate(perm_ass):
+        #             arr[rule[i][0][0]][rule[i][0][1]] = perm
+        #
+        #         rowcnt = [ sum( len(arr[row][col]) for col in range(w) ) for row in range(h) ]
+        #         colcnt = [ sum( len(arr[row][col]) for row in range(h) ) for col in range(w) ]
+        #
+        #         for colpart in product(*[ ordered_set_partitions(range(colcnt[col]), [ len(arr[row][col]) for row in range(h) ]) for col in range(w) ]):
+        #             for rowpart in product(*[ ordered_set_partitions(range(rowcnt[row]), [ len(arr[row][col]) for col in range(w) ]) for row in range(h) ]):
+        #                 res = [ [None]*colcnt[col] for col in range(w) ]
+        #
+        #                 cumul = 1
+        #                 for row in range(h-1,-1,-1):
+        #                     for col in range(w):
+        #                         for idx, val in zip(sorted(colpart[col][row]), permute(sorted(rowpart[row][col]), arr[row][col])):
+        #                             res[col][idx] = cumul + val
+        #
+        #                     cumul += rowcnt[row]
+        #
+        #                 yield tuple(flatten(res))
+
         for count_ass in count_assignments(0, n):
-            for perm_ass in product(*[ s[1].generate_of_length(cnt, input) for cnt, s in zip(count_ass, rule) ]):
 
-                arr = [ [ [] for j in range(w) ] for i in range(h) ]
+            cntz = [ [ 0 for j in range(w) ] for i in range(h) ]
 
-                for i, perm in enumerate(perm_ass):
-                    arr[rule[i][0][0]][rule[i][0][1]] = perm
+            for i, k in enumerate(count_ass):
+                cntz[rule[i][0][0]][rule[i][0][1]] = k
 
-                rowcnt = [ sum( len(arr[row][col]) for col in range(w) ) for row in range(h) ]
-                colcnt = [ sum( len(arr[row][col]) for row in range(h) ) for col in range(w) ]
+            rowcnt = [ sum( cntz[row][col] for col in range(w) ) for row in range(h) ]
+            colcnt = [ sum( cntz[row][col] for row in range(h) ) for col in range(w) ]
 
-                for colpart in product(*[ ordered_set_partitions(range(colcnt[col]), [ len(arr[row][col]) for row in range(h) ]) for col in range(w) ]):
-                    for rowpart in product(*[ ordered_set_partitions(range(rowcnt[row]), [ len(arr[row][col]) for col in range(w) ]) for row in range(h) ]):
+            for colpart in product(*[ ordered_set_partitions(range(colcnt[col]), [ cntz[row][col] for row in range(h) ]) for col in range(w) ]):
+                for rowpart in product(*[ ordered_set_partitions(range(rowcnt[row]), [ cntz[row][col] for col in range(w) ]) for row in range(h) ]):
+                    for perm_ass in product(*[ s[1].generate_of_length(cnt, input) for cnt, s in zip(count_ass, rule) ]):
+                        arr = [ [ [] for j in range(w) ] for i in range(h) ]
+
+                        for i, perm in enumerate(perm_ass):
+                            arr[rule[i][0][0]][rule[i][0][1]] = perm
+
                         res = [ [None]*colcnt[col] for col in range(w) ]
 
                         cumul = 1
@@ -146,4 +176,3 @@ class GeneratingRule(PermutationSet):
 
     # def __repr__(self):
     #     return 'GeneratingRule(%s)' % repr(self.rule)
-
