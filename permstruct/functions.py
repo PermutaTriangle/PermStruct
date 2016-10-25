@@ -215,9 +215,7 @@ def populate_rule_set(settings, rule_set):
                         if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                             ok = False
                         if ok:
-                            pr.enable()
                             assert rule_set.add_rule(g) != RuleDeath.PERM_PROP
-                            pr.disable()
 
                     nxt.append([ [ rule[x][y] for y in range(m) ] for x in range(n) ])
             cur = nxt
@@ -263,7 +261,7 @@ def populate_rule_set(settings, rule_set):
                 if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                     ok = False
                 if ok:
-                    res = rule_set.add_rule(g,True)
+                    res = rule_set.add_rule(g)
                     if res == RuleDeath.PERM_PROP:
                         return None
                     elif res != RuleDeath.ALIVE:
