@@ -447,8 +447,12 @@ def populate_rule_set(settings, rule_set):
                 ok = True
                 if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                     ok = False
-                if ok and rule_set.add_rule(g,True) == RuleDeath.PERM_PROP:
-                    return None
+                if ok:
+                    res = rule_set.add_rule(g,True)
+                    if res == RuleDeath.PERM_PROP:
+                        return None
+                    elif res != RuleDeath.ALIVE:
+                        here.end = False
 
             found = False
             for (i,j,s2) in reduce(lambda x,y: x&y, [ c.down.keys() for c in cur ]):
