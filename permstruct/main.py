@@ -24,7 +24,7 @@ def struct(patts, size=None, perm_bound=None, verify_bound=None, subpatts_len=No
     - ``ask_verify_higher'' - whether to ask about verifying with longer permutations.
     """
 
-    k = 0 if len(patts) == 0 else max( len(p) for p in patts )
+    k = 1 if len(patts) == 0 else max( len(p) for p in patts )
 
     perm_bound    = k+2 if perm_bound is None else perm_bound
     verify_bound  = perm_bound+2 if verify_bound is None else verify_bound
