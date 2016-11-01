@@ -20,7 +20,7 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=False, remo
     settings.logger.log('Tayloring DAG')
 
     elems = []
-    if len(patts) > 0:
+    if len(patterns) > 0:
 
         if max_len_patt is None:
             max_len_patt = max( len(p) for p in patterns )
