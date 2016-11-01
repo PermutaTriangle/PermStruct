@@ -12,7 +12,7 @@ class SubPatternType:
 
 # def taylor_dag(patterns, perm_bound, max_len_patt=None, upper_bound=None, remove=True):
 def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=False, remove_finite=True,
-               subpattern_type=SubPatternType.RECTANGULAR):
+               subpattern_type=SubPatternType.EVERY):
     assert settings.sinput.avoidance is not None, "Tayloring is only supported for avoidance"
     patterns = settings.sinput.avoidance
 
