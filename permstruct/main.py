@@ -1,8 +1,7 @@
 from __future__ import print_function
 from permuta import Permutation
-from permstruct.dag import SubPatternType
 from permstruct import StructSettings, StructLogger, AvoiderInput, exhaustive
-from permstruct.dag import taylor_dag
+from permstruct.dag import taylor_dag, SubPatternType
 
 def struct(patts, size=None, perm_bound=None, verify_bound=None, subpatts_len=None, subpatts_num=None, subpatts_type=SubPatternType.EVERY, ask_verify_higher=True):
     """

@@ -18,5 +18,5 @@ from .functions import (
 
 from .exhaustive import exhaustive
 from .construct import construct_rule
-from .permstruct import struct
+from .main import struct
 
