@@ -99,7 +99,7 @@ class AvoiderInput(StructInput):
             self.permutations[0] = []
             maybe = Permutation([])
             if maybe.avoids(self.avoidance):
-                self.permutations[0].add(maybe)
+                self.permutations[0].append(maybe)
         else:
             self._assure_length(l-1)
             here = set()
