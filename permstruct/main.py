@@ -17,7 +17,7 @@ def struct(patts, size=None, perm_bound=None, verify_bound=None, subpatts_len=No
 
     - ``subpatts_len'' - the longest subpattern to use from the basis.
 
-    - ``subpatts_num'' - the maximum number of subpattern to use from the basis.
+    - ``subpatts_num'' - the maximum number of subpatterns to use from the basis.
 
     - ``subpatts_type'' - the type of subpattern to use from the basis.
 
@@ -25,14 +25,6 @@ def struct(patts, size=None, perm_bound=None, verify_bound=None, subpatts_len=No
     """
 
     k = 1 if len(patts) == 0 else max( len(p) for p in patts )
-
-    perm_bound    = k+2 if perm_bound is None else perm_bound
-    verify_bound  = perm_bound+2 if verify_bound is None else verify_bound
-
-    # The dag
-    max_len_patt = subpatts_len
-    upper_bound  = subpatts_num
-    remove       = False
 
     # Grids
     if size is not None:
@@ -42,6 +34,19 @@ def struct(patts, size=None, perm_bound=None, verify_bound=None, subpatts_len=No
         max_rule_size = (k+1, k+1)
         max_non_empty = k+1
     max_rules     = None
+
+    # Perms
+    if size is None:
+        perm_bound = k+2 if perm_bound is None else perm_bound
+    else:
+        perm_bound = max(size+1, k+2 if perm_bound is None else perm_bound)
+    # perm_bound    = k+2 if perm_bound is None else perm_bound
+    verify_bound  = perm_bound+2 if verify_bound is None else verify_bound
+
+    # The dag
+    max_len_patt = subpatts_len
+    upper_bound  = subpatts_num
+    remove       = False
 
     settings = StructSettings(
             perm_bound=perm_bound,

@@ -40,7 +40,7 @@ upper_bound  = 1
 max_rule_size = (6, 6)
 max_non_empty = 6
 max_rules     = None
-# ------------------------------------------------------------------------------ Takes too long, move to server
+# ------------------------------------------------------------------------------ Takes too long, move to server. Failure on server. No cover found
 perm_bound    = 6
 verify_bound  = 10
 
@@ -49,6 +49,16 @@ max_len_patt = None
 upper_bound  = None
 max_rule_size = (5, 5)
 max_non_empty = 5
+max_rules     = None
+# ------------------------------------------------------------------------------ No cover
+perm_bound    = 7
+verify_bound  = 10
+
+# Grids
+max_len_patt = 3
+upper_bound  = 1
+max_rule_size = (6, 6)
+max_non_empty = 6
 max_rules     = None
 # ------------------------------------------------------------------------------
 
