@@ -9,7 +9,7 @@ def struct(patts, size=None, perm_bound=None, verify_bound=None, subpatts_len=No
 
     - ``patts'' - the patterns in the basis.
 
-    - ``size'' - the maximum size of rules to try.
+    - ``size'' - the maximum size of the rules to try.
 
     - ``perm_bound'' - the longest permutations to use from Av(patts).
 
@@ -59,4 +59,3 @@ def struct(patts, size=None, perm_bound=None, verify_bound=None, subpatts_len=No
                         subpattern_type=subpatts_type))
 
     exhaustive(settings)
-
