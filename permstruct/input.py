@@ -98,15 +98,15 @@ class AvoiderInput(StructInput):
         if l == 0:
             self.permutations[0] = []
             maybe = Permutation([])
-            if maybe.avoids(self.avoidance):
+            if maybe.avoids(*self.avoidance):
                 self.permutations[0].append(maybe)
         else:
             self._assure_length(l-1)
             here = set()
             for p in self.permutations[l-1]:
                 for i in range(l):
-                    q = Permutation(p[:i] + [l] + p[i:])
-                    if q.avoids(self.avoidance):
+                    q = Permutation(p[:i] + (l,) + p[i:])
+                    if q.avoids(*self.avoidance):
                         here.add(q)
             self.permutations[l] = list(here)
 
@@ -131,4 +131,3 @@ class AvoiderInput(StructInput):
     def get_permutation_set(self):
         # XXX: should there be an upto paramater?
         return set([ p for ps in self.permutations.values() for p in ps ])
-

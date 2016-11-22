@@ -1,3 +1,4 @@
+from permuta import Permutation
 from permuta.misc import ordered_set_partitions, flatten
 from .permutation_set import PermutationSet
 from .static_permutation_set import StaticPermutationSet
@@ -89,7 +90,7 @@ class GeneratingRule(PermutationSet):
 
                             cumul += rowcnt[row]
 
-                        yield tuple(flatten(res))
+                        yield Permutation(flatten(res))
 
 
     def to_static(self, max_n, input, description=None):

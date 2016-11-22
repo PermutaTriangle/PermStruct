@@ -9,7 +9,7 @@ class UniversePermutationSet(PermutationSet):
         super(UniversePermutationSet, self).__init__(description='universe permutation set')
 
     def generate_of_length(self, n, input):
-        return [ tuple(p) for p in Permutations(n) ]
+        return [ p for p in Permutations(n) ]
 
     def contains(self, perm):
         return True
@@ -19,4 +19,3 @@ class UniversePermutationSet(PermutationSet):
 
     def __repr__(self):
         return 'UniversePermutationSet()'
-

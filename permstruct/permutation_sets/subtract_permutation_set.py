@@ -21,12 +21,12 @@ class SubtractPermutationSet(PermutationSet):
         mainp = set()
         here = set()
         for p in self.main.generate_of_length(l, input):
-            mainp.add(tuple(p))
-            here.add(tuple(p))
+            mainp.add(p)
+            here.add(p)
         for s in self.sub:
             if s is None:
                 if l == 0:
-                    st = [ tuple() ]
+                    st = [ Permutation() ]
                 else:
                     st = [ ]
             else:
@@ -69,4 +69,3 @@ class SubtractPermutationSet(PermutationSet):
             if self.permutations[l]:
                 return l
             l += 1
-
