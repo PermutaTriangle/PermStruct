@@ -10,15 +10,23 @@ import sys
 is_classical = True
 
 # STATUS ================================================ >
-patts = [Permutation([1,3,2,4])]
+patts = map(Permutation, [[1,2,4,3], [1,3,2,4], [1,3,4,2], [1,4,2,3], [1,4,3,2], [2,1,4,3], [2,3,1,4], [3,1,2,4]]) # 1243_1324_1342_1423_1432_2143_2314_3124
+patts = map(Permutation, [[1,2,4,3], [1,3,2,4], [1,3,4,2], [1,4,3,2], [2,1,4,3], [2,3,1,4], [2,4,1,3]]) # 1243_1324_1342_1432_2143_2314_2413
+patts = [Permutation([1,2,4,3]), Permutation([1,3,2,4]), Permutation([1,3,4,2]), Permutation([1,4,3,2]), Permutation([2,1,4,3]), Permutation([2,3,1,4]), Permutation([2,4,1,3])]
+# patts = map(Permutation, [[1,2,4,3], [1,3,2,4]])
+# patts = map(Permutation, [[4,2,3,1]])
 
-perm_bound    = 5
-verify_bound  = 7
+task = '1324_1342_1423_1432_2143_2314_2341_2413_2431_3124_3142_3214_3241_4123_4132_4213'
+task = '1342_1432_2413_3124_3142_3214_3241_3412_4132'
+patts = [ Permutation([ int(c) for c in p ]) for p in task.split('_') ]
+
+perm_bound    = 7
+verify_bound  = 8
 ignored       = 0
 
 # The dag
-max_len_patt = None
-upper_bound  = None
+max_len_patt = 4
+upper_bound  = 24
 remove       = False
 
 # Grids
