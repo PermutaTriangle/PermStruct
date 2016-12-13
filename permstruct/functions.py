@@ -22,8 +22,10 @@ def verify_cover(settings, rules):
 
     while True:
         for l in range(check_from, check_to+1):
+            settings.logger.log('Starting verification for length %d' % l)
             curinp = settings.sinput.get_permutations(upto=l)
             found = set()
+
             for rule in rules:
                 for p in rule.generate_of_length(l, curinp):
                     if p in found:
