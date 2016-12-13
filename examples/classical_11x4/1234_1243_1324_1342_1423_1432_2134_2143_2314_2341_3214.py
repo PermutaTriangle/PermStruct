@@ -16,7 +16,7 @@ is_classical = True
 task = '1234_1243_1324_1342_1423_1432_2134_2143_2314_2341_3214'
 patts = [ Permutation([ int(c) for c in p ]) for p in task.split('_') ]
 
-perm_bound    = 9
+perm_bound    = 14
 verify_bound  = 14
 ignored       = 0
 
