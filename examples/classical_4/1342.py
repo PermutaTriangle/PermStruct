@@ -8,7 +8,7 @@ from permstruct.dag import taylor_dag
 import sys
 
 # STATUS ================================================ >
-patts = [Permutation([1,3,2,4])]
+patts = [Permutation([1,3,4,2])]
 
 # Fails, as expected
 struct(patts)

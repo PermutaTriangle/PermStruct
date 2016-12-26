@@ -7,8 +7,12 @@ from permstruct.dag import taylor_dag
 
 import sys
 
-# STATUS ================================================ >
-patts = [Permutation([1,3,2,4])]
+# -- Example from Kuszmaul paper -- #
 
-# Fails, as expected
+# STATUS ================================================ >
+
+task = '2314_2413_3412'
+patts = [ Permutation([ int(c) for c in p ]) for p in task.split('_') ]
+
 struct(patts)
+# struct(patts, size = 4, verify_bound = 10, ask_verify_higher = True)

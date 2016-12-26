@@ -8,7 +8,7 @@ from permstruct.dag import taylor_dag
 import sys
 
 # STATUS ================================================ >
-patts = [Permutation([1,3,2,4])]
+patts = [Permutation([2,4,1,3])]
 
-# Fails, as expected
+# Running... should run on the cluster
 struct(patts)

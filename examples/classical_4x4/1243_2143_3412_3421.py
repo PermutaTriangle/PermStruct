@@ -8,7 +8,8 @@ from permstruct.dag import taylor_dag
 import sys
 
 # STATUS ================================================ >
-patts = [Permutation([1,3,2,4])]
 
-# Fails, as expected
+task = '1243_2143_3412_3421'
+patts = [ Permutation([ int(c) for c in p ]) for p in task.split('_') ]
+
 struct(patts)
