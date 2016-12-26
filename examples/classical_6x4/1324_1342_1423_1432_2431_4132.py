@@ -14,5 +14,5 @@ import sys
 task = '1324_1342_1423_1432_2431_4132'
 patts = [ Permutation([ int(c) for c in p ]) for p in task.split('_') ]
 
-struct(patts, perm_bound=10, subpatts_type='EVERY')
+struct(patts, perm_bound=10, subpatts_type=SubPatternType.EVERY) # < ------------------------------- I CAN HAZ BUG!
 # struct(patts, size = 4, verify_bound = 10, ask_verify_higher = True)
