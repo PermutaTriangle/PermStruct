@@ -1,5 +1,5 @@
-# import sys
-# from permuta import Permutation
+import sys
+from permuta import Permutation
 
 # The following code is based on "The Insertion Encoding of Permutations".
 #
@@ -81,3 +81,12 @@ def is_insertion_encodable(C):
         if curr == goal:
             return True
     return False
+
+# while True:
+#     line = sys.stdin.readline()
+#     if not line:
+#         break
+#     line = line.strip()
+#     perms = [ Permutation(list(map(int,p))) for p in line.split('_') ]
+#     if not is_insertion_encodable(perms):
+#         print line

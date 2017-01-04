@@ -17,4 +17,3 @@ task = '1234_1243_1324_1342_1423_1432_2134_2143_2341_2431_3142_3241'
 patts = [ Permutation([ int(c) for c in p ]) for p in task.split('_') ]
 
 struct(patts, size=2)
-# struct(patts, size = 4, verify_bound = 10, ask_verify_higher = True)
