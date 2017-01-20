@@ -20,7 +20,7 @@ $ make -C exact_cover
 $ sudo make -C exact_cover install
 ```
 
-It is also possible to install PermStruct in development mode, in which case you
+You can also possible to install PermStruct in development mode, in which case you
 run the following instead:
 ```
 $ sudo ./setup.py develop
@@ -32,8 +32,8 @@ $ ./setup.py test
 ```
 
 ## Usage
-Once you've installed PermStruct, it can be imported into a Python script just
-like any other Python library:
+Once you've installed PermStruct, it can be imported into a Python script like
+any other Python library:
 ```
 import permstruct
 ```
