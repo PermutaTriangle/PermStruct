@@ -113,7 +113,7 @@ class OverlayGeneratingRule(PermutationSet):
 
                             cumul += rowcnt[row]
 
-                        yield tuple(flatten(res))
+                        yield Permutation(flatten(res))
 
 
     def to_static(self, max_n, input, description=None):
@@ -177,4 +177,3 @@ class OverlayGeneratingRule(PermutationSet):
 
     def __hash__(self):
         return sum( hash((k, v)) for k, v in self.rule.items() ) + sum( hash((k, v)) for k, v in self.overlay )
-

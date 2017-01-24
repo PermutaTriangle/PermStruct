@@ -14,7 +14,7 @@ class Length0PermutationSet(PermutationSet):
     def generate_of_length(self, n, input):
 
         if n == 0:
-            yield tuple()
+            yield Permutation()
 
     def contains(self, perm):
         return len(perm) == 0
@@ -30,4 +30,3 @@ class Length0PermutationSet(PermutationSet):
 
     def __hash__(self):
         return hash(tuple([repr(self), 12387841212314]))
-

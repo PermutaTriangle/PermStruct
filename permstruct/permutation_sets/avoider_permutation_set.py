@@ -9,7 +9,7 @@ from copy import deepcopy
 
 class AvoiderPermutationSet(PermutationSet):
     def __init__(self, avoid):
-        self.avoid = sorted([ list(a) for a in avoid ])
+        self.avoid = sorted([ a for a in avoid ])
         super(AvoiderPermutationSet, self).__init__(description='Av(%s)' % self.avoid)
         self.permutations = {}
 
@@ -17,14 +17,14 @@ class AvoiderPermutationSet(PermutationSet):
         if l in self.permutations:
             return
         if l == 0:
-            self.permutations[0] = [ tuple() ]
+            self.permutations[0] = [ Permutation() ]
         else:
             self._assure_length(l-1)
             here = set()
             for p in self.permutations[l-1]:
                 for i in range(l):
                     q = p[:i] + (l,) + p[i:]
-                    if Permutation(q).avoids(self.avoid):
+                    if Permutation(q).avoids(*self.avoid):
                         here.add(q)
             self.permutations[l] = list(here)
 
@@ -53,4 +53,3 @@ class AvoiderPermutationSet(PermutationSet):
 
     def min_length(self, input):
         return 0
-

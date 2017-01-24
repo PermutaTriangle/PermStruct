@@ -15,7 +15,7 @@ class StaticPermutationSet(PermutationSet):
         for perm in perms:
             n = len(perm)
             self.perms.setdefault(n, [])
-            self.perms[n].append(tuple(perm))
+            self.perms[n].append(perm)
 
     @staticmethod
     def from_predicate(predicate, max_n, gf=None, description=None):
@@ -24,7 +24,7 @@ class StaticPermutationSet(PermutationSet):
         for n in range(max_n+1):
             for perm in Permutations(n):
                 if predicate(perm):
-                    perms.append(tuple(perm))
+                    perms.append(perm)
 
         return StaticPermutationSet(perms, gf, description)
 
@@ -69,4 +69,3 @@ class StaticPermutationSet(PermutationSet):
         if self.can_be_alone() != other.can_be_alone():
             return self.can_be_alone() < other.can_be_alone()
         return False
-

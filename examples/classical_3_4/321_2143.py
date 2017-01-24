@@ -32,8 +32,8 @@ patts = [Permutation([3,2,1]), Permutation([2,1,4,3])]
 
 # ------------------------------------------------------------------------------
 
-perm_bound    = 11
-verify_bound  = 13
+perm_bound    = 11 # gurobi went nuts on the cluster with 10
+verify_bound  = 13 # up from 12
 ignored       = 0
 
 # The dag
@@ -42,7 +42,7 @@ upper_bound  = 1 # None
 remove       = False
 
 # Grids
-max_rule_size = (9,9) # <------------ NOTE!
+max_rule_size = (9,9) # was (9,8)
 max_non_empty = 9
 max_rules     = None
 

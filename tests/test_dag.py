@@ -40,9 +40,9 @@ class TestDAG(unittest.TestCase):
         settings.set_input(StructInput.from_avoidance(settings, patts))
         res = taylor_dag(settings, remove=False, remove_finite=False)
         self.check([
-            [[1,2], [2,1]],
-            [[1,2,3], [2,1]],
-            [[1,2], [3,2,1]],
+            [Permutation([1,2]), Permutation([2,1])],
+            [Permutation([1,2,3]), Permutation([2,1])],
+            [Permutation([1,2]), Permutation([3,2,1])],
         ], res)
 
         patts = [
@@ -61,7 +61,7 @@ class TestDAG(unittest.TestCase):
         settings.set_input(StructInput.from_avoidance(settings, patts))
         res = taylor_dag(settings, max_len_patt=2, remove=False, remove_finite=False)
         self.check([
-            [[1,2], [2,1]],
+            [Permutation([1,2]), Permutation([2,1])],
         ], res)
 
     def test_reachable_above(self):
@@ -141,4 +141,3 @@ class TestDAG(unittest.TestCase):
             b += es(dag2)
 
         self.assertTrue(a*20/100 > b) # just a sanity check, but can fail with low probability
-

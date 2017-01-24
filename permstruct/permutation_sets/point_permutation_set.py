@@ -1,4 +1,4 @@
-
+from permuta import Permutation
 from .permutation_set import PermutationSet
 
 class PointPermutationSet(PermutationSet):
@@ -15,7 +15,7 @@ class PointPermutationSet(PermutationSet):
     def generate_of_length(self, n, input):
 
         if n == 1:
-            yield (1,)
+            yield Permutation([1])
 
     def contains(self, perm):
         return len(perm) == 1
@@ -31,4 +31,3 @@ class PointPermutationSet(PermutationSet):
 
     def __hash__(self):
         return hash(tuple([repr(self), 12387841212314]))
-
