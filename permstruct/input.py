@@ -99,7 +99,7 @@ class AvoiderInput(StructInput):
         if l in self.permutations:
             return
         if l == 0:
-            self.permutations[0] = [ Permutation([]) ]
+            self.permutations[0] = set([ Permutation([]) ])
         else:
             self._assure_length(l-1)
             here = set()
@@ -108,7 +108,7 @@ class AvoiderInput(StructInput):
                     q = Permutation(p[:i] + [l] + p[i:])
                     if q.avoids(self.avoidance):
                         here.add(q)
-            self.permutations[l] = list(here)
+            self.permutations[l] = here
 
     def contains(self, perm):
         if type(perm) is not Permutation:
@@ -124,9 +124,9 @@ class AvoiderInput(StructInput):
         # XXX: should we return a deep copy?
         if upto is not None:
             self._assure_length(upto)
-            return dict([ (k,self.permutations[k]) for k in range(upto+1) ])
+            return dict([ (k,list(self.permutations[k])) for k in range(upto+1) ])
         else:
-            return self.permutations
+            return list(self.permutations)
 
     def get_permutation_set(self):
         # XXX: should there be an upto paramater?

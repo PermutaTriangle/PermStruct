@@ -23,6 +23,7 @@ def verify_cover(settings, rules):
 
     while True:
         for l in range(check_from, check_to+1):
+            settings.logger.log('Starting verification for length %d' % l)
             curinp = settings.sinput.get_permutations(upto=l)
             found = set()
             for rule in rules:
@@ -235,7 +236,7 @@ def populate_rule_set(settings, rule_set):
         ProgressBar.draw()
         ProgressBar.draw()
 
-        above = { a for a in dag.get_parents(s) if a is not None and a != s }
+        above = set([ a for a in dag.get_parents(s) if a is not None and a != s ])
         rule = [ [ None for y in range(m) ] for x in range(n) ]
 
         def intersect(cur, pos):
@@ -257,7 +258,12 @@ def populate_rule_set(settings, rule_set):
                         sj = y
                         break
                 assert sj is not None
-                g = GeneratingRule({ (x-si,y-sj): rule[x][y] for x in range(si,n) for y in range(sj,m) })
+                mp = dict()
+                for x in range(si,n):
+                    for y in range(sj,m):
+                        mp[(x-si,y-sj)] = rule[x][y]
+
+                g = GeneratingRule(mp)
                 ok = True
                 if (si,sj) == (n-1,m-1) and not rule[si][sj].can_be_alone():
                     ok = False
