@@ -13,6 +13,12 @@ the following commands:
 ```
 $ sudo ./setup.py install
 ```
+PermStruct was built on an older version of Permuta so you will need to swap to
+the branch called "struct". Do this by running the following command in the
+Permuta directory:
+```
+git checkout struct
+```
 If you have [Gurobi](http://www.gurobi.com) installed then you are done. If you
 do not have it run:
 ```
