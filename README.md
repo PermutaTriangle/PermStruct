@@ -7,17 +7,13 @@ terms of so-called generating rules. These descriptions can then be used to
 derive generating functions for the permutation sets.
 
 ## Installing
+
 To install PermStruct on your system, start by installing the
-[Permuta](https://github.com/PermutaTriangle/Permuta) library. Then run
-the following commands:
+[Permuta](https://github.com/PermutaTriangle/Permuta) library. PermStruct was
+built on an older version of Permuta so you will need to swap to the branch
+called "struct". Then run the following commands:
 ```
 $ sudo ./setup.py install
-```
-PermStruct was built on an older version of Permuta so you will need to swap to
-the branch called "struct". Do this by running the following command in the
-Permuta directory:
-```
-git checkout struct
 ```
 If you have [Gurobi](http://www.gurobi.com) installed then you are done. If you
 do not have it run:
