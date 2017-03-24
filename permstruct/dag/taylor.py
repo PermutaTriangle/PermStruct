@@ -54,15 +54,15 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=False, remo
             if subpattern_type == SubPatternType.RECTANGULAR:
                 for l in range(len(p)):
                     for r in range(l,len(p)):
-                        here = sorted(p.perm[l:r+1])
+                        here = sorted(list(p)[l:r+1])
                         for x in range(len(here)):
                             want = set()
                             for y in range(x,len(here)):
                                 want.add(here[y])
                                 cur = []
                                 for j in range(l,r+1):
-                                    if p.perm[j] in want:
-                                        cur.append(p.perm[j])
+                                    if p[j] in want:
+                                        cur.append(p[j])
                                 if len(cur) <= max_len_patt:
                                     valid.add(Permutation.to_standard(cur))
             elif subpattern_type == SubPatternType.CONSECUTIVE:
@@ -70,7 +70,7 @@ def taylor_dag(settings, max_len_patt=None, upper_bound=None, remove=False, remo
                     for r in range(l,len(p)):
                         if r - l + 1 > max_len_patt:
                             break
-                        here = p.perm[l:r+1]
+                        here = list(p)[l:r+1]
                         if max(here) - min(here) + 1 == len(here):
                             valid.add(Permutation.to_standard(here))
 

@@ -2,15 +2,26 @@ from subprocess import Popen, PIPE
 import sys
 import tempfile
 import shutil
+import resource
+import platform
 import os
 
 def exact_cover(settings, bss):
     try:
+        print('Trying to start Gurobi')
         for res in exact_cover_gurobi(settings, bss):
             yield res
-    except:
-        for res in exact_cover_lingeling(settings, bss):
-            yield res
+        print('Gurobi was found')
+    except Exception as e:
+        print('No Gurobi found or Gurobi failed, with the error')
+        print(e)
+        try:
+            print('Trying Lingeling:')
+            for res in exact_cover_lingeling(settings, bss):
+                yield res
+        except Exception as f:
+            print('Lingeling failed as well, with the error')
+            print(f)
 
     # TODO: call Permuta's Algorithm X implementation if everything else fails
 
@@ -26,6 +37,7 @@ def exact_cover_gurobi(settings, bss):
         tdir = tempfile.mkdtemp(prefix='struct_tmp')
         inp = os.path.join(tdir, 'inp.lp')
         outp = os.path.join(tdir, 'out.sol')
+        #templog = os.path.join(tdir, 'templog.txt')
 
         with open(inp, 'w') as lp:
             lp.write('Minimize %s\n' % ' + '.join( 'x%d' % i for i in range(len(bss)) ))
@@ -41,9 +53,30 @@ def exact_cover_gurobi(settings, bss):
             lp.write('Binary\n')
             lp.write('    %s\n' % ' '.join( 'x%d' % i for i in range(len(bss)) ))
             lp.write('End\n')
-
-        p = Popen('gurobi_cl ResultFile=%s %s' % (outp, inp), shell=True, stdout=PIPE, stderr=PIPE)
+        
+        print('The inp.lp file has been created')
+        print('The size of the inp.file is %s Mb' %(os.path.getsize(inp)//2**20))
+        if platform.system() == 'Darwin':
+            print('The peak memory used so far is %s Mb' %(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss//2**20)) # getrusage returns in bytes on OS X
+        else:
+            print('The peak memory used so far is %s Mb' %(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss//2**10)) # but kilobytes on Linux
+        print('Starting Gurobi')
+        #p = Popen('gurobi_cl ResultFile=%s %s' % (outp, inp), shell=True, stdout=PIPE, stderr=PIPE)
+        #p = Popen('gurobi_cl LogFile=%s ResultFile=%s %s' % (templog, outp, inp), shell=True)
+        #p = Popen('gurobi_cl LogFile=%s ResultFile=%s %s' % (templog, outp, inp), shell=True, stdout=PIPE, stderr=PIPE)
+        p = Popen('gurobi_cl Method=1 ResultFile=%s %s' % (outp, inp), shell=True, stdout=PIPE, stderr=PIPE)
+        print('Made it past Popen')
+        output, error = p.communicate()
+        if p.returncode != 0:
+            print(p.returncode, output, error)
+        else:
+            print('returncode = %s' %p.returncode)
+            print(output)
         assert p.wait() == 0
+        print('Made it through Gurobi')
+
+        #with open(templog, 'r') as fin:
+        #    print(fin.read())
 
         with open(outp, 'r') as f:
             while True:
@@ -54,7 +87,7 @@ def exact_cover_gurobi(settings, bss):
                     continue
                 anything = True
                 k,v = line.strip().split()
-                if int(v) == 1:
+                if abs(float(v) - 1) < 0.1:
                     used.add(int(k[1:]))
     finally:
         if tdir is not None:
